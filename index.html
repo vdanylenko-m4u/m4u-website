@@ -1847,12 +1847,11 @@ document.getElementById('pfSubmit').addEventListener('click', () => {
   const formData = { phone, email, company, interests, source: 'm4u-website', timestamp: new Date().toISOString() };
 
   // === NETHUNT WEBHOOK ===
-  // Replace this URL with your NetHunt webhook endpoint:
-  // fetch('https://nethunt.com/webhooks/YOUR_WEBHOOK_ID', {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify(formData)
-  // });
+  fetch('https://nethunt.com/service/automation/hooks/6996f3710ee5b01f1e3958d0', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(formData)
+  });
 
   console.log('Form data:', formData);
 
