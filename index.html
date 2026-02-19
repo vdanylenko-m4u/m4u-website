@@ -214,6 +214,27 @@ nav.scrolled {
   .nav-links { display: none; }
 }
 
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.lang-switch a {
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.lang-active {
+  color: var(--text-primary) !important;
+  background: rgba(255,255,255,0.08);
+}
+
+.lang-sep { color: var(--text-muted); font-size: 0.75rem; }
+
 /* === HERO === */
 .hero {
   min-height: 100vh;
@@ -1633,9 +1654,9 @@ footer {
       <p class="reveal d2">M4U працює з різними рівнями прийняття рішень у девелоперській компанії.</p>
     </div>
     <div class="aud-grid">
-      <div class="aud reveal"><div class="aud-role">CEO / Власник</div><h3>Максимізуємо ваш дохід. Точка.</h3><ul><li>Комерційний блок стає керованим</li><li>Бізнес переходить із хаосу в систему</li><li>Прозорі метрики замість інтуїції</li></ul></div>
+      <div class="aud reveal"><div class="aud-role">CEO / Власник</div><h3>Максимізуємо ваш дохід</h3><ul><li>Комерційний блок стає керованим</li><li>Бізнес переходить із хаосу в систему</li><li>Прозорі метрики замість інтуїції</li></ul></div>
       <div class="aud reveal d1"><div class="aud-role">Комерційний директор</div><h3>Стратегія замість тактики</h3><ul><li>Цифрові процеси замість ручного контролю</li><li>Є цифри — не потрібно «вмовляти» власника</li><li>Прогнозована прибутковість проєкту</li></ul></div>
-      <div class="aud reveal d2"><div class="aud-role">Маркетинг-директор</div><h3>Оптимізація кожної гривні</h3><ul><li>Зменшення вартості ліда через ціновий асортимент</li><li>Управління асортиментом для попиту</li><li>Ефективний маркетинговий бюджет</li></ul></div>
+      <div class="aud reveal d2"><div class="aud-role">Маркетинг-директор</div><h3>Оптимізація кожної гривні</h3><ul><li>Вища ефективність лідогенерації через управління асортиментом</li><li>Чітка звітність завдяки налаштованій CRM</li><li>Система продажів на основі цінностей проекту</li></ul></div>
       <div class="aud reveal d3"><div class="aud-role">Керівник ВП</div><h3>Ми — ваш підсилювач</h3><ul><li>Ліди не губляться в процесах</li><li>Продажі стабільні та прогнозовані</li><li>CRM працює на вас, а не ви на неї</li></ul></div>
     </div>
   </div>
@@ -1673,7 +1694,7 @@ footer {
       <p class="reveal d2">Спільно з <a href="https://ksd.ua" target="_blank" style="color:var(--olive-light);text-decoration:underline;">Київською Школою Девелопменту</a>. Знання, перевірені практикою на проєктах вартістю 75+ млрд грн.</p>
     </div>
     <div class="edu-grid">
-      <div class="edu reveal"><div class="edu-format">ОНЛАЙН-КУРС · ВОЛОДИМИР ДАНИЛЕНКО</div><h3>Прайс-менеджмент в нерухомості</h3><p>Від формування стартових цін до динамічного управління та автоматизації. Зменшення неліквідних квартир та максимізація прибутку.</p><div class="edu-tags"><span class="edu-t">CEO</span><span class="edu-t">Комерційний директор</span><span class="edu-t">Директор з продажів</span><span class="edu-t">Аналітик</span></div></div>
+      <div class="edu reveal"><div class="edu-format">ОНЛАЙН-КУРС · ТЕПЕР В ЗАПИСІ</div><h3>Прайс-менеджмент в нерухомості</h3><p>Від формування стартових цін до динамічного управління та автоматизації. Зменшення неліквідних квартир та максимізація прибутку.</p><div class="edu-tags"><span class="edu-t">CEO</span><span class="edu-t">Комерційний директор</span><span class="edu-t">Директор з продажів</span><span class="edu-t">Аналітик</span></div></div>
       <div class="edu reveal d1"><div class="edu-format">ОНЛАЙН-КУРС · 7 МОДУЛІВ · 14 ГОДИН</div><h3>Управління комерціалізацією в девелопменті</h3><p>Як перетворити хаотичні продажі в систему з прогнозованим прибутком. Дохідна модель, керування прайсом, аналіз ефективності.</p><div class="edu-tags"><span class="edu-t">Дохідна модель</span><span class="edu-t">KPI</span><span class="edu-t">Аналітика</span><span class="edu-t">Бюджетування</span></div></div>
     </div>
   </div>
@@ -1684,7 +1705,7 @@ footer {
   <div class="container">
     <div class="cta-box reveal">
       <h2>Скільки прибутку ви втрачаєте щомісяця?</h2>
-      <p>Замовте безкоштовний аудит ваших комерційних процесів. Ми покажемо конкретні точки зростання.</p>
+      <p>Замовте експрес-аудит ваших комерційних процесів. Ми покажемо конкретні точки зростання.</p>
       <button class="btn btn-white popup-trigger" data-product="Консалтинг та аудит процесів">Замовити аудит процесів →</button>
     </div>
   </div>
@@ -1746,11 +1767,11 @@ footer {
       </div>
       <div class="f-col"><h4>Продукти</h4><ul><li><a href="https://maxify.ai" target="_blank">Maxify.AI</a></li><li><a href="#products">CRM4U</a></li><li><a href="https://parc.com.ua" target="_blank">P/ARC</a></li><li><a href="#products">Data4U</a></li><li><a href="#products">AI-Lab</a></li></ul></div>
       <div class="f-col"><h4>Сервіси</h4><ul><li><a href="#services">Система продажів</a></li><li><a href="#services">CRM-інтеграція</a></li><li><a href="#services">Управління доходами</a></li><li><a href="#services">Ціноутворення</a></li><li><a href="#services">Market Intelligence</a></li></ul></div>
-      <div class="f-col"><h4>Контакти</h4><ul><li><a href="mailto:v.danylenko@maxify.ai">v.danylenko@maxify.ai</a></li><li><a href="tel:+380989048810">+380 98 904 88 10</a></li><li><a href="#education">Освітні програми</a></li></ul></div>
+      <div class="f-col"><h4>Контакти</h4><ul><li><a href="tel:+380931210455">+380 93 121 04 55</a></li><li><a href="#education">Освітні програми</a></li></ul></div>
     </div>
     <div class="footer-bottom">
-      <span>© 2025 M4U. Технології та сервіси для нерухомості.</span>
-      <span>Kyiv · Vienna · Warsaw · Tbilisi · Dubai</span>
+      <span>© 2026 M4U. Технології та сервіси для нерухомості.</span>
+      <span>Київ · Варшава · Лондон</span>
     </div>
   </div>
 </footer>
