@@ -1217,6 +1217,164 @@ footer {
 }
 
 @media (max-width: 480px) { .footer-grid { grid-template-columns: 1fr; } }
+
+/* === POPUP === */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s var(--ease);
+  padding: 24px;
+}
+
+.popup-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.popup-form {
+  background: var(--bg-card);
+  border: 1px solid var(--border-hover);
+  border-radius: 20px;
+  padding: 44px 40px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  transform: translateY(20px) scale(0.97);
+  transition: transform 0.35s var(--ease);
+}
+
+.popup-overlay.active .popup-form {
+  transform: translateY(0) scale(1);
+}
+
+.popup-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.8rem;
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.popup-close:hover { color: var(--text-primary); }
+
+.popup-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.popup-sub {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+
+.pf-group { margin-bottom: 20px; }
+
+.pf-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+}
+
+.pf-req { color: var(--olive-light); }
+.pf-opt { color: var(--text-muted); font-weight: 400; }
+
+.pf-input {
+  width: 100%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-hover);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  font-family: var(--font);
+  transition: border-color 0.25s;
+  outline: none;
+}
+
+.pf-input::placeholder { color: var(--text-muted); }
+.pf-input:focus { border-color: var(--olive); }
+
+.pf-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pf-check {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.7);
+  transition: color 0.2s;
+}
+
+.pf-check:hover { color: var(--text-primary); }
+
+.pf-check input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.pf-check-box {
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--border-hover);
+  border-radius: 5px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  background: var(--bg-secondary);
+}
+
+.pf-check input:checked + .pf-check-box {
+  background: var(--olive);
+  border-color: var(--olive);
+}
+
+.pf-check input:checked + .pf-check-box::after {
+  content: '✓';
+  color: var(--bg-primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.pf-privacy {
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 14px;
+}
+
+@media (max-width: 480px) {
+  .popup-form { padding: 32px 24px; }
+}
 </style>
 </head>
 <body>
@@ -1231,7 +1389,7 @@ footer {
       <li><a href="#maxify">Maxify</a></li>
       <li><a href="#services">Сервіси</a></li>
       <li><a href="#education">Освіта</a></li>
-      <li><a href="#contact" class="btn btn-olive" style="padding:9px 22px; color:#fff;">Замовити аудит</a></li>
+      <li>          <a href="#contact" class="btn btn-olive" style="padding:9px 22px; color:#fff;" onclick="event.preventDefault();openPopup()">Замовити аудит</a></li>
     </ul>
   </div>
 </nav>
@@ -1246,7 +1404,7 @@ footer {
         <h1 class="reveal d1">Технології, що генерують <em>прибуток</em> в нерухомості</h1>
         <p class="hero-sub reveal d2">Єдина в Україні екосистема інтелектуальних рішень для девелоперів. SaaS-продукти, консалтинг та освіта для максимізації вашого доходу.</p>
         <div class="hero-actions reveal d3">
-          <a href="#contact" class="btn btn-olive">Замовити аудит процесів →</a>
+          <button class="btn btn-olive popup-trigger" data-product="Консалтинг та аудит процесів" style="color:#fff;">Замовити аудит процесів →</button>
           <a href="#products" class="btn btn-outline">Дослідити продукти</a>
         </div>
         <div class="hero-trust reveal d4">Income. We Trust.</div>
@@ -1339,7 +1497,7 @@ footer {
           <li>Інтеграція з Maxify.AI, AI-агентами, онлайн-шахівницей та системою інтерактивної візуалізації проекту</li>
           <li>Платформи: Creatio, NetHunt</li>
         </ul>
-        <a href="#contact" class="btn btn-outline">Замовити впровадження →</a>
+        <button class="btn btn-outline popup-trigger" data-product="CRM4U — впровадження CRM">Замовити впровадження →</button>
       </div>
       <div class="pc-visual steel-bg">
         <div class="eco-grid">
@@ -1527,10 +1685,55 @@ footer {
     <div class="cta-box reveal">
       <h2>Скільки прибутку ви втрачаєте щомісяця?</h2>
       <p>Замовте безкоштовний аудит ваших комерційних процесів. Ми покажемо конкретні точки зростання.</p>
-      <a href="mailto:v.danylenko@maxify.ai" class="btn btn-white">Замовити аудит процесів →</a>
+      <button class="btn btn-white popup-trigger" data-product="Консалтинг та аудит процесів">Замовити аудит процесів →</button>
     </div>
   </div>
 </section>
+
+<!-- POPUP FORM -->
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup-form">
+    <button class="popup-close" id="popupClose" aria-label="Закрити">&times;</button>
+    <div class="popup-header">
+      <div class="tag" style="margin-bottom:12px;">Зворотний зв'язок</div>
+      <h3 class="popup-title">Замовити консультацію</h3>
+      <p class="popup-sub">Залиште контакти — ми зв'яжемось протягом робочого дня</p>
+    </div>
+    <div id="formContainer">
+      <div class="pf-group">
+        <label class="pf-label">Телефон <span class="pf-req">*</span></label>
+        <input type="tel" id="pfPhone" class="pf-input" placeholder="+380 XX XXX XX XX" required>
+      </div>
+      <div class="pf-group">
+        <label class="pf-label">Email <span class="pf-req">*</span></label>
+        <input type="email" id="pfEmail" class="pf-input" placeholder="name@company.com" required>
+      </div>
+      <div class="pf-group">
+        <label class="pf-label">Компанія <span class="pf-opt">(опціонально)</span></label>
+        <input type="text" id="pfCompany" class="pf-input" placeholder="Назва компанії">
+      </div>
+      <div class="pf-group">
+        <label class="pf-label">Що вас цікавить?</label>
+        <div class="pf-checks">
+          <label class="pf-check"><input type="checkbox" name="interest" value="Maxify — динамічне ціноутворення"><span class="pf-check-box"></span>Maxify — динамічне ціноутворення</label>
+          <label class="pf-check"><input type="checkbox" name="interest" value="CRM4U — впровадження CRM"><span class="pf-check-box"></span>CRM4U — впровадження CRM</label>
+          <label class="pf-check"><input type="checkbox" name="interest" value="P/ARC — аналітика ринку"><span class="pf-check-box"></span>P/ARC — аналітика ринку</label>
+          <label class="pf-check"><input type="checkbox" name="interest" value="Data4U — автоматизована звітність"><span class="pf-check-box"></span>Data4U — автоматизована звітність</label>
+          <label class="pf-check"><input type="checkbox" name="interest" value="AI-Lab — AI-рішення"><span class="pf-check-box"></span>AI-Lab — AI-рішення</label>
+          <label class="pf-check"><input type="checkbox" name="interest" value="Консалтинг та аудит процесів"><span class="pf-check-box"></span>Консалтинг та аудит процесів</label>
+          <label class="pf-check"><input type="checkbox" name="interest" value="Освітні програми"><span class="pf-check-box"></span>Освітні програми</label>
+        </div>
+      </div>
+      <button class="btn btn-olive popup-submit" id="pfSubmit" style="width:100%;justify-content:center;color:#fff;padding:16px 28px;font-size:0.95rem;">Надіслати заявку →</button>
+      <p class="pf-privacy">Натискаючи кнопку, ви погоджуєтесь з обробкою персональних даних</p>
+    </div>
+    <div id="formSuccess" style="display:none;text-align:center;padding:40px 0;">
+      <div style="font-size:3rem;margin-bottom:16px;">✓</div>
+      <h3 style="font-size:1.3rem;font-weight:700;margin-bottom:8px;">Дякуємо за заявку!</h3>
+      <p style="color:var(--text-secondary);font-size:0.95rem;">Ми зв'яжемось з вами протягом робочого дня.</p>
+    </div>
+  </div>
+</div>
 
 <!-- FOOTER -->
 <footer>
@@ -1553,7 +1756,7 @@ footer {
 </footer>
 
 <script>
-// Set logo images from CSS variable
+// Logo
 const logoDataUrl = getComputedStyle(document.documentElement).getPropertyValue('--logo-url').trim();
 const match = logoDataUrl.match(/url\(['"]?(.*?)['"]?\)/);
 if (match) {
@@ -1578,6 +1781,84 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     const t = document.querySelector(a.getAttribute('href'));
     if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
+});
+
+// Popup
+const overlay = document.getElementById('popupOverlay');
+const formContainer = document.getElementById('formContainer');
+const formSuccess = document.getElementById('formSuccess');
+
+function openPopup(preselect) {
+  // Reset form
+  formContainer.style.display = '';
+  formSuccess.style.display = 'none';
+  document.getElementById('pfPhone').value = '';
+  document.getElementById('pfEmail').value = '';
+  document.getElementById('pfCompany').value = '';
+  document.querySelectorAll('input[name="interest"]').forEach(cb => cb.checked = false);
+
+  // Preselect checkbox if product specified
+  if (preselect) {
+    document.querySelectorAll('input[name="interest"]').forEach(cb => {
+      if (cb.value === preselect) cb.checked = true;
+    });
+  }
+
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePopup() {
+  overlay.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Trigger buttons
+document.querySelectorAll('.popup-trigger').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    openPopup(btn.dataset.product || '');
+  });
+});
+
+// Close
+document.getElementById('popupClose').addEventListener('click', closePopup);
+overlay.addEventListener('click', e => { if (e.target === overlay) closePopup(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
+
+// Submit
+document.getElementById('pfSubmit').addEventListener('click', () => {
+  const phone = document.getElementById('pfPhone').value.trim();
+  const email = document.getElementById('pfEmail').value.trim();
+  const company = document.getElementById('pfCompany').value.trim();
+  const interests = [];
+  document.querySelectorAll('input[name="interest"]:checked').forEach(cb => interests.push(cb.value));
+
+  if (!phone || !email) {
+    alert('Будь ласка, заповніть телефон та email');
+    return;
+  }
+
+  if (!/\S+@\S+\.\S+/.test(email)) {
+    alert('Будь ласка, введіть коректний email');
+    return;
+  }
+
+  const formData = { phone, email, company, interests, source: 'm4u-website', timestamp: new Date().toISOString() };
+
+  // === NETHUNT WEBHOOK ===
+  // Replace this URL with your NetHunt webhook endpoint:
+  // fetch('https://nethunt.com/webhooks/YOUR_WEBHOOK_ID', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify(formData)
+  // });
+
+  console.log('Form data:', formData);
+
+  formContainer.style.display = 'none';
+  formSuccess.style.display = '';
+  setTimeout(closePopup, 2500);
 });
 </script>
 </body>
