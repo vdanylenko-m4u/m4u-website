@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M4U — Технології та сервіси, що генерують прибуток в нерухомості</title>
+<meta name="description" content="M4U — PropTech-екосистема для девелоперів. Динамічне ціноутворення Maxify, CRM4U, аналітика P/ARC. 60+ проєктів, 8 країн, 3+ млрд євро.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Brand Palette — derived from M4U presentation */
+  --bg-primary: #141414;
+  --bg-secondary: #1C1C1C;
+  --bg-card: #1E1E1E;
+  --bg-elevated: #252525;
+  
+  /* Olive/Khaki — primary brand accent from presentation panels */
+  --olive: #9B9B6F;
+  --olive-light: #B8B88A;
+  --olive-muted: rgba(155, 155, 111, 0.15);
+  --olive-border: rgba(155, 155, 111, 0.25);
+  
+  /* Steel Blue — secondary accent from CRM4U panels */
+  --steel: #8EB4CC;
+  --steel-light: #A8CBE0;
+  --steel-muted: rgba(142, 180, 204, 0.12);
+  --steel-border: rgba(142, 180, 204, 0.2);
+  
+  /* Maxify Blue */
+  --maxify-blue: #2B5BFC;
+  --maxify-dark: #0A1028;
+  --maxify-glow: rgba(43, 91, 252, 0.12);
+  
+  /* Neutrals */
+  --white: #F5F5F3;
+  --text-primary: #F0F0EC;
+  --text-secondary: #A0A098;
+  --text-muted: #6B6B65;
+  --border: rgba(255,255,255,0.06);
+  --border-hover: rgba(255,255,255,0.12);
+  
+  /* Accent */
+  --green: #4CAF7D;
+  
+  /* Typography */
+  --font: 'DM Sans', -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  
+  /* Motion */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  
+  /* Logo */
+  --logo-url: url('data:image/png;base64,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');
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  line-height: 1.65;
+}
+
+/* === UTILITIES === */
+.container { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+@media (max-width: 768px) { .container { padding: 0 24px; } }
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--olive-light);
+  margin-bottom: 20px;
+}
+
+.tag::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: var(--olive);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.d1 { transition-delay: 0.08s; }
+.d2 { transition-delay: 0.16s; }
+.d3 { transition-delay: 0.24s; }
+.d4 { transition-delay: 0.32s; }
+.d5 { transition-delay: 0.4s; }
+
+/* === NAV === */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 18px 0;
+  transition: all 0.35s var(--ease);
+}
+
+nav.scrolled {
+  background: rgba(20, 20, 20, 0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-logo {
+  height: 28px;
+  width: auto;
+  display: block;
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+  align-items: center;
+}
+
+.nav-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.25s;
+}
+
+.nav-links a:hover { color: var(--text-primary); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  text-decoration: none;
+  transition: all 0.3s var(--ease);
+  cursor: pointer;
+  border: none;
+  font-family: var(--font);
+}
+
+.btn-olive {
+  background: var(--olive);
+  color: var(--bg-primary);
+}
+
+.btn-olive:hover {
+  background: var(--olive-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(155, 155, 111, 0.25);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-hover);
+}
+
+.btn-outline:hover {
+  border-color: var(--olive);
+  color: var(--olive-light);
+}
+
+.btn-maxify {
+  background: var(--maxify-blue);
+  color: #fff;
+}
+
+.btn-maxify:hover {
+  box-shadow: 0 6px 24px rgba(43, 91, 252, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-white {
+  background: var(--white);
+  color: var(--bg-primary);
+}
+
+.btn-white:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 960px) {
+  .nav-links { display: none; }
+}
+
+/* === HERO === */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 120px 0 80px;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 65% 35%, rgba(155, 155, 111, 0.06), transparent),
+    radial-gradient(ellipse 40% 40% at 15% 70%, rgba(142, 180, 204, 0.04), transparent);
+}
+
+.hero-grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 100px 100px;
+}
+
+.hero-layout {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.hero h1 {
+  font-size: clamp(2.6rem, 5vw, 4.2rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  margin-bottom: 24px;
+}
+
+.hero h1 em {
+  font-style: normal;
+  color: var(--olive-light);
+}
+
+.hero-sub {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  max-width: 520px;
+  margin-bottom: 40px;
+}
+
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+.hero-trust {
+  margin-top: 56px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-family: var(--mono);
+  letter-spacing: 0.05em;
+}
+
+.hero-metrics-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 44px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.hm-cell {
+  padding: 28px 20px;
+  text-align: center;
+  background: var(--bg-secondary);
+  transition: background 0.3s;
+}
+
+.hm-cell:first-child { border-radius: 12px 0 0 0; }
+.hm-cell:nth-child(2) { border-radius: 0 12px 0 0; }
+.hm-cell:nth-child(3) { border-radius: 0 0 0 12px; }
+.hm-cell:last-child { border-radius: 0 0 12px 0; }
+
+.hm-cell:hover { background: var(--olive-muted); }
+
+.hm-num {
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.hm-num span { color: var(--olive); }
+
+.hm-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+  line-height: 1.35;
+}
+
+.hero-slogan {
+  text-align: center;
+  padding: 20px;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  color: var(--olive);
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+@media (max-width: 960px) {
+  .hero-layout { grid-template-columns: 1fr; }
+  .hero-metrics-panel { max-width: 480px; }
+}
+
+/* === LOGO BAR === */
+.logo-bar {
+  padding: 48px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.logo-bar-label {
+  text-align: center;
+  font-size: 0.7rem;
+  font-family: var(--mono);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+}
+
+.logos-scroll {
+  display: flex;
+  gap: 48px;
+  animation: slide 45s linear infinite;
+  width: max-content;
+}
+
+.logos-scroll span {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.18);
+  white-space: nowrap;
+  transition: color 0.25s;
+}
+
+.logos-scroll span:hover { color: rgba(255,255,255,0.4); }
+
+@keyframes slide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* === SECTIONS === */
+section { padding: 120px 0; position: relative; }
+
+.section-head {
+  max-width: 600px;
+  margin-bottom: 64px;
+}
+
+.section-head h2 {
+  font-size: clamp(1.9rem, 3.2vw, 2.8rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  margin-bottom: 18px;
+}
+
+.section-head p {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* === ABOUT === */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: start;
+}
+
+.about-text p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: 18px;
+}
+
+.about-quote {
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  padding: 24px 0 24px 24px;
+  border-left: 3px solid var(--olive);
+  margin: 28px 0;
+  font-style: italic;
+  line-height: 1.7;
+}
+
+/* Stats panel — olive-tinted like presentation */
+.stats-panel {
+  background: var(--olive-muted);
+  border: 1px solid var(--olive-border);
+  border-radius: 20px;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+
+.sp-cell {
+  background: var(--bg-primary);
+  border-radius: 14px;
+  padding: 36px 24px;
+  text-align: center;
+  transition: background 0.3s;
+}
+
+.sp-cell:hover { background: var(--bg-secondary); }
+
+.sp-num {
+  font-size: 2.6rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.sp-num .a { color: var(--olive-light); }
+
+.sp-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .about-grid { grid-template-columns: 1fr; gap: 48px; }
+}
+
+/* === PRODUCTS === */
+.product-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  transition: all 0.35s var(--ease);
+  background: var(--bg-card);
+}
+
+.product-card:hover {
+  border-color: var(--olive-border);
+}
+
+.product-card.maxify-theme:hover {
+  border-color: rgba(43, 91, 252, 0.25);
+}
+
+.product-card.steel-theme:hover {
+  border-color: var(--steel-border);
+}
+
+.pc-content {
+  padding: 52px 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.pc-badge {
+  display: inline-flex;
+  padding: 5px 14px;
+  border-radius: 100px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  font-family: var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  width: fit-content;
+  margin-bottom: 18px;
+}
+
+.badge-olive {
+  background: var(--olive-muted);
+  color: var(--olive-light);
+  border: 1px solid var(--olive-border);
+}
+
+.badge-blue {
+  background: var(--maxify-glow);
+  color: var(--maxify-blue);
+  border: 1px solid rgba(43, 91, 252, 0.2);
+}
+
+.badge-steel {
+  background: var(--steel-muted);
+  color: var(--steel);
+  border: 1px solid var(--steel-border);
+}
+
+.pc-content h3 {
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+
+.pc-tagline {
+  font-size: 0.9rem;
+  color: var(--olive-light);
+  font-weight: 500;
+  margin-bottom: 18px;
+}
+
+.pc-tagline.blue { color: var(--maxify-blue); }
+.pc-tagline.steel { color: var(--steel); }
+
+.pc-desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.pc-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 28px;
+}
+
+.pc-features li {
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.65);
+  display: flex;
+  gap: 10px;
+  line-height: 1.5;
+}
+
+.pc-features li::before {
+  content: '→';
+  color: var(--olive);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.pc-features.blue li::before { color: var(--maxify-blue); }
+.pc-features.steel li::before { color: var(--steel); }
+
+.pc-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  min-height: 380px;
+  overflow: hidden;
+}
+
+.pc-visual.olive-bg {
+  background: linear-gradient(135deg, var(--olive-muted), rgba(155, 155, 111, 0.04));
+}
+
+.pc-visual.blue-bg {
+  background: linear-gradient(135deg, var(--maxify-glow), rgba(43, 91, 252, 0.03));
+}
+
+.pc-visual.steel-bg {
+  background: linear-gradient(135deg, var(--steel-muted), rgba(142, 180, 204, 0.03));
+}
+
+.exclusive {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: var(--olive);
+  color: var(--bg-primary);
+  padding: 5px 14px;
+  border-radius: 100px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  font-family: var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.pc-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  padding: 40px;
+}
+
+.pm {
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(8px);
+  padding: 18px 22px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  text-align: center;
+  min-width: 110px;
+}
+
+.pm-n { font-size: 1.5rem; font-weight: 800; color: var(--white); }
+.pm-l { font-size: 0.68rem; color: var(--text-muted); margin-top: 2px; }
+
+/* Ecosystem nodes */
+.eco-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  padding: 36px;
+}
+
+.eco-n {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.5);
+  transition: all 0.25s;
+}
+
+.eco-n:hover {
+  border-color: var(--steel);
+  color: var(--white);
+  background: var(--steel-muted);
+}
+
+.eco-n.core {
+  background: var(--steel);
+  color: var(--bg-primary);
+  border-color: var(--steel);
+  font-size: 0.9rem;
+  padding: 14px 24px;
+}
+
+/* Small product cards */
+.products-small {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.ps-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px 32px;
+  transition: all 0.3s var(--ease);
+}
+
+.ps-card:hover {
+  border-color: var(--olive-border);
+  transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+  .product-card { grid-template-columns: 1fr; }
+  .pc-visual { min-height: 260px; }
+  .products-small { grid-template-columns: 1fr; }
+}
+
+/* === MAXIFY SECTION === */
+.maxify {
+  background: linear-gradient(180deg, var(--bg-primary) 0%, var(--maxify-dark) 40%, var(--bg-primary) 100%);
+}
+
+.mx-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 56px;
+  align-items: center;
+  margin-bottom: 80px;
+}
+
+.mx-grid h2 .blue { color: var(--maxify-blue); }
+
+.mx-visual-box {
+  background: linear-gradient(135deg, rgba(43, 91, 252, 0.1), rgba(43, 91, 252, 0.02));
+  border: 1px solid rgba(43, 91, 252, 0.15);
+  border-radius: 20px;
+  padding: 48px 36px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.mx-visual-box::before {
+  content: '';
+  position: absolute;
+  top: -60%;
+  right: -60%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(43,91,252,0.05), transparent 55%);
+  animation: orbit 25s linear infinite;
+}
+
+@keyframes orbit {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.roi-big {
+  position: relative;
+  z-index: 1;
+  font-size: 5.5rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  background: linear-gradient(135deg, #4A75FF, var(--green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+.roi-sub {
+  position: relative;
+  z-index: 1;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-top: 8px;
+}
+
+.mx-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  background: rgba(43, 91, 252, 0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-top: 28px;
+  position: relative;
+  z-index: 1;
+}
+
+.mx-cell {
+  background: rgba(10, 16, 40, 0.85);
+  padding: 22px 16px;
+  text-align: center;
+}
+
+.mx-cn { font-size: 1.4rem; font-weight: 800; color: #fff; }
+.mx-cl { font-size: 0.68rem; color: var(--text-muted); margin-top: 3px; line-height: 1.3; }
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 64px;
+}
+
+.step {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  transition: all 0.3s var(--ease);
+}
+
+.step:hover {
+  border-color: rgba(43, 91, 252, 0.2);
+  background: var(--maxify-glow);
+  transform: translateY(-3px);
+}
+
+.step-n {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--maxify-blue);
+  margin-bottom: 14px;
+}
+
+.step-i { font-size: 2.2rem; margin-bottom: 12px; }
+
+.step h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.step p {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+@media (max-width: 960px) {
+  .mx-grid { grid-template-columns: 1fr; }
+  .mx-row { grid-template-columns: 1fr 1fr; }
+  .steps { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 480px) {
+  .steps { grid-template-columns: 1fr; }
+}
+
+/* === SERVICES === */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.svc {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px 28px;
+  transition: all 0.3s var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+
+.svc::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--olive), var(--olive-light));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.svc:hover::after { opacity: 1; }
+.svc:hover { border-color: var(--olive-border); transform: translateY(-3px); }
+
+.svc-num {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--olive);
+  letter-spacing: 0.12em;
+  margin-bottom: 16px;
+}
+
+.svc h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.svc p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.svc-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border: 1px solid var(--olive-border);
+  border-radius: 100px;
+  font-size: 0.68rem;
+  color: var(--olive-light);
+  font-family: var(--mono);
+}
+
+@media (max-width: 960px) { .services-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .services-grid { grid-template-columns: 1fr; } }
+
+/* === FOR WHOM === */
+.for-whom { background: var(--bg-secondary); }
+
+.aud-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-top: 56px;
+}
+
+.aud {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px 24px;
+  transition: all 0.3s var(--ease);
+}
+
+.aud:hover {
+  border-color: var(--olive-border);
+  transform: translateY(-3px);
+}
+
+.aud-role {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--olive);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.aud h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+  line-height: 1.3;
+}
+
+.aud ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.aud li {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  padding-left: 16px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.aud li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--olive);
+}
+
+@media (max-width: 960px) { .aud-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .aud-grid { grid-template-columns: 1fr; } }
+
+/* === CASES === */
+.cases-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 56px;
+}
+
+.case {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 48px 40px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s var(--ease);
+}
+
+.case:hover { border-color: var(--olive-border); }
+
+.case::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--olive), var(--green));
+}
+
+.case-proj {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--olive);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.case h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 14px; }
+.case p { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 24px; }
+
+.case-result { display: flex; align-items: baseline; gap: 12px; }
+
+.cr-num {
+  font-size: 2.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--green), var(--olive-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.03em;
+}
+
+.cr-label { font-size: 0.88rem; color: var(--text-muted); }
+
+@media (max-width: 768px) { .cases-grid { grid-template-columns: 1fr; } }
+
+/* === FOUNDER === */
+.founder { background: var(--bg-secondary); }
+
+.founder-grid {
+  display: grid;
+  grid-template-columns: 0.7fr 1fr;
+  gap: 72px;
+  align-items: center;
+}
+
+.founder-photo {
+  aspect-ratio: 3/4;
+  background: linear-gradient(135deg, var(--olive-muted), rgba(155,155,111,0.05));
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5rem;
+  border: 1px solid var(--olive-border);
+}
+
+.founder-info h2 {
+  font-size: clamp(1.7rem, 2.8vw, 2.4rem);
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.founder-role {
+  font-size: 0.95rem;
+  color: var(--olive-light);
+  margin-bottom: 24px;
+}
+
+.founder-bio {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: 28px;
+}
+
+.creds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cred {
+  background: var(--olive-muted);
+  border: 1px solid var(--olive-border);
+  padding: 8px 18px;
+  border-radius: 100px;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.75);
+}
+
+@media (max-width: 768px) {
+  .founder-grid { grid-template-columns: 1fr; gap: 40px; }
+  .founder-photo { max-width: 260px; }
+}
+
+/* === EDUCATION === */
+.edu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 56px;
+}
+
+.edu {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 44px 36px;
+  transition: all 0.3s var(--ease);
+}
+
+.edu:hover { border-color: var(--olive-border); transform: translateY(-3px); }
+
+.edu-format {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--olive);
+  letter-spacing: 0.08em;
+  margin-bottom: 14px;
+}
+
+.edu h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 14px; line-height: 1.3; }
+.edu p { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px; }
+
+.edu-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.edu-t {
+  background: rgba(255,255,255,0.04);
+  padding: 5px 14px;
+  border-radius: 100px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 768px) { .edu-grid { grid-template-columns: 1fr; } }
+
+/* === CTA === */
+.cta-section { padding: 120px 0; }
+
+.cta-box {
+  background: linear-gradient(135deg, var(--olive) 0%, #7A7A56 100%);
+  border-radius: 24px;
+  padding: 80px 56px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 40%, rgba(255,255,255,0.08), transparent 50%),
+    radial-gradient(ellipse at 80% 60%, rgba(0,0,0,0.15), transparent 50%);
+}
+
+.cta-box * { position: relative; z-index: 1; }
+
+.cta-box h2 {
+  font-size: clamp(1.9rem, 3.2vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+  color: var(--bg-primary);
+}
+
+.cta-box p {
+  font-size: 1.05rem;
+  color: rgba(20,20,20,0.7);
+  max-width: 500px;
+  margin: 0 auto 36px;
+  line-height: 1.7;
+}
+
+/* === FOOTER === */
+footer {
+  padding: 72px 0 36px;
+  border-top: 1px solid var(--border);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 56px;
+  margin-bottom: 56px;
+}
+
+.footer-logo { height: 24px; margin-bottom: 16px; }
+
+.footer-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 280px;
+  margin-bottom: 16px;
+}
+
+.footer-slogan {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--olive);
+  letter-spacing: 0.1em;
+}
+
+.f-col h4 {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+}
+
+.f-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.f-col a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.88rem; transition: color 0.25s; }
+.f-col a:hover { color: var(--text-primary); }
+
+.footer-bottom {
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 36px; }
+  .footer-bottom { flex-direction: column; gap: 10px; }
+}
+
+@media (max-width: 480px) { .footer-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="container nav-inner">
+    <img src="" alt="M4U" class="nav-logo" id="nav-logo-img">
+    <ul class="nav-links">
+      <li><a href="#about">Про нас</a></li>
+      <li><a href="#products">Продукти</a></li>
+      <li><a href="#maxify">Maxify</a></li>
+      <li><a href="#services">Сервіси</a></li>
+      <li><a href="#education">Освіта</a></li>
+      <li><a href="#contact" class="btn btn-olive" style="padding:9px 22px;">Замовити аудит</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="container">
+    <div class="hero-layout">
+      <div>
+        <div class="tag reveal">PropTech Ecosystem</div>
+        <h1 class="reveal d1">Технології, що генерують <em>прибуток</em> в нерухомості</h1>
+        <p class="hero-sub reveal d2">Єдина в Україні екосистема інтелектуальних рішень для девелоперів. SaaS-продукти, консалтинг та освіта для максимізації вашого доходу.</p>
+        <div class="hero-actions reveal d3">
+          <a href="#contact" class="btn btn-olive">Замовити аудит процесів →</a>
+          <a href="#products" class="btn btn-outline">Дослідити продукти</a>
+        </div>
+        <div class="hero-trust reveal d4">Income. We Trust.</div>
+      </div>
+      <div class="hero-metrics-panel reveal d2">
+        <div class="hm-cell">
+          <div class="hm-num">3<span>+</span></div>
+          <div class="hm-label">млрд євро<br>вартість проєктів</div>
+        </div>
+        <div class="hm-cell">
+          <div class="hm-num">60<span>+</span></div>
+          <div class="hm-label">реалізованих<br>проєктів</div>
+        </div>
+        <div class="hm-cell">
+          <div class="hm-num">8</div>
+          <div class="hm-label">країн<br>присутності</div>
+        </div>
+        <div class="hm-cell">
+          <div class="hm-num">20<span>+</span></div>
+          <div class="hm-label">років досвіду<br>засновника</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGO BAR -->
+<div class="logo-bar">
+  <div class="logo-bar-label">Нам довіряють провідні девелопери</div>
+  <div class="logos-scroll">
+    <span>SAGA</span><span>Інтергал-Буд</span><span>DIM Group</span><span>Perfect Group</span><span>Seven Hills</span><span>Місто Комфорту</span><span>Object 1</span><span>Segrex</span><span>WK Development</span><span>LEV Development</span><span>Royal House</span><span>MURAPOL</span><span>CORDIA</span><span>ASBUD</span><span>United Industries</span><span>ONE Development</span><span>YIT</span><span>SKANSKA</span><span>European Village</span><span>UDP</span><span>Gumbati</span>
+    <span>SAGA</span><span>Інтергал-Буд</span><span>DIM Group</span><span>Perfect Group</span><span>Seven Hills</span><span>Місто Комфорту</span><span>Object 1</span><span>Segrex</span><span>WK Development</span><span>LEV Development</span><span>Royal House</span><span>MURAPOL</span><span>CORDIA</span><span>ASBUD</span><span>United Industries</span><span>ONE Development</span><span>YIT</span><span>SKANSKA</span><span>European Village</span><span>UDP</span><span>Gumbati</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div>
+        <div class="tag reveal">Про компанію</div>
+        <h2 style="font-size:clamp(1.9rem,3.2vw,2.8rem);font-weight:800;line-height:1.12;letter-spacing:-0.025em;margin-bottom:24px;" class="reveal d1">Від консалтингу до PropTech-екосистеми за 7 років</h2>
+        <div class="about-text">
+          <p class="reveal d2">M4U виросла з консалтингової компанії до провайдера унікальних SaaS-продуктів для управління ціноутворенням і комерційними процесами у сфері нерухомості.</p>
+          <p class="reveal d3">Ми єдині в Україні надаємо послуги із системної трансформації девелоперського бізнесу, поєднуючи передові технології, аналітику та глибоке розуміння потреб ринку.</p>
+        </div>
+        <div class="about-quote reveal d4">Технології роблять гроші. Це не гасло — це наш щоденний доказ на проєктах вартістю 3+ млрд євро.</div>
+      </div>
+      <div class="stats-panel reveal d2">
+        <div class="sp-cell">
+          <div class="sp-num">20<span class="a">+</span></div>
+          <div class="sp-label">років досвіду<br>засновника в RE</div>
+        </div>
+        <div class="sp-cell">
+          <div class="sp-num">60<span class="a">+</span></div>
+          <div class="sp-label">реалізованих<br>проєктів</div>
+        </div>
+        <div class="sp-cell">
+          <div class="sp-num">8</div>
+          <div class="sp-label">країн<br>присутності</div>
+        </div>
+        <div class="sp-cell">
+          <div class="sp-num">75<span class="a">+</span></div>
+          <div class="sp-label">млрд грн<br>вартість проєктів</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="container">
+    <div class="section-head">
+      <div class="tag reveal">Продукти та технології</div>
+      <h2 class="reveal d1">Повний цикл: досліджуємо → навчаємо → впроваджуємо</h2>
+      <p class="reveal d2">П'ять технологічних продуктів. Кожен вирішує конкретну задачу. Разом — екосистема, яка максимізує прибуток.</p>
+    </div>
+
+    <!-- CRM4U -->
+    <div class="product-card steel-theme reveal">
+      <div class="pc-content">
+        <div class="pc-badge badge-steel">CRM Framework</div>
+        <h3>CRM4U</h3>
+        <div class="pc-tagline steel">Продажі, які приносять задоволення клієнту і прибуток компанії</div>
+        <p class="pc-desc">Спеціалізований CRM-фреймворк для девелоперів. Не розробка з нуля — а перевірене галузеве рішення з реальними бізнес-результатами.</p>
+        <ul class="pc-features steel">
+          <li>Клієнтоцентрична методологія продажів</li>
+          <li>Комплексна автоматизація від ліда до договору</li>
+          <li>Інтеграція з Maxify, AI-агентами та візуалізацією</li>
+          <li>Платформи: Creatio, NetHunt</li>
+        </ul>
+        <a href="#contact" class="btn btn-outline">Замовити впровадження →</a>
+      </div>
+      <div class="pc-visual steel-bg">
+        <div class="eco-grid">
+          <div class="eco-n">E-Doc</div>
+          <div class="eco-n">Telephony</div>
+          <div class="eco-n">E-mail</div>
+          <div class="eco-n">Messengers</div>
+          <div class="eco-n core">CRM</div>
+          <div class="eco-n">AI-agents</div>
+          <div class="eco-n">AI-services</div>
+          <div class="eco-n">Tasker</div>
+          <div class="eco-n">Digital Catalog</div>
+          <div class="eco-n">Maxify</div>
+          <div class="eco-n">Analytics</div>
+          <div class="eco-n">HR</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- P/ARC -->
+    <div class="product-card reveal">
+      <div class="pc-content">
+        <div class="pc-badge badge-olive">Market Intelligence</div>
+        <h3>P/ARC</h3>
+        <div class="pc-tagline">Аналітична decision-making система для девелоперів</div>
+        <p class="pc-desc">Автоматично збирає дані з 60+ відкритих джерел, оцінює споживчу цінність проєкту за 20+ параметрами та розраховує обґрунтовану ринкову ціну.</p>
+        <ul class="pc-features">
+          <li>Оцінка цінності локації та конкурентне середовище</li>
+          <li>Розрахунок обґрунтованої стартової ціни</li>
+          <li>Порівняння «ціна — цінність» з конкурентами</li>
+          <li>Аналіз слабких місць проєкту</li>
+        </ul>
+        <a href="https://parc.com.ua" class="btn btn-outline" target="_blank">parc.com.ua →</a>
+      </div>
+      <div class="pc-visual olive-bg">
+        <span class="exclusive">Exclusively at M4U</span>
+        <div class="pc-metrics">
+          <div class="pm"><div class="pm-n">250+</div><div class="pm-l">забудовників</div></div>
+          <div class="pm"><div class="pm-n">800+</div><div class="pm-l">проєктів</div></div>
+          <div class="pm"><div class="pm-n">220K</div><div class="pm-l">квартир</div></div>
+          <div class="pm"><div class="pm-n">60+</div><div class="pm-l">джерел даних</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data4U & AI-Lab -->
+    <div class="products-small">
+      <div class="ps-card reveal">
+        <div class="pc-badge badge-olive" style="margin-bottom:16px;">Analytics</div>
+        <h3 style="font-size:1.5rem;font-weight:800;margin-bottom:12px;">Data4U</h3>
+        <p class="pc-desc">Автоматизовані дашборди для CEO, CFO та комерційного директора. Продажі, маркетинг, фінанси — в режимі реального часу.</p>
+        <ul class="pc-features">
+          <li>План-факт та фінансові прогнози</li>
+          <li>Конверсії, швидкість угод, ROI кампаній</li>
+          <li>Аналітика ефективності менеджерів</li>
+        </ul>
+      </div>
+      <div class="ps-card reveal d1">
+        <div class="pc-badge badge-blue" style="margin-bottom:16px;">AI Solutions</div>
+        <h3 style="font-size:1.5rem;font-weight:800;margin-bottom:12px;">AI-Lab</h3>
+        <p class="pc-desc">Штучний інтелект, інтегрований у ваші продажі. Від чат-ботів до прогнозування — AI працює 24/7.</p>
+        <ul class="pc-features blue">
+          <li>Чат-агенти та голосові боти з CRM-інтеграцією</li>
+          <li>Аналітика дзвінків та профілювання</li>
+          <li>Прогнозування продажів</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAXIFY -->
+<section class="maxify" id="maxify">
+  <div class="container">
+    <div class="mx-grid">
+      <div>
+        <div class="tag reveal" style="color:var(--maxify-blue);">Флагманський продукт</div>
+        <div class="section-head" style="margin-bottom:32px;">
+          <h2 class="reveal d1">Maxify — перша в Європі система <span class="blue">динамічного ціноутворення</span> для девелоперів</h2>
+        </div>
+        <p style="font-size:1rem;color:var(--text-secondary);line-height:1.8;margin-bottom:16px;" class="reveal d2">Хмарне SaaS-рішення, яке аналізує «вектор цінності» кожної квартири — під'їзд, поверх, вікновид, кількість кімнат, тип планування, тераси — та оптимізує ціну індивідуально.</p>
+        <p style="font-size:1rem;color:var(--text-secondary);line-height:1.8;margin-bottom:32px;" class="reveal d3">За 8 років розробки Maxify пройшов шлях від ідеї до системи, яка переоцінює активи вартістю €1+ млрд у 6 країнах.</p>
+        <a href="https://maxify.ai" class="btn btn-maxify reveal d4" target="_blank">maxify.ai →</a>
+      </div>
+      <div class="reveal d2">
+        <div class="mx-visual-box">
+          <div class="roi-big">+800%</div>
+          <div class="roi-sub">ROI від впровадження</div>
+          <div class="mx-row">
+            <div class="mx-cell"><div class="mx-cn">+40%</div><div class="mx-cl">приріст ціни популярних квартир</div></div>
+            <div class="mx-cell"><div class="mx-cn">+16-30%</div><div class="mx-cl">приріст прибутку</div></div>
+            <div class="mx-cell"><div class="mx-cn">-20%</div><div class="mx-cl">тривалість угод</div></div>
+            <div class="mx-cell"><div class="mx-cn">-25-30%</div><div class="mx-cl">зменшення знижок</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-size:1.6rem;font-weight:800;text-align:center;margin-bottom:48px;" class="reveal">Як Maxify змінює ціноутворення</h3>
+    <div class="steps">
+      <div class="step reveal"><div class="step-n">01</div><div class="step-i"><svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="6" y="16" width="8" height="14" rx="2" stroke="var(--maxify-blue)" stroke-width="1.5"/><rect x="14" y="10" width="8" height="20" rx="2" stroke="var(--maxify-blue)" stroke-width="1.5"/><rect x="22" y="6" width="8" height="24" rx="2" stroke="var(--maxify-blue)" stroke-width="1.5" fill="rgba(43,91,252,0.12)"/></svg></div><h4>Стартові ціни</h4><p>Швидко розраховує стартові ціни на основі характеристик будинку та проводить цінову диференціацію</p></div>
+      <div class="step reveal d1"><div class="step-n">02</div><div class="step-i"><svg width="36" height="36" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="12" stroke="var(--maxify-blue)" stroke-width="1.5"/><path d="M18 10v8l5.5 3" stroke="var(--maxify-blue)" stroke-width="1.5" stroke-linecap="round"/><circle cx="18" cy="18" r="2" fill="rgba(43,91,252,0.4)"/></svg></div><h4>Аналіз попиту</h4><p>Показує популярні та непопулярні характеристики квартир для зручного керування розпроданістю</p></div>
+      <div class="step reveal d2"><div class="step-n">03</div><div class="step-i"><svg width="36" height="36" viewBox="0 0 36 36" fill="none"><path d="M8 24l6-8 5 4 9-12" stroke="var(--maxify-blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="28" cy="8" r="3" stroke="var(--maxify-blue)" stroke-width="1.5" fill="rgba(43,91,252,0.12)"/><path d="M6 30h24" stroke="rgba(43,91,252,0.3)" stroke-width="1"/></svg></div><h4>Миттєва переоцінка</h4><p>Переоцінка за секунди з урахуванням попередніх продажів та цільових показників доходу</p></div>
+      <div class="step reveal d3"><div class="step-n">04</div><div class="step-i"><svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="4" y="12" width="10" height="12" rx="2" stroke="var(--maxify-blue)" stroke-width="1.5"/><rect x="22" y="12" width="10" height="12" rx="2" stroke="var(--maxify-blue)" stroke-width="1.5"/><path d="M14 16h8M14 20h8" stroke="var(--maxify-blue)" stroke-width="1.5" stroke-linecap="round"/><circle cx="16" cy="18" r="1.5" fill="rgba(43,91,252,0.4)"/><circle cx="20" cy="18" r="1.5" fill="rgba(43,91,252,0.4)"/></svg></div><h4>Інтеграція</h4><p>Через API отримує оновлення по продажам та відправляє нові ціни у вашу шахматку чи ERP</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="section-head">
+      <div class="tag reveal">4U Services</div>
+      <h2 class="reveal d1">Скільки грошей ви недоотримуєте через хаотичні процеси?</h2>
+      <p class="reveal d2">Шість напрямків сервісів. Від побудови системи продажів до автоматизації ціноутворення.</p>
+    </div>
+    <div class="services-grid">
+      <div class="svc reveal"><div class="svc-num">SERVICE 01</div><h3>Розробка системи продажів</h3><p>Структурована система, яка збільшує конверсії та максимізує дохід. Навчання команди, оптимізація процесів.</p><span class="svc-tag">#SalesOptimization</span></div>
+      <div class="svc reveal d1"><div class="svc-num">SERVICE 02</div><h3>Цифровізація продажів та інтеграція CRM</h3><p>Автоматизація процесів, AI-асистенти, інтерактивна візуалізація. Повна цифрова трансформація.</p><span class="svc-tag">#CRMIntegration</span></div>
+      <div class="svc reveal d2"><div class="svc-num">SERVICE 03</div><h3>Управління доходами та комерційна стратегія</h3><p>Комплексний план доходів, цінова стратегія, динамічне управління цінами.</p><span class="svc-tag">#ProfitOptimization</span></div>
+      <div class="svc reveal"><div class="svc-num">SERVICE 04 · EXCLUSIVELY AT M4U</div><h3>Управління ціноутворенням та автоматизація</h3><p>Інтеграція Maxify.AI, індивідуальні системи управління ціноутворенням, постійна підтримка.</p><span class="svc-tag">#DynamicPricing</span></div>
+      <div class="svc reveal d1"><div class="svc-num">SERVICE 05</div><h3>Data4U: Автоматизована звітність</h3><p>Плани доходів, план-факт, рентабельність маркетингу, дашборди для моніторингу в реальному часі.</p><span class="svc-tag">#DataDriven</span></div>
+      <div class="svc reveal d2"><div class="svc-num">SERVICE 06 · EXCLUSIVELY AT M4U</div><h3>Market Intelligence: P/ARC</h3><p>Оцінка цінності локації, конкурентне середовище, обґрунтована стартова ціна на базі 60+ джерел.</p><span class="svc-tag">#MarketIntelligence</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOR WHOM -->
+<section class="for-whom" id="for-whom">
+  <div class="container">
+    <div class="section-head">
+      <div class="tag reveal">Для кого</div>
+      <h2 class="reveal d1">Ваша роль визначає ваш біль. Ми знаємо кожен.</h2>
+      <p class="reveal d2">M4U працює з різними рівнями прийняття рішень у девелоперській компанії.</p>
+    </div>
+    <div class="aud-grid">
+      <div class="aud reveal"><div class="aud-role">CEO / Власник</div><h3>Максимізуємо ваш дохід. Точка.</h3><ul><li>Комерційний блок стає керованим</li><li>Бізнес переходить із хаосу в систему</li><li>Прозорі метрики замість інтуїції</li></ul></div>
+      <div class="aud reveal d1"><div class="aud-role">Комерційний директор</div><h3>Стратегія замість тактики</h3><ul><li>Цифрові процеси замість ручного контролю</li><li>Є цифри — не потрібно «вмовляти» власника</li><li>Прогнозована прибутковість проєкту</li></ul></div>
+      <div class="aud reveal d2"><div class="aud-role">Маркетинг-директор</div><h3>Оптимізація кожної гривні</h3><ul><li>Зменшення вартості ліда через ціновий асортимент</li><li>Управління асортиментом для попиту</li><li>Ефективний маркетинговий бюджет</li></ul></div>
+      <div class="aud reveal d3"><div class="aud-role">Керівник ВП</div><h3>Ми — ваш підсилювач</h3><ul><li>Ліди не губляться в процесах</li><li>Продажі стабільні та прогнозовані</li><li>CRM працює на вас, а не ви на неї</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- CASES -->
+<section id="cases">
+  <div class="container">
+    <div class="section-head">
+      <div class="tag reveal">Результати</div>
+      <h2 class="reveal d1">Цифри, які неможливо проігнорувати</h2>
+      <p class="reveal d2">Кожен кейс — реальний проєкт із вимірюваним результатом.</p>
+    </div>
+    <div class="cases-grid">
+      <div class="case reveal"><div class="case-proj">Кейс: ONE Batumi</div><h3>Динамічне ціноутворення у преміальному сегменті</h3><p>Впровадження Maxify для преміального ЖК у Батумі дозволило максимізувати цінність кожної квартири через індивідуальну переоцінку.</p><div class="case-result"><span class="cr-num">+40%</span><span class="cr-label">приріст ціни популярних квартир</span></div></div>
+      <div class="case reveal d1"><div class="case-proj">Кейс: Stay&Rent</div><h3>Системне управління доходами проєкту</h3><p>Комплексний підхід до управління ціноутворенням та плану доходів для інвестиційного проєкту.</p><div class="case-result"><span class="cr-num">112%</span><span class="cr-label">виконання плану ціни продажу</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDER -->
+<section class="founder" id="founder">
+  <div class="container">
+    <div class="founder-grid">
+      <div class="founder-photo reveal">👤</div>
+      <div>
+        <div class="tag reveal">Засновник</div>
+        <h2 class="reveal d1" style="font-size:clamp(1.7rem,2.8vw,2.4rem);font-weight:800;margin-bottom:6px;">Володимир Даниленко</h2>
+        <div class="founder-role reveal d2">CEO M4U · Co-founder Maxify</div>
+        <p class="founder-bio reveal d3">20 років у сфері нерухомості, з них 10 — у комерційному управлінні. Першим в Україні впровадив систему автоматизованого інтелектуального управління цінами. 30+ реалізованих проєктів загальною вартістю ₴54 млрд. Працює з девелоперами в Україні, Європі та Сакартвело.</p>
+        <div class="creds reveal d4">
+          <span class="cred">30+ проєктів</span>
+          <span class="cred">₴54 млрд загальна вартість</span>
+          <span class="cred">Co-founder Maxify</span>
+          <span class="cred">Викладач бізнес-школи</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="container">
+    <div class="section-head">
+      <div class="tag reveal">Освіта</div>
+      <h2 class="reveal d1">Навчіть команду заробляти більше</h2>
+      <p class="reveal d2">Спільно з Київською Школою Девелопменту. Знання, перевірені практикою на проєктах вартістю 3+ млрд євро.</p>
+    </div>
+    <div class="edu-grid">
+      <div class="edu reveal"><div class="edu-format">ОНЛАЙН-КУРС · ВОЛОДИМИР ДАНИЛЕНКО</div><h3>Прайс-менеджмент в нерухомості</h3><p>Від формування стартових цін до динамічного управління та автоматизації. Зменшення неліквідних квартир та максимізація прибутку.</p><div class="edu-tags"><span class="edu-t">CEO</span><span class="edu-t">Комерційний директор</span><span class="edu-t">Директор з продажів</span><span class="edu-t">Аналітик</span></div></div>
+      <div class="edu reveal d1"><div class="edu-format">ОНЛАЙН-КУРС · 7 МОДУЛІВ · 14 ГОДИН</div><h3>Управління комерціалізацією в девелопменті</h3><p>Як перетворити хаотичні продажі в систему з прогнозованим прибутком. Дохідна модель, керування прайсом, аналіз ефективності.</p><div class="edu-tags"><span class="edu-t">Дохідна модель</span><span class="edu-t">KPI</span><span class="edu-t">Аналітика</span><span class="edu-t">Бюджетування</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="container">
+    <div class="cta-box reveal">
+      <h2>Скільки прибутку ви втрачаєте щомісяця?</h2>
+      <p>Замовте безкоштовний аудит ваших комерційних процесів. Ми покажемо конкретні точки зростання.</p>
+      <a href="mailto:v.danylenko@maxify.ai" class="btn btn-white">Замовити аудит процесів →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <img src="" alt="M4U" class="footer-logo" id="footer-logo-img">
+        <p class="footer-desc">PropTech-екосистема, яка максимізує прибуток девелоперів через синергію інтелектуальних технологій.</p>
+        <div class="footer-slogan">Income. We Trust.</div>
+      </div>
+      <div class="f-col"><h4>Продукти</h4><ul><li><a href="https://maxify.ai" target="_blank">Maxify.AI</a></li><li><a href="#products">CRM4U</a></li><li><a href="https://parc.com.ua" target="_blank">P/ARC</a></li><li><a href="#products">Data4U</a></li><li><a href="#products">AI-Lab</a></li></ul></div>
+      <div class="f-col"><h4>Сервіси</h4><ul><li><a href="#services">Система продажів</a></li><li><a href="#services">CRM-інтеграція</a></li><li><a href="#services">Управління доходами</a></li><li><a href="#services">Ціноутворення</a></li><li><a href="#services">Market Intelligence</a></li></ul></div>
+      <div class="f-col"><h4>Контакти</h4><ul><li><a href="mailto:v.danylenko@maxify.ai">v.danylenko@maxify.ai</a></li><li><a href="tel:+380989048810">+380 98 904 88 10</a></li><li><a href="#education">Освітні програми</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 M4U. Технології та сервіси для нерухомості.</span>
+      <span>Kyiv · Vienna · Warsaw · Tbilisi · Dubai</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Set logo images from CSS variable
+const logoDataUrl = getComputedStyle(document.documentElement).getPropertyValue('--logo-url').trim();
+const match = logoDataUrl.match(/url\(['"]?(.*?)['"]?\)/);
+if (match) {
+  document.getElementById('nav-logo-img').src = match[1];
+  document.getElementById('footer-logo-img').src = match[1];
+}
+
+// Scroll reveal
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Nav scroll
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40));
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>
