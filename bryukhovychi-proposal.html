@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Комерційна пропозиція — M4U & Maxify</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --primary: #1a1a2e;
+    --accent: #e94560;
+    --accent-light: #ff6b81;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #2d2d3a;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --gradient-1: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    --gradient-accent: linear-gradient(135deg, #e94560 0%, #ff6b81 100%);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .hero {
+    background: var(--gradient-1);
+    color: white;
+    padding: 60px 40px 50px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 500px;
+    height: 500px;
+    background: rgba(233, 69, 96, 0.08);
+    border-radius: 50%;
+  }
+
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  .brand-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  .hero h1 {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 span {
+    color: var(--accent-light);
+  }
+
+  .hero-sub {
+    font-size: 18px;
+    opacity: 0.75;
+    font-weight: 300;
+    max-width: 600px;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  .section {
+    margin-bottom: 48px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: var(--primary);
+  }
+
+  .intro-text {
+    font-size: 16px;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 32px;
+  }
+
+  /* Tier Cards */
+  .tiers {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .tier-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    position: relative;
+    transition: box-shadow 0.3s;
+  }
+
+  .tier-card:hover {
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  }
+
+  .tier-card.featured {
+    border-color: var(--accent);
+    box-shadow: 0 4px 20px rgba(233, 69, 96, 0.1);
+  }
+
+  .tier-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+
+  .tier-badge.t1 {
+    background: #f0fdf4;
+    color: #16a34a;
+  }
+
+  .tier-badge.t2 {
+    background: #fef2f2;
+    color: var(--accent);
+  }
+
+  .tier-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .tier-desc {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 20px;
+    line-height: 1.7;
+  }
+
+  .tier-meta {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .meta-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+
+  .meta-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  .meta-value.price {
+    color: var(--accent);
+  }
+
+  .deliverables {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .deliverables h4 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .del-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .del-tag {
+    background: #f3f4f6;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  /* Services Grid */
+  .services-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 600px) {
+    .services-grid { grid-template-columns: 1fr; }
+  }
+
+  .service-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+  }
+
+  .service-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-bottom: 14px;
+  }
+
+  .service-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .service-card p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* Pricing Table */
+  .pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+  }
+
+  .pricing-table th {
+    text-align: left;
+    padding: 14px 16px;
+    background: var(--primary);
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .pricing-table th:first-child { border-radius: 10px 0 0 0; }
+  .pricing-table th:last-child { border-radius: 0 10px 0 0; }
+
+  .pricing-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+
+  .pricing-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .pricing-table tbody tr:hover {
+    background: #f9fafb;
+  }
+
+  .highlight-row td {
+    background: #fef2f2;
+    font-weight: 600;
+  }
+
+  /* Maxify Section */
+  .maxify-box {
+    background: var(--gradient-1);
+    color: white;
+    border-radius: 16px;
+    padding: 36px;
+    margin-top: 24px;
+  }
+
+  .maxify-box h3 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .maxify-box .sub {
+    opacity: 0.7;
+    margin-bottom: 24px;
+    font-size: 15px;
+  }
+
+  .maxify-options {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .maxify-opt {
+    flex: 1;
+    min-width: 200px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .maxify-opt .opt-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    opacity: 0.6;
+    margin-bottom: 8px;
+  }
+
+  .maxify-opt .opt-rate {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+
+  .maxify-opt .opt-rate span {
+    font-size: 16px;
+    font-weight: 400;
+    opacity: 0.7;
+  }
+
+  .maxify-opt .opt-desc {
+    font-size: 13px;
+    opacity: 0.65;
+    line-height: 1.5;
+  }
+
+  .or-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0.5;
+    padding: 0 8px;
+  }
+
+  /* CTA */
+  .cta-section {
+    text-align: center;
+    padding: 48px 20px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+
+  .cta-section h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .cta-section p {
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  .cta-contacts {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .placeholder-note {
+    background: #fffbeb;
+    border: 1px dashed #f59e0b;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: #92400e;
+    margin-top: 12px;
+  }
+
+  /* Password Screen */
+  .pw-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--primary);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.4s, visibility 0.4s;
+  }
+
+  .pw-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .pw-box {
+    text-align: center;
+    color: white;
+    max-width: 360px;
+    padding: 20px;
+  }
+
+  .pw-box .brand-dot { margin: 0 auto 20px; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; }
+
+  .pw-box h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+
+  .pw-box p { font-size: 14px; opacity: 0.5; margin-bottom: 28px; }
+
+  .pw-input-wrap {
+    display: flex;
+    gap: 8px;
+  }
+
+  .pw-input-wrap input {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.06);
+    color: white;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .pw-input-wrap input:focus { border-color: var(--accent); }
+
+  .pw-input-wrap input::placeholder { color: rgba(255,255,255,0.3); }
+
+  .pw-input-wrap button {
+    padding: 12px 24px;
+    border-radius: 10px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+  }
+
+  .pw-input-wrap button:hover { background: var(--accent-light); }
+
+  .pw-error {
+    color: var(--accent-light);
+    font-size: 13px;
+    margin-top: 12px;
+    min-height: 20px;
+  }
+
+  /* Save PDF Button */
+  .save-pdf-section {
+    text-align: center;
+    padding: 32px 20px 48px;
+  }
+
+  .save-pdf-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 32px;
+    border-radius: 12px;
+    border: none;
+    background: var(--gradient-1);
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .save-pdf-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(26, 26, 46, 0.3);
+  }
+
+  /* Print styles */
+  @media print {
+    .save-pdf-section, .pw-overlay { display: none !important; }
+    .hero { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .maxify-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .pricing-table th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: white; }
+    .section { break-inside: avoid; }
+    .tier-card { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Password Screen -->
+<div class="pw-overlay" id="pwOverlay">
+  <div class="pw-box">
+    <div class="brand-dot"></div>
+    <h2>M4U & Maxify</h2>
+    <p>Для перегляду пропозиції введіть пароль</p>
+    <div class="pw-input-wrap">
+      <input type="password" id="pwInput" placeholder="Пароль" autofocus>
+      <button onclick="checkPw()">→</button>
+    </div>
+    <div class="pw-error" id="pwError"></div>
+  </div>
+</div>
+
+<script>
+  var PASSWORD = 'br2026';
+  function checkPw() {
+    var input = document.getElementById('pwInput');
+    var error = document.getElementById('pwError');
+    if (input.value === PASSWORD) {
+      document.getElementById('pwOverlay').classList.add('hidden');
+    } else {
+      error.textContent = 'Невірний пароль';
+      input.value = '';
+      input.focus();
+    }
+  }
+  document.getElementById('pwInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkPw();
+  });
+</script>
+
+<div class="hero">
+  <div class="hero-content">
+    <div class="brand">
+      <div class="brand-dot"></div>
+      M4U & MAXIFY
+    </div>
+    <h1>Комерційна пропозиція<br><span>щодо співпраці</span></h1>
+    <p class="hero-sub">Дослідження ринку, управління ціноутворенням та побудова ефективної системи продажів для житлового проєкту у Брюховичах</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- INTRO -->
+  <div class="section">
+    <div class="section-label">Про нас</div>
+    <div class="section-title">Що ми пропонуємо</div>
+    <p class="intro-text">
+      M4U — консалтингова компанія у сфері revenue management для житлової нерухомості. Ми допомагаємо девелоперам приймати цінові рішення на основі даних, вибудовувати процеси продажів та впроваджувати технології управління доходами. Наш SaaS-продукт Maxify забезпечує динамічне ціноутворення в реальному часі.
+    </p>
+    <p class="intro-text">
+      Нижче — структура послуг, які ми можемо надати для вашого нового проєкту. Співпраця побудована поетапно: від дослідження до повноцінного супроводу продажів.
+    </p>
+  </div>
+
+  <!-- RESEARCH TIERS -->
+  <div class="section">
+    <div class="section-label">Етап 1</div>
+    <div class="section-title">Цінова стратегія: дослідження та розрахунок</div>
+
+    <p class="intro-text">
+      Розробка цінової стратегії на основі матриці стратегічних цінових рішень. Експрес-варіант охоплює два з трьох елементів матриці; розширений — додає третій, що дає повну картину для прийняття рішення.
+    </p>
+
+    <div class="tiers">
+
+      <!-- TIER 1 -->
+      <div class="tier-card">
+        <span class="tier-badge t1">Варіант 1</span>
+        <div class="tier-name">Експрес-дослідження</div>
+        <div class="tier-desc">
+          Визначення стартової середньої ціни та цінового діапазону на основі двох елементів матриці: конкурентно-орієнтованих цін (P/ARC аналіз Львівського регіону) та підходу «собівартість+». Співвідношення цих двох показників дає обґрунтований ціновий коридор для запуску продажів.
+        </div>
+        <div class="tier-meta">
+          <div class="meta-item">
+            <span class="meta-label">Вартість</span>
+            <span class="meta-value price">€ 1 500</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Термін</span>
+            <span class="meta-value">1 тиждень</span>
+          </div>
+        </div>
+        <div class="deliverables">
+          <h4>Елементи матриці</h4>
+          <div class="del-list">
+            <span class="del-tag">P/ARC — конкурентно-орієнтовані ціни</span>
+            <span class="del-tag">Собівартість+ — floor price забудовника</span>
+          </div>
+        </div>
+        <div class="deliverables" style="border-top: none; padding-top: 8px;">
+          <h4>Результати (формат)</h4>
+          <div class="del-list">
+            <span class="del-tag">Звіт P/ARC (PDF)</span>
+            <span class="del-tag">Аналітична записка — презентація 3–4 стор. (PDF)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TIER 2 -->
+      <div class="tier-card featured">
+        <span class="tier-badge t2">Варіант 2</span>
+        <div class="tier-name">Повне дослідження з опитуванням покупців</div>
+        <div class="tier-desc">
+          Усе з Варіанту 1 плюс третій елемент матриці — функція «ціна-відгук»: дослідження реакції потенційних покупців на цінові рівні через анкетування. Це дає повну тріаду для прийняття стратегічних цінових рішень: ринок + собівартість + покупець.
+        </div>
+        <div class="tier-meta">
+          <div class="meta-item">
+            <span class="meta-label">Вартість</span>
+            <span class="meta-value price">€ 1 800</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Термін</span>
+            <span class="meta-value">+ 1 тиждень</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Методологія</span>
+            <span class="meta-value" style="font-size:14px; font-weight:500;">Van Westendorp PSM + Gabor-Granger</span>
+          </div>
+        </div>
+        <div class="deliverables">
+          <h4>Додатковий елемент матриці</h4>
+          <div class="del-list">
+            <span class="del-tag">Ціна-відгук — оцінка потенційного покупця</span>
+          </div>
+        </div>
+        <div class="deliverables" style="border-top: none; padding-top: 8px;">
+          <h4>Додаткові результати (формат)</h4>
+          <div class="del-list">
+            <span class="del-tag">Криві попиту (WTP)</span>
+            <span class="del-tag">Цінові точки (PMC, OPP, IDP)</span>
+            <span class="del-tag">Валідація діапазону реальним попитом</span>
+            <span class="del-tag">Звіт про анкетування з презентацією (PDF)</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CONDITIONS -->
+  <div class="section">
+    <div class="section-label">Умови</div>
+    <div class="section-title">Організаційні деталі</div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <div class="service-card">
+        <div class="service-icon" style="background:#f0fdf4;">📅</div>
+        <h3>Старт робіт</h3>
+        <p>25 березня 2026 року — за умови підписання договору та отримання передплати</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:#eff6ff;">💳</div>
+        <h3>Оплата</h3>
+        <p>Передплата 50% на ФОП. Решта — після передачі результатів</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- STARTING PRICES -->
+  <div class="section">
+    <div class="section-label">Етап 2</div>
+    <div class="section-title">Розрахунок стартових цін</div>
+    <p class="intro-text">
+      На основі результатів дослідження ми розраховуємо стартову цінову матрицю за допомогою платформи Maxify — з урахуванням поверховості, площі, видових характеристик, орієнтації та інших параметрів квартир.
+    </p>
+    <div class="del-list">
+      <span class="del-tag">Цінова матриця (поквартирна)</span>
+      <span class="del-tag">Коефіцієнти коригування</span>
+      <span class="del-tag">Revenue-прогноз</span>
+    </div>
+  </div>
+
+  <!-- SALES DEPARTMENT -->
+  <div class="section">
+    <div class="section-label">Етап 3</div>
+    <div class="section-title">Організація відділу продажів</div>
+    <p class="intro-text">
+      Побудова або реорганізація комерційного підрозділу проєкту: від підбору та навчання команди до впровадження процесів, звітності та системи управління — з ув'язуванням усіх елементів у єдину систему комерціалізації.
+    </p>
+
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon" style="background:#eff6ff;">👥</div>
+        <h3>Структура відділу</h3>
+        <p>Організаційна модель, ролі, зони відповідальності, KPI та система мотивації менеджерів</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:#f0fdf4;">⚙️</div>
+        <h3>Процеси продажів</h3>
+        <p>Регламенти роботи з клієнтом на кожному етапі воронки, скрипти, чек-листи, стандарти якості</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:#fef3c7;">📈</div>
+        <h3>Звітність та управління</h3>
+        <p>Дашборди, регулярна аналітика, план-факт, контроль конверсій та ефективності команди</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:#fce7f3;">🔗</div>
+        <h3>Єдина система комерціалізації</h3>
+        <p>Інтеграція продажів, маркетингу, ціноутворення та клієнтського сервісу в цілісну операційну модель</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CORPORATE ECOSYSTEM -->
+  <div class="section">
+    <div class="section-label">Напрямок співпраці</div>
+    <div class="section-title">Корпоративна IT-екосистема продажів</div>
+    <p class="intro-text">
+      За потреби — розробка та впровадження повної технологічної інфраструктури для управління продажами: від CRM до клієнтського кабінету. Обсяг та вартість визначаються після аудиту поточних систем.
+    </p>
+
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon" style="background:#eff6ff;">📊</div>
+        <h3>CRM-система</h3>
+        <p>Налаштування воронки продажів, автоматизації, аналітики та інтеграцій під процеси проєкту</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:#f0fdf4;">📄</div>
+        <h3>Документообіг</h3>
+        <p>Шаблони договорів, автогенерація документів, електронний підпис, контроль версій</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:#fef3c7;">💰</div>
+        <h3>Робота з дебіторською</h3>
+        <p>Контроль графіків платежів, автоматичні нагадування, звітність по заборгованості</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:#fce7f3;">👤</div>
+        <h3>Клієнтський кабінет</h3>
+        <p>Особистий кабінет покупця: документи, графіки платежів, статус будівництва, комунікація</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAXIFY DYNAMIC PRICING -->
+  <div class="section">
+    <div class="section-label">Постійний сервіс</div>
+    <div class="section-title">Динамічне ціноутворення Maxify</div>
+    <p class="intro-text">
+      Безперервне управління ціновою стратегією на основі даних про темпи продажів, залишки, ринкову кон'юнктуру та поведінку покупців.
+    </p>
+
+    <div class="maxify-box">
+      <h3>Maxify — Revenue Management Platform</h3>
+      <p class="sub">Дві моделі оплати на вибір</p>
+
+      <div class="maxify-options">
+        <div class="maxify-opt">
+          <div class="opt-label">Модель А — Self-Service</div>
+          <div class="opt-rate">0.1% <span>від продажів</span></div>
+          <div class="opt-desc">Ви самостійно управляєте ціноутворенням у платформі. Ми забезпечуємо інструмент, аналітику та технічну підтримку.</div>
+        </div>
+        <div class="or-divider">або</div>
+        <div class="maxify-opt">
+          <div class="opt-label">Модель Б — Full Management</div>
+          <div class="opt-rate">0.15% <span>від продажів</span></div>
+          <div class="opt-desc">Ми повністю управляємо ціноутворенням: аналіз, рекомендації, оновлення цін, регулярна звітність та стратегічний супровід.</div>
+        </div>
+      </div>
+
+      <p style="margin-top: 20px; opacity: 0.5; font-size: 13px;">* % нараховується від фактичних продажів (суми закритих угод)</p>
+
+      <div style="margin-top: 20px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 18px;">
+        <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.5; margin-bottom: 8px;">Альтернатива — підписка</div>
+        <div style="font-size: 28px; font-weight: 800;">€ 990 <span style="font-size: 15px; font-weight: 400; opacity: 0.7;">/ місяць</span></div>
+        <div style="font-size: 13px; opacity: 0.6; margin-top: 4px;">Фіксована щомісячна оплата незалежно від обсягу продажів</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <h2>Готові обговорити деталі?</h2>
+    <p>Зв'яжіться з нами для уточнення обсягу робіт та старту співпраці</p>
+    <div class="cta-contacts">
+      <span>📧 v.danylenko@m4u.com.ua</span>
+      <span>📞 +380 98 904 88 10</span>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
