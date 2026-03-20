@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Комерційна пропозиція — M4U</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --black: #000000;
+    --white: #FFFFFF;
+    --olive: #C3BD9F;
+    --mint: #B5C7B6;
+    --steel: #B1C4D4;
+    --text: #2d2d3a;
+    --muted: #6b7280;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --border: #e5e7eb;
+    --gradient-hero: linear-gradient(135deg, #000000 0%, #1a1a2e 100%);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ===== PASSWORD ===== */
+  .pw-overlay {
+    position: fixed; inset: 0; background: var(--black);
+    z-index: 9999; display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.4s, visibility 0.4s;
+  }
+  .pw-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  .pw-box { text-align: center; color: white; max-width: 360px; padding: 20px; }
+  .pw-box .logo-sm { margin: 0 auto 24px; }
+  .pw-box p { font-size: 14px; opacity: 0.5; margin-bottom: 28px; }
+  .pw-input-wrap { display: flex; gap: 8px; }
+  .pw-input-wrap input {
+    flex: 1; padding: 12px 16px; border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06);
+    color: white; font-size: 15px; font-family: inherit; outline: none;
+  }
+  .pw-input-wrap input:focus { border-color: var(--olive); }
+  .pw-input-wrap input::placeholder { color: rgba(255,255,255,0.3); }
+  .pw-input-wrap button {
+    padding: 12px 24px; border-radius: 10px; border: none;
+    background: var(--olive); color: var(--black);
+    font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit;
+  }
+  .pw-input-wrap button:hover { background: #d4cdb0; }
+  .pw-error { color: #e88; font-size: 13px; margin-top: 12px; min-height: 20px; }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: var(--gradient-hero); color: white;
+    padding: 56px 40px 48px; position: relative; overflow: hidden;
+  }
+  .hero::after {
+    content: ''; position: absolute; top: -40%; right: -15%;
+    width: 500px; height: 500px; background: rgba(195, 189, 159, 0.06);
+    border-radius: 50%;
+  }
+  .hero-content { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+  .hero .logo-mark { margin-bottom: 32px; }
+  .hero h1 {
+    font-family: 'Oswald', sans-serif; font-size: 38px;
+    font-weight: 700; line-height: 1.15; margin-bottom: 14px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .hero h1 span { color: var(--olive); }
+  .hero-sub { font-size: 17px; opacity: 0.7; font-weight: 300; max-width: 600px; }
+
+  /* ===== LAYOUT ===== */
+  .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .section { margin-bottom: 48px; }
+  .section-label {
+    font-family: 'Oswald', sans-serif; font-size: 11px;
+    letter-spacing: 3px; text-transform: uppercase;
+    color: var(--olive); font-weight: 600; margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Oswald', sans-serif; font-size: 26px;
+    font-weight: 600; margin-bottom: 24px; color: var(--black);
+    text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .intro-text { font-size: 15px; color: var(--muted); line-height: 1.8; margin-bottom: 24px; }
+
+  /* ===== TIER CARDS ===== */
+  .tiers { display: flex; flex-direction: column; gap: 20px; }
+  .tier-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 28px; transition: box-shadow 0.3s;
+  }
+  .tier-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.06); }
+  .tier-card.featured { border-color: var(--olive); box-shadow: 0 4px 16px rgba(195,189,159,0.15); }
+  .tier-badge {
+    display: inline-block; font-family: 'Oswald', sans-serif;
+    font-size: 11px; font-weight: 600; letter-spacing: 2px;
+    text-transform: uppercase; padding: 4px 12px; border-radius: 6px; margin-bottom: 14px;
+  }
+  .tier-badge.v1 { background: #f0f4ec; color: #5a6e4a; }
+  .tier-name { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; }
+  .tier-desc { color: var(--muted); font-size: 14px; margin-bottom: 20px; line-height: 1.7; }
+  .tier-meta { display: flex; gap: 24px; flex-wrap: wrap; }
+  .meta-item { display: flex; flex-direction: column; }
+  .meta-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 2px; }
+  .meta-value { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; color: var(--black); }
+  .meta-value.price { color: #5a6e4a; }
+  .deliverables { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
+  .deliverables h4 {
+    font-family: 'Oswald', sans-serif; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 10px;
+  }
+  .del-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .del-tag { background: #f3f4f6; padding: 5px 13px; border-radius: 6px; font-size: 13px; color: var(--text); }
+
+  /* ===== SERVICES GRID ===== */
+  .services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 600px) { .services-grid { grid-template-columns: 1fr; } }
+  .service-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 22px;
+  }
+  .service-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; margin-bottom: 12px;
+  }
+  .service-card h3 { font-family: 'Oswald', sans-serif; font-size: 15px; font-weight: 600; margin-bottom: 5px; text-transform: uppercase; }
+  .service-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* ===== CONTEXT BLOCK ===== */
+  .context-block {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 28px; margin-bottom: 48px;
+    border-left: 3px solid var(--olive);
+  }
+  .context-block .context-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+  }
+  .context-block .context-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: #f5f3ed; display: flex; align-items: center;
+    justify-content: center; font-size: 16px;
+  }
+  .context-block .context-title {
+    font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1px; color: var(--black);
+  }
+  .context-list { display: flex; flex-direction: column; gap: 8px; }
+  .context-list .ctx-item {
+    display: flex; gap: 10px; font-size: 14px; color: var(--text); line-height: 1.5;
+  }
+  .context-list .ctx-label {
+    flex-shrink: 0; font-weight: 600; color: var(--muted);
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+    min-width: 100px; padding-top: 2px;
+  }
+
+  /* ===== CROSS-SELL ===== */
+  .cross-sell-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 600px) { .cross-sell-grid { grid-template-columns: 1fr; } }
+  .cross-sell-item {
+    padding: 16px 18px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--card);
+  }
+  .cross-sell-item h4 {
+    font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; color: var(--black);
+  }
+  .cross-sell-item p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* ===== EDUCATION BLOCK ===== */
+  .edu-block {
+    margin-top: 28px; padding: 28px; border-radius: 14px;
+    background: linear-gradient(135deg, #f7f6f2 0%, #f0efe8 100%);
+    border: 1px solid #e0ddd0;
+  }
+  .edu-block .edu-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
+  }
+  .edu-block .edu-badge {
+    font-family: 'Oswald', sans-serif; font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    background: var(--olive); color: var(--black);
+    padding: 3px 10px; border-radius: 4px;
+  }
+  .edu-block .edu-partner {
+    font-size: 11px; color: var(--muted); letter-spacing: 0.5px;
+  }
+  .edu-block h3 {
+    font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 600;
+    text-transform: uppercase; margin-bottom: 14px; color: var(--black);
+  }
+  .edu-courses { display: flex; gap: 14px; flex-wrap: wrap; }
+  .edu-course {
+    flex: 1; min-width: 220px; padding: 20px;
+    background: var(--white); border-radius: 10px;
+    border: 1px solid #ddd8c8;
+  }
+  .edu-course h4 {
+    font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600;
+    text-transform: uppercase; color: var(--black); margin-bottom: 6px;
+  }
+  .edu-course p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .edu-course .edu-tag {
+    display: inline-block; margin-top: 10px; font-size: 11px;
+    color: #8a7e64; font-weight: 500; letter-spacing: 0.3px;
+  }
+
+  /* ===== CTA ===== */
+  .cta-section {
+    text-align: center; padding: 44px 20px; border-top: 1px solid var(--border); margin-top: 16px;
+  }
+  .cta-section h2 { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; }
+  .cta-section p { color: var(--muted); margin-bottom: 20px; font-size: 14px; }
+  .cta-contacts {
+    display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; font-size: 14px; color: var(--text);
+  }
+
+  /* ===== PDF BUTTON ===== */
+  .save-pdf-section { text-align: center; padding: 28px 20px 44px; }
+  .save-pdf-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 28px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--white); color: var(--text);
+    font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .save-pdf-btn:hover { border-color: var(--olive); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+
+  /* ===== PRINT ===== */
+  @media print {
+    .save-pdf-section, .pw-overlay { display: none !important; }
+    .hero { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: white; }
+    .section, .tier-card { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== PASSWORD ===== -->
+<div class="pw-overlay" id="pwOverlay">
+  <div class="pw-box">
+    <svg class="logo-sm" viewBox="0 0 140.14 84.44" xmlns="http://www.w3.org/2000/svg" width="70"><polygon fill="#C3BD9F" points="27.4 44.71 27.16 44.71 11.62 0 0 0 0 84.44 12.09 84.44 12.09 33.09 12.33 33.09 24.19 69.38 30.24 69.38 42.22 33.09 42.46 33.09 42.46 84.44 54.55 84.44 54.55 0 42.81 0 27.4 44.71"/><path fill="#C3BD9F" d="M128,0V64.28q0,4.51-2.13,6.64a7.73,7.73,0,0,1-10.67,0q-2.13-2.13-2.14-6.64V0H101V65.47a18.75,18.75,0,0,0,1.54,7.65A20.62,20.62,0,0,0,113,83.61a18.46,18.46,0,0,0,7.53,1.54,18.92,18.92,0,0,0,7.59-1.54,20.13,20.13,0,0,0,6.28-4.27,19.09,19.09,0,0,0,5.7-13.87V0Z"/><polygon fill="#C3BD9F" points="90.3 28.3 79.47 28.3 79.47 47.02 71.82 47.02 85.92 0 74.48 0 60.78 47.53 60.75 57.29 79.47 57.29 79.47 67.06 90.3 67.06 90.3 57.29 94.81 57.29 94.81 47.02 90.3 47.02 90.3 28.3"/><rect fill="#C3BD9F" x="60.75" y="74.31" width="34.06" height="10.14"/></svg>
+    <p>Для перегляду пропозиції введіть пароль</p>
+    <div class="pw-input-wrap">
+      <input type="password" id="pwInput" placeholder="Пароль" autofocus>
+      <button onclick="checkPw()">→</button>
+    </div>
+    <div class="pw-error" id="pwError"></div>
+  </div>
+</div>
+
+<script>
+  var PASSWORD = 'kru2026';
+  function checkPw() {
+    var input = document.getElementById('pwInput');
+    var error = document.getElementById('pwError');
+    if (input.value === PASSWORD) {
+      document.getElementById('pwOverlay').classList.add('hidden');
+    } else {
+      error.textContent = '\u041D\u0435\u0432\u0456\u0440\u043D\u0438\u0439 \u043F\u0430\u0440\u043E\u043B\u044C';
+      input.value = '';
+      input.focus();
+    }
+  }
+  document.getElementById('pwInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkPw();
+  });
+</script>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="hero-content">
+    <svg class="logo-mark" viewBox="0 0 140.14 84.44" xmlns="http://www.w3.org/2000/svg" width="80"><polygon fill="#fff" points="27.4 44.71 27.16 44.71 11.62 0 0 0 0 84.44 12.09 84.44 12.09 33.09 12.33 33.09 24.19 69.38 30.24 69.38 42.22 33.09 42.46 33.09 42.46 84.44 54.55 84.44 54.55 0 42.81 0 27.4 44.71"/><path fill="#fff" d="M128,0V64.28q0,4.51-2.13,6.64a7.73,7.73,0,0,1-10.67,0q-2.13-2.13-2.14-6.64V0H101V65.47a18.75,18.75,0,0,0,1.54,7.65A20.62,20.62,0,0,0,113,83.61a18.46,18.46,0,0,0,7.53,1.54,18.92,18.92,0,0,0,7.59-1.54,20.13,20.13,0,0,0,6.28-4.27,19.09,19.09,0,0,0,5.7-13.87V0Z"/><polygon fill="#fff" points="90.3 28.3 79.47 28.3 79.47 47.02 71.82 47.02 85.92 0 74.48 0 60.78 47.53 60.75 57.29 79.47 57.29 79.47 67.06 90.3 67.06 90.3 57.29 94.81 57.29 94.81 47.02 90.3 47.02 90.3 28.3"/><rect fill="#fff" x="60.75" y="74.31" width="34.06" height="10.14"/></svg>
+    <h1>Комерційна пропозиція<br><span>ЖК / Крушинка, Київська область</span></h1>
+    <p class="hero-sub">Визначення стартової середньої ціни та цінової рамки на основі конкурентного аналізу</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ===== INTRO ===== -->
+  <div class="section">
+    <div class="section-label">Про нас</div>
+    <div class="section-title">Що ми пропонуємо</div>
+    <p class="intro-text">
+      M4U — консалтингова компанія у сфері revenue management для житлової нерухомості. Ми допомагаємо девелоперам приймати цінові рішення на основі даних, вибудовувати процеси продажів та впроваджувати технології управління доходами.
+    </p>
+  </div>
+
+  <!-- ===== ВИХІДНІ ДАНІ ===== -->
+  <div class="context-block">
+    <div class="context-header">
+      <div class="context-icon">📋</div>
+      <div class="context-title">Вихідні дані по проєкту</div>
+    </div>
+    <div class="context-list">
+      <p style="font-size: 14px; color: var(--text); line-height: 1.7; margin-bottom: 14px;">
+        Ви звернулись до нас із запитом щодо визначення стартової середньої ціни та цінової рамки для житлового комплексу в с. Крушинка. Надали архітектурну концепцію першої черги та схему забудови, на основі яких ми підготували цю пропозицію.
+      </p>
+      <div class="ctx-item">
+        <span class="ctx-label">Проєкт</span>
+        <span>ЖК, с. Крушинка, Київська область</span>
+      </div>
+      <div class="ctx-item">
+        <span class="ctx-label">Локація</span>
+        <span>с. Крушинка, Бучанський район, Київська область</span>
+      </div>
+      <div class="ctx-item">
+        <span class="ctx-label">Формат</span>
+        <span>Малоповерхова житлова забудова, 4 поверхи з антресолями</span>
+      </div>
+      <div class="ctx-item">
+        <span class="ctx-label">Масштаб</span>
+        <span>4 квартали, 19 секцій, ~500 квартир, ділянка 4,5 га. Перша черга: 2 будинки, 217 квартир, ~13 920 м² житлової площі</span>
+      </div>
+      <div class="ctx-item">
+        <span class="ctx-label">Стадія</span>
+        <span>Проєктування (архітектурна концепція)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ЦІНОВЕ ДОСЛІДЖЕННЯ ===== -->
+  <div class="section">
+    <div class="section-label">Послуга</div>
+    <div class="section-title">Цінова стратегія: експрес-дослідження</div>
+    <p class="intro-text">
+      Визначення стартової середньої ціни та цінового діапазону на основі двох елементів матриці стратегічних цінових рішень: конкурентно-орієнтованих цін (P/ARC аналіз Київська область) та підходу «собівартість+».
+    </p>
+
+    <div class="tiers">
+      <div class="tier-card featured">
+        <span class="tier-badge v1">Експрес-дослідження</span>
+        <div class="tier-name">P/ARC + Собівартість+</div>
+        <div class="tier-desc">
+          P/ARC — аналітична система M4U для конкурентного аналізу та цінового позиціонування. Агрегує дані з 60+ відкритих джерел, оцінює споживчу цінність за параметрами місцерозташування, якості та надійності. Результати аналізу доповнюються розрахунком floor price забудовника на основі собівартості.
+        </div>
+        <div class="tier-meta">
+          <div class="meta-item">
+            <span class="meta-label">Вартість</span>
+            <span class="meta-value price">€ 1 500</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Термін</span>
+            <span class="meta-value">5 р. днів</span>
+          </div>
+        </div>
+        <div class="deliverables">
+          <h4>Елементи матриці</h4>
+          <div class="del-list">
+            <span class="del-tag">P/ARC — конкурентно-орієнтовані ціни</span>
+            <span class="del-tag">Собівартість+ — floor price забудовника</span>
+          </div>
+        </div>
+        <div class="deliverables" style="border-top:none; padding-top:8px;">
+          <h4>Результати (формат)</h4>
+          <div class="del-list">
+            <span class="del-tag">Звіт P/ARC (PDF)</span>
+            <span class="del-tag">Аналітична записка — презентація 3–4 стор. (PDF)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== УМОВИ ===== -->
+  <div class="section">
+    <div class="section-label">Умови</div>
+    <div class="section-title">Організаційні деталі</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+      <div class="service-card">
+        <div class="service-icon" style="background:#f0f4ec;">📅</div>
+        <h3>Старт робіт</h3>
+        <p>23 березня 2026 — за умови підписання договору та отримання передплати</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:#f0f1f5;">💳</div>
+        <h3>Оплата</h3>
+        <p>Передплата 50% на ФОП. Решта 50% — після передачі результатів</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== КРОС-ПРОДАЖІ ===== -->
+  <div class="section">
+    <div class="section-label">Також</div>
+    <div class="section-title">Інші напрямки співпраці</div>
+    <p class="intro-text">
+      Окрім цінового дослідження, M4U може супроводжувати проєкт на наступних етапах комерціалізації:
+    </p>
+    <div class="cross-sell-grid">
+      <div class="cross-sell-item">
+        <h4>Розрахунок стартових цін</h4>
+        <p>Поквартирна цінова матриця через Maxify з урахуванням поверховості, площі, виду, орієнтації</p>
+      </div>
+      <div class="cross-sell-item">
+        <h4>Динамічне ціноутворення Maxify</h4>
+        <p>Автоматизоване управління ціновою стратегією на основі темпів продажів</p>
+      </div>
+      <div class="cross-sell-item">
+        <h4>Організація відділу продажів</h4>
+        <p>Побудова структури, процесів, звітності та системи мотивації</p>
+      </div>
+      <div class="cross-sell-item">
+        <h4>CRM та IT-екосистема</h4>
+        <p>Налаштування CRM, документообігу, дебіторської та клієнтського кабінету</p>
+      </div>
+      <div class="cross-sell-item">
+        <h4>Аудит процесу продажів</h4>
+        <p>AS-IS діагностика воронки, CRM-процесів та ефективності команди</p>
+      </div>
+      <div class="cross-sell-item">
+        <h4>Брокерська програма</h4>
+        <p>Партнерський регламент та система мотивації брокерської спільноти</p>
+      </div>
+      <div class="cross-sell-item">
+        <h4>Регламенти продажів</h4>
+        <p>Стандарти роботи з клієнтом, скрипти, чек-листи</p>
+      </div>
+      <div class="cross-sell-item">
+        <h4>AI-інтеграція в продажі</h4>
+        <p>Автоматизація обробки лідів, аналітика дзвінків, поведінковий скорінг</p>
+      </div>
+    </div>
+
+    <!-- Education -->
+    <div class="edu-block">
+      <div class="edu-header">
+        <span class="edu-badge">Навчання</span>
+        <span class="edu-partner">спільно з Київською Школою Девелопменту</span>
+      </div>
+      <h3>Професійні курси для команди</h3>
+      <div class="edu-courses">
+        <div class="edu-course">
+          <h4>Комерційне управління</h4>
+          <p>Побудова системи комерційного управління девелоперським проєктом: від стратегії до операційного контролю продажів, маркетингу та ціноутворення</p>
+          <span class="edu-tag">📚 Для комерційних директорів, керівників відділів продажів, власників</span>
+        </div>
+        <div class="edu-course">
+          <h4>Прайс-менеджмент</h4>
+          <p>Управління ціноутворенням у девелопменті: методології визначення цін, динамічне ціноутворення, аналіз конкурентів та моделювання дохідності</p>
+          <span class="edu-tag">📚 Для комерційних директорів, аналітиків, керівників відділів продажів, власників</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CTA ===== -->
+  <div class="cta-section">
+    <h2>Готові обговорити деталі?</h2>
+    <p>Зв'яжіться з нами для уточнення обсягу робіт та старту співпраці</p>
+    <div class="cta-contacts">
+      <span id="ctaEmail">📧</span>
+      <span>📞 +380 98 904 88 10</span>
+    </div>
+    <script>
+      document.getElementById('ctaEmail').textContent = '\u{1F4E7} v.danylenko' + '@' + 'm4u.com.ua';
+    </script>
+  </div>
+
+  <!-- ===== PDF ===== -->
+  <div class="save-pdf-section">
+    <button class="save-pdf-btn" onclick="window.print()">📄 Зберегти в PDF</button>
+  </div>
+
+</div>
+
+</body>
+</html>
