@@ -821,22 +821,68 @@
     </div>
   </div>
 
+  <!-- РОЗДІЛЮВАЧ -->
+  <div style="border-top: 2px solid var(--border); margin: 48px 0 0;"></div>
+
+  <!-- ПРИКЛАД ЗВІТУ + ДОКУМЕНТИ — окремий фон -->
+  <div style="background: #f4f5f7; margin: 0 -20px; padding: 48px 20px;">
+    <div style="max-width: 800px; margin: 0 auto;">
+
+      <!-- ПРИКЛАД ЗВІТУ -->
+      <div class="section">
+        <div class="section-label">Приклад</div>
+        <div class="section-title">Як виглядає звіт P/ARC</div>
+        <p class="intro-text">
+          Нижче — приклад інтерактивного звіту P/ARC PRO+ для Львівського регіону. Це демонстраційна версія, яка ілюструє формат, глибину аналізу та візуалізацію даних, які ви отримаєте в рамках дослідження.
+        </p>
+        <a href="https://m4u.ua/parc_pro_plus_lviv_report" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 10px; padding: 16px 28px; border-radius: 12px; background: var(--gradient-1); color: white; text-decoration: none; font-size: 15px; font-weight: 600; transition: transform 0.2s, box-shadow 0.2s;">
+          📊 Відкрити приклад звіту P/ARC PRO+
+          <span style="font-size: 12px; opacity: 0.6;">↗ нове вікно</span>
+        </a>
+      </div>
+
+      <!-- ДОКУМЕНТИ -->
+      <div class="section" style="margin-bottom: 0;">
+        <div class="section-label">Документи</div>
+        <div class="section-title">Договір та рахунок</div>
+        <p class="intro-text">
+          Для старту співпраці — шаблон договору та рахунок на передплату. Документи доступні за посиланнями нижче.
+        </p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <a href="https://docs.google.com/document/d/1J9mYue_5t3DjeKPHpHP35SPx1tFVgJxz/edit?usp=sharing&ouid=102267329342706603751&rtpof=true&sd=true" target="_blank" rel="noopener" class="service-card" style="text-decoration: none; color: inherit; transition: box-shadow 0.3s; background: var(--card);">
+            <div class="service-icon" style="background:#f0fdf4;">📝</div>
+            <h3>Шаблон договору</h3>
+            <p>Типовий договір на надання консалтингових послуг. Відкрити для перегляду та завантаження.</p>
+            <span style="display: inline-block; margin-top: 10px; font-size: 12px; color: var(--accent); font-weight: 600; letter-spacing: 0.5px;">ВІДКРИТИ В GOOGLE DOCS ↗</span>
+          </a>
+          <a href="https://drive.google.com/file/d/15cXR7hMT7vtpUMeuSZ-qZdFhehmoTCFZ/view?usp=sharing" target="_blank" rel="noopener" class="service-card" style="text-decoration: none; color: inherit; transition: box-shadow 0.3s; background: var(--card);">
+            <div class="service-icon" style="background:#eff6ff;">🧾</div>
+            <h3>Рахунок на передплату</h3>
+            <p>Рахунок-фактура на передплату 50%. Відкрити для перегляду та завантаження.</p>
+            <span style="display: inline-block; margin-top: 10px; font-size: 12px; color: var(--accent); font-weight: 600; letter-spacing: 0.5px;">ВІДКРИТИ В GOOGLE DRIVE ↗</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
   <!-- CTA -->
   <div class="cta-section">
     <h2>Готові обговорити деталі?</h2>
     <p>Зв'яжіться з нами для уточнення обсягу робіт та старту співпраці</p>
     <div class="cta-contacts">
-      <span>📧 v.danylenko@m4u.com.ua</span>
+      <span id="ctaEmail">📧</span>
       <span>📞 +380 98 904 88 10</span>
     </div>
+    <script>
+      document.getElementById('ctaEmail').textContent = '\u{1F4E7} v.danylenko' + '@' + 'm4u.com.ua';
+    </script>
   </div>
 
-  <!-- Save PDF -->
+  <!-- PDF -->
   <div class="save-pdf-section">
-    <button class="save-pdf-btn" onclick="window.print()">
-      📄 Зберегти в PDF
-    </button>
+    <button class="save-pdf-btn" onclick="window.print()">📄 Зберегти в PDF</button>
   </div>
 
 </div>
