@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Комерційна пропозиція — M4U × Ковальська</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --black: #000000;
+    --white: #FFFFFF;
+    --olive: #C3BD9F;
+    --mint: #B5C7B6;
+    --steel: #B1C4D4;
+    --text: #2d2d3a;
+    --muted: #6b7280;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --border: #e5e7eb;
+    --gradient-hero: linear-gradient(135deg, #000000 0%, #1a1a2e 100%);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ===== PASSWORD ===== */
+  .pw-overlay {
+    position: fixed; inset: 0; background: var(--black);
+    z-index: 9999; display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.4s, visibility 0.4s;
+  }
+  .pw-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  .pw-box { text-align: center; color: white; max-width: 360px; padding: 20px; }
+  .pw-box .logo-sm { margin: 0 auto 24px; }
+  .pw-box p { font-size: 14px; opacity: 0.5; margin-bottom: 28px; }
+  .pw-input-wrap { display: flex; gap: 8px; }
+  .pw-input-wrap input {
+    flex: 1; padding: 12px 16px; border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06);
+    color: white; font-size: 15px; font-family: inherit; outline: none;
+  }
+  .pw-input-wrap input:focus { border-color: var(--olive); }
+  .pw-input-wrap input::placeholder { color: rgba(255,255,255,0.3); }
+  .pw-input-wrap button {
+    padding: 12px 24px; border-radius: 10px; border: none;
+    background: var(--olive); color: var(--black);
+    font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit;
+  }
+  .pw-input-wrap button:hover { background: #d4cdb0; }
+  .pw-error { color: #e88; font-size: 13px; margin-top: 12px; min-height: 20px; }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: var(--gradient-hero); color: white;
+    padding: 56px 40px 48px; position: relative; overflow: hidden;
+  }
+  .hero::after {
+    content: ''; position: absolute; top: -40%; right: -15%;
+    width: 500px; height: 500px; background: rgba(195, 189, 159, 0.06);
+    border-radius: 50%;
+  }
+  .hero-content { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+  .hero .logo-mark { margin-bottom: 32px; }
+  .hero h1 {
+    font-family: 'Oswald', sans-serif; font-size: 38px;
+    font-weight: 700; line-height: 1.15; margin-bottom: 14px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .hero h1 span { color: var(--olive); }
+  .hero-sub { font-size: 17px; opacity: 0.7; font-weight: 300; max-width: 600px; }
+
+  /* ===== LAYOUT ===== */
+  .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .section { margin-bottom: 48px; }
+  .section-label {
+    font-family: 'Oswald', sans-serif; font-size: 11px;
+    letter-spacing: 3px; text-transform: uppercase;
+    color: var(--olive); font-weight: 600; margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Oswald', sans-serif; font-size: 26px;
+    font-weight: 600; margin-bottom: 24px; color: var(--black);
+    text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .intro-text { font-size: 15px; color: var(--muted); line-height: 1.8; margin-bottom: 24px; }
+
+  /* ===== ACCENT BLOCK (change #1) ===== */
+  .accent-block {
+    background: linear-gradient(135deg, #f7f6f2 0%, #f0efe8 100%);
+    border: 1px solid #e0ddd0; border-left: 3px solid var(--olive);
+    border-radius: 10px; padding: 20px 24px; margin-bottom: 28px;
+    font-size: 15px; color: var(--text); line-height: 1.8;
+  }
+
+  /* ===== TIER CARDS ===== */
+  .tiers { display: flex; flex-direction: column; gap: 20px; }
+  .tier-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 28px; transition: box-shadow 0.3s;
+  }
+  .tier-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.06); }
+  .tier-card.featured { border-color: var(--olive); box-shadow: 0 4px 16px rgba(195,189,159,0.15); }
+  .tier-badge {
+    display: inline-block; font-family: 'Oswald', sans-serif;
+    font-size: 11px; font-weight: 600; letter-spacing: 2px;
+    text-transform: uppercase; padding: 4px 12px; border-radius: 6px; margin-bottom: 14px;
+  }
+  .tier-badge.v1 { background: #f0f4ec; color: #5a6e4a; }
+  .tier-badge.v2 { background: #f5f3ed; color: #8a7e64; }
+  .tier-badge.v3 { background: #eef2f6; color: #4a6a8a; }
+  .tier-name { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; }
+  .tier-desc { color: var(--muted); font-size: 14px; margin-bottom: 20px; line-height: 1.7; }
+  .tier-meta { display: flex; gap: 24px; flex-wrap: wrap; }
+  .meta-item { display: flex; flex-direction: column; }
+  .meta-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 2px; }
+  .meta-value { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; color: var(--black); }
+  .meta-value.price { color: #5a6e4a; }
+  .deliverables { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
+  .deliverables h4 {
+    font-family: 'Oswald', sans-serif; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 10px;
+  }
+  .del-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .del-tag { background: #f3f4f6; padding: 5px 13px; border-radius: 6px; font-size: 13px; color: var(--text); }
+
+  /* ===== SERVICES GRID ===== */
+  .services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 600px) { .services-grid { grid-template-columns: 1fr; } }
+  .service-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 22px;
+  }
+  .service-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; margin-bottom: 12px;
+  }
+  .service-card h3 { font-family: 'Oswald', sans-serif; font-size: 15px; font-weight: 600; margin-bottom: 5px; text-transform: uppercase; }
+  .service-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* ===== MAXIFY BOX ===== */
+  .maxify-box {
+    background: var(--gradient-hero); color: white;
+    border-radius: 14px; padding: 32px;
+  }
+  .maxify-box h3 { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; }
+  .maxify-box .sub { opacity: 0.6; margin-bottom: 22px; font-size: 14px; }
+  .maxify-options { display: flex; gap: 14px; flex-wrap: wrap; }
+  .maxify-opt {
+    flex: 1; min-width: 200px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px; padding: 22px;
+  }
+  .maxify-opt .opt-label {
+    font-family: 'Oswald', sans-serif; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.5; margin-bottom: 8px;
+  }
+  .maxify-opt .opt-rate { font-family: 'Oswald', sans-serif; font-size: 30px; font-weight: 700; margin-bottom: 4px; }
+  .maxify-opt .opt-rate span { font-size: 15px; font-weight: 400; opacity: 0.6; }
+  .maxify-opt .opt-desc { font-size: 13px; opacity: 0.6; line-height: 1.5; }
+  .or-divider {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; opacity: 0.4; padding: 0 6px;
+  }
+
+  /* ===== MAXIFY SUBSCRIPTION TABLE ===== */
+  .maxify-sub-table {
+    width: 100%; border-collapse: collapse; margin-top: 20px;
+  }
+  .maxify-sub-table th {
+    font-family: 'Oswald', sans-serif; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.4); font-weight: 600;
+    padding: 10px 14px; text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+  }
+  .maxify-sub-table td {
+    padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.8); font-size: 14px;
+  }
+  .maxify-sub-table tr:last-child td { border-bottom: none; }
+  .maxify-sub-table .td-price-w {
+    font-family: 'Oswald', sans-serif; font-size: 18px;
+    font-weight: 600; color: var(--olive);
+  }
+
+  /* ===== P/ARC SUBSCRIPTION TABLE ===== */
+  .parc-table {
+    width: 100%; border-collapse: collapse; margin-top: 16px;
+  }
+  .parc-table th {
+    font-family: 'Oswald', sans-serif; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: var(--muted); font-weight: 600;
+    padding: 10px 14px; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .parc-table td {
+    padding: 12px 14px; border-bottom: 1px solid var(--border);
+    color: var(--text); font-size: 14px;
+  }
+  .parc-table tr:last-child td { border-bottom: none; }
+  .parc-table .td-price {
+    font-family: 'Oswald', sans-serif; font-size: 18px;
+    font-weight: 600; color: #5a6e4a;
+  }
+  .parc-table .td-save {
+    font-size: 12px; color: #5a6e4a; font-weight: 500;
+  }
+
+  /* ===== MOCKUP STYLES ===== */
+  .mockup-wrapper {
+    margin: 24px 0; border-radius: 12px; overflow: hidden;
+    border: 1px solid var(--border); background: #f8f9fa;
+  }
+  .mockup-bar {
+    display: flex; align-items: center; gap: 6px;
+    padding: 10px 14px; background: #ebedf0; border-bottom: 1px solid var(--border);
+  }
+  .mockup-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .mockup-dot.r { background: #ff5f57; }
+  .mockup-dot.y { background: #febc2e; }
+  .mockup-dot.g { background: #28c840; }
+  .mockup-bar-title {
+    font-size: 11px; color: var(--muted); margin-left: 8px;
+    font-family: 'Oswald', sans-serif; letter-spacing: 1px; text-transform: uppercase;
+  }
+  .mockup-body { padding: 0; }
+
+  /* ===== NOTE BOX ===== */
+  .note-box {
+    background: #f7f6f2; border: 1px solid #e0ddd0;
+    border-radius: 10px; padding: 18px 22px; margin-top: 20px;
+    font-size: 13px; color: var(--text); line-height: 1.7;
+  }
+  .note-box strong { color: var(--black); }
+
+  /* ===== CROSS-SELL ===== */
+  .cross-sell-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 600px) { .cross-sell-grid { grid-template-columns: 1fr; } }
+  .cross-sell-item {
+    padding: 16px 18px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--card);
+  }
+  .cross-sell-item h4 {
+    font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; color: var(--black);
+  }
+  .cross-sell-item p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* ===== CONTEXT BLOCK ===== */
+  .context-block {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 28px; margin-bottom: 48px;
+    border-left: 3px solid var(--olive);
+  }
+  .context-block .context-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+  }
+  .context-block .context-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: #f5f3ed; display: flex; align-items: center;
+    justify-content: center; font-size: 16px;
+  }
+  .context-block .context-title {
+    font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1px; color: var(--black);
+  }
+  .context-list { display: flex; flex-direction: column; gap: 8px; }
+  .context-list .ctx-item {
+    display: flex; gap: 10px; font-size: 14px; color: var(--text); line-height: 1.5;
+  }
+  .context-list .ctx-label {
+    flex-shrink: 0; font-weight: 600; color: var(--muted);
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+    min-width: 100px; padding-top: 2px;
+  }
+
+  /* ===== EDUCATION BLOCK ===== */
+  .edu-block {
+    margin-top: 28px; padding: 28px; border-radius: 14px;
+    background: linear-gradient(135deg, #f7f6f2 0%, #f0efe8 100%);
+    border: 1px solid #e0ddd0;
+  }
+  .edu-block .edu-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
+  }
+  .edu-block .edu-badge {
+    font-family: 'Oswald', sans-serif; font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    background: var(--olive); color: var(--black);
+    padding: 3px 10px; border-radius: 4px;
+  }
+  .edu-block .edu-partner {
+    font-size: 11px; color: var(--muted); letter-spacing: 0.5px;
+  }
+  .edu-block h3 {
+    font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 600;
+    text-transform: uppercase; margin-bottom: 14px; color: var(--black);
+  }
+  .edu-courses { display: flex; gap: 14px; flex-wrap: wrap; }
+  .edu-course {
+    flex: 1; min-width: 220px; padding: 20px;
+    background: var(--white); border-radius: 10px;
+    border: 1px solid #ddd8c8;
+  }
+  .edu-course h4 {
+    font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600;
+    text-transform: uppercase; color: var(--black); margin-bottom: 6px;
+  }
+  .edu-course p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .edu-course .edu-tag {
+    display: inline-block; margin-top: 10px; font-size: 11px;
+    color: #8a7e64; font-weight: 500; letter-spacing: 0.3px;
+  }
+
+  /* ===== CTA ===== */
+  .cta-section {
+    text-align: center; padding: 44px 20px; border-top: 1px solid var(--border); margin-top: 16px;
+  }
+  .cta-section h2 { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; }
+  .cta-section p { color: var(--muted); margin-bottom: 20px; font-size: 14px; }
+  .cta-contacts {
+    display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; font-size: 14px; color: var(--text);
+  }
+
+  /* ===== PDF BUTTON ===== */
+  .save-pdf-section { text-align: center; padding: 28px 20px 44px; }
+  .save-pdf-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 28px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--white); color: var(--text);
+    font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .save-pdf-btn:hover { border-color: var(--olive); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+
+  /* ===== CALCULATOR ===== */
+  .calc-section {
+    margin-bottom: 48px;
+  }
+  .calc-box {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 28px; margin-top: 20px;
+  }
+  .calc-row {
+    display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 18px;
+  }
+  .calc-field {
+    flex: 1; min-width: 180px;
+  }
+  .calc-field label {
+    display: block; font-size: 12px; text-transform: uppercase;
+    letter-spacing: 0.8px; color: var(--muted); font-weight: 600; margin-bottom: 6px;
+  }
+  .calc-field select {
+    width: 100%; padding: 10px 14px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--bg);
+    font-family: inherit; font-size: 14px; color: var(--text);
+    cursor: pointer; outline: none; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 5l3 3 3-3' fill='none' stroke='%236b7280' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center;
+  }
+  .calc-field select:focus { border-color: var(--olive); }
+  .calc-toggles {
+    display: flex; gap: 8px; margin-bottom: 22px;
+  }
+  .calc-toggle {
+    flex: 1; padding: 10px 16px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--bg);
+    font-family: inherit; font-size: 13px; color: var(--muted);
+    cursor: pointer; text-align: center; font-weight: 500;
+    transition: all 0.2s;
+  }
+  .calc-toggle.active {
+    background: var(--black); color: white; border-color: var(--black);
+  }
+  .calc-toggle:hover:not(.active) {
+    border-color: var(--olive);
+  }
+  .calc-results {
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .calc-result-card {
+    background: #f8f9fa; border-radius: 10px; padding: 20px;
+    border: 1px solid var(--border);
+  }
+  .calc-result-card h4 {
+    font-family: 'Oswald', sans-serif; font-size: 13px;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: var(--muted); margin-bottom: 14px;
+  }
+  .calc-result-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;
+  }
+  @media (max-width: 600px) { .calc-result-grid { grid-template-columns: 1fr; } }
+  .calc-metric .cm-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--muted); margin-bottom: 2px;
+  }
+  .calc-metric .cm-value {
+    font-family: 'Oswald', sans-serif; font-size: 22px;
+    font-weight: 600; color: var(--black);
+  }
+  .calc-metric .cm-value.green { color: #5a6e4a; }
+  .calc-metric .cm-note {
+    font-size: 11px; color: #5a6e4a; font-weight: 500; margin-top: 2px;
+  }
+  .calc-total-bar {
+    background: var(--gradient-hero); color: white;
+    border-radius: 10px; padding: 22px; margin-top: 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .calc-total-bar .ct-label {
+    font-family: 'Oswald', sans-serif; font-size: 14px;
+    text-transform: uppercase; letter-spacing: 1px; opacity: 0.6;
+  }
+  .calc-total-bar .ct-value {
+    font-family: 'Oswald', sans-serif; font-size: 32px;
+    font-weight: 700; color: var(--olive);
+  }
+  .calc-total-bar .ct-savings {
+    font-size: 13px; color: var(--olive); opacity: 0.8;
+  }
+  .calc-empty {
+    text-align: center; padding: 32px; color: var(--muted); font-size: 14px;
+  }
+
+  /* ===== PRINT ===== */
+  @media print {
+    .save-pdf-section, .pw-overlay { display: none !important; }
+    .hero, .maxify-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: white; }
+    .section, .tier-card, .mockup-wrapper { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== PASSWORD ===== -->
+<div class="pw-overlay" id="pwOverlay">
+  <div class="pw-box">
+    <svg class="logo-sm" viewBox="0 0 140.14 84.44" xmlns="http://www.w3.org/2000/svg" width="70"><polygon fill="#C3BD9F" points="27.4 44.71 27.16 44.71 11.62 0 0 0 0 84.44 12.09 84.44 12.09 33.09 12.33 33.09 24.19 69.38 30.24 69.38 42.22 33.09 42.46 33.09 42.46 84.44 54.55 84.44 54.55 0 42.81 0 27.4 44.71"/><path fill="#C3BD9F" d="M128,0V64.28q0,4.51-2.13,6.64a7.73,7.73,0,0,1-10.67,0q-2.13-2.13-2.14-6.64V0H101V65.47a18.75,18.75,0,0,0,1.54,7.65A20.62,20.62,0,0,0,113,83.61a18.46,18.46,0,0,0,7.53,1.54,18.92,18.92,0,0,0,7.59-1.54,20.13,20.13,0,0,0,6.28-4.27,19.09,19.09,0,0,0,5.7-13.87V0Z"/><polygon fill="#C3BD9F" points="90.3 28.3 79.47 28.3 79.47 47.02 71.82 47.02 85.92 0 74.48 0 60.78 47.53 60.75 57.29 79.47 57.29 79.47 67.06 90.3 67.06 90.3 57.29 94.81 57.29 94.81 47.02 90.3 47.02 90.3 28.3"/><rect fill="#C3BD9F" x="60.75" y="74.31" width="34.06" height="10.14"/></svg>
+    <p>Для перегляду пропозиції введіть пароль</p>
+    <div class="pw-input-wrap">
+      <input type="password" id="pwInput" placeholder="Пароль" autofocus>
+      <button type="button" id="pwToggle" onclick="togglePw()" style="padding:12px 14px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:10px; color:rgba(255,255,255,0.5); cursor:pointer; font-size:16px; line-height:1;" title="Показати пароль">👁</button>
+      <button onclick="checkPw()">→</button>
+    </div>
+    <div class="pw-error" id="pwError"></div>
+  </div>
+</div>
+
+<script>
+  var PASSWORD = 'kovalska2026';
+  function togglePw() {
+    var input = document.getElementById('pwInput');
+    var btn = document.getElementById('pwToggle');
+    if (input.type === 'password') {
+      input.type = 'text';
+      btn.textContent = '🔒';
+    } else {
+      input.type = 'password';
+      btn.textContent = '👁';
+    }
+    input.focus();
+  }
+  function checkPw() {
+    var input = document.getElementById('pwInput');
+    var error = document.getElementById('pwError');
+    if (input.value === PASSWORD) {
+      document.getElementById('pwOverlay').classList.add('hidden');
+    } else {
+      error.textContent = '\u041D\u0435\u0432\u0456\u0440\u043D\u0438\u0439 \u043F\u0430\u0440\u043E\u043B\u044C';
+      input.value = '';
+      input.focus();
+    }
+  }
+  document.getElementById('pwInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkPw();
+  });
+</script>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="hero-content">
+    <svg class="logo-mark" viewBox="0 0 140.14 84.44" xmlns="http://www.w3.org/2000/svg" width="80"><polygon fill="#fff" points="27.4 44.71 27.16 44.71 11.62 0 0 0 0 84.44 12.09 84.44 12.09 33.09 12.33 33.09 24.19 69.38 30.24 69.38 42.22 33.09 42.46 33.09 42.46 84.44 54.55 84.44 54.55 0 42.81 0 27.4 44.71"/><path fill="#fff" d="M128,0V64.28q0,4.51-2.13,6.64a7.73,7.73,0,0,1-10.67,0q-2.13-2.13-2.14-6.64V0H101V65.47a18.75,18.75,0,0,0,1.54,7.65A20.62,20.62,0,0,0,113,83.61a18.46,18.46,0,0,0,7.53,1.54,18.92,18.92,0,0,0,7.59-1.54,20.13,20.13,0,0,0,6.28-4.27,19.09,19.09,0,0,0,5.7-13.87V0Z"/><polygon fill="#fff" points="90.3 28.3 79.47 28.3 79.47 47.02 71.82 47.02 85.92 0 74.48 0 60.78 47.53 60.75 57.29 79.47 57.29 79.47 67.06 90.3 67.06 90.3 57.29 94.81 57.29 94.81 47.02 90.3 47.02 90.3 28.3"/><rect fill="#fff" x="60.75" y="74.31" width="34.06" height="10.14"/></svg>
+    <h1>Комерційна пропозиція<br><span>Ковальська Нерухомість</span></h1>
+    <p class="hero-sub">Revenue management та технологічні рішення для системного управління цінами в девелоперському бізнесі</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ===== INTRO ===== -->
+  <div class="section">
+    <div class="section-label">Про нас</div>
+    <div class="section-title">Що ми пропонуємо</div>
+    <p class="intro-text">
+      M4U — консалтингова компанія у сфері revenue management для житлової нерухомості. Ми допомагаємо девелоперам приймати цінові рішення на основі даних, вибудовувати процеси комерційного управління та впроваджувати технології управління доходами.
+    </p>
+    <!-- CHANGE #1: Accent block -->
+    <div class="accent-block">
+      У цій пропозиції ми надаємо стандартні умови співпраці та готові обговорювати їх детальніше з урахуванням обсягів (кількості будинків). Ми зацікавлені в розвитку revenue management та IT-екосистеми комерційного управління в девелоперському бізнесі компанії.
+    </div>
+  </div>
+
+  <!-- ===== ВИХІДНІ ДАНІ (CHANGE #2) ===== -->
+  <div class="context-block">
+    <div class="context-header">
+      <div class="context-icon">📋</div>
+      <div class="context-title">Вихідні дані</div>
+    </div>
+    <div class="context-list">
+      <p style="font-size: 14px; color: var(--text); line-height: 1.7; margin-bottom: 14px;">
+        Компанія «Ковальська Нерухомість» звернулась із запитом щодо побудови системного процесу управління цінами — від аналітики до динамічного ціноутворення. На основі цього запиту ми підготували пропозицію, що охоплює три напрямки: консалтинг, ринкову аналітику та автоматизацію ціноутворення.
+      </p>
+      <div class="ctx-item">
+        <span class="ctx-label">Клієнт</span>
+        <span>Ковальська Нерухомість</span>
+      </div>
+      <div class="ctx-item">
+        <span class="ctx-label">Запит</span>
+        <span>Системне управління цінами: аналітика → стратегія → автоматизація</span>
+      </div>
+      <div class="ctx-item">
+        <span class="ctx-label">Рівень</span>
+        <span>Загальний запит на рівні девелоперської компанії «Ковальська Нерухомість»</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ЕТАП 1: КОНСАЛТИНГ ===== -->
+  <div class="section">
+    <div class="section-label">Етап 1</div>
+    <div class="section-title">Політика ціноутворення</div>
+    <p class="intro-text">
+      Розробка документа з рекомендаціями щодо системного управління прибутком: принципи ціноутворення, процеси прийняття цінових рішень, ролі та відповідальність, метрики ефективності.
+    </p>
+
+    <div class="tiers">
+      <div class="tier-card featured">
+        <span class="tier-badge v2">Консалтинг</span>
+        <div class="tier-name">Організація управління цінами</div>
+        <div class="tier-desc">
+          Підготовка політики з ціноутворення — гайд із рекомендаціями щодо системного управління прибутком для девелоперського бізнесу компанії. Охоплює принципи формування цін, процеси перегляду та коригування, зони відповідальності, KPI та підходи до прийняття рішень на основі даних.
+        </div>
+        <div class="tier-meta">
+          <div class="meta-item">
+            <span class="meta-label">Вартість</span>
+            <span class="meta-value price">€ 1 900</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Термін</span>
+            <span class="meta-value">3 тижні</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Оплата</span>
+            <span class="meta-value" style="font-size:14px; font-weight:500;">Разова</span>
+          </div>
+        </div>
+        <div class="deliverables">
+          <h4>Результат</h4>
+          <div class="del-list">
+            <span class="del-tag">PDF-гайд з рекомендаціями</span>
+            <span class="del-tag">Принципи ціноутворення</span>
+            <span class="del-tag">Процеси та ролі</span>
+            <span class="del-tag">KPI та метрики</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ЕТАП 2: P/ARC (CHANGE #3: Power BI note) ===== -->
+  <div class="section">
+    <div class="section-label">Етап 2</div>
+    <div class="section-title">P/ARC — ринкова аналітика</div>
+    <p class="intro-text">
+      Аналітична система M4U для конкурентного аналізу та цінового позиціонування. Агрегує дані з 60+ відкритих джерел, оцінює споживчу цінність об'єктів за параметрами місцерозташування, якості та надійності забудовника.
+    </p>
+
+    <!-- P/ARC MOCKUP -->
+    <div class="mockup-wrapper">
+      <div class="mockup-bar">
+        <div class="mockup-dot r"></div>
+        <div class="mockup-dot y"></div>
+        <div class="mockup-dot g"></div>
+        <span class="mockup-bar-title">P/ARC — Market Intelligence</span>
+      </div>
+      <div class="mockup-body">
+        <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg" style="display:block; width:100%;">
+          <rect width="760" height="340" fill="#f8f9fa"/>
+          <!-- Sidebar -->
+          <rect x="0" y="0" width="180" height="340" fill="#1a1a2e"/>
+          <rect x="20" y="20" width="60" height="8" rx="4" fill="#C3BD9F" opacity="0.8"/>
+          <rect x="20" y="50" width="140" height="6" rx="3" fill="rgba(255,255,255,0.1)"/>
+          <rect x="20" y="70" width="140" height="32" rx="6" fill="rgba(195,189,159,0.15)"/>
+          <text x="40" y="90" font-family="Inter,sans-serif" font-size="11" fill="#C3BD9F" font-weight="600">Новий проєкт</text>
+          <rect x="20" y="114" width="140" height="32" rx="6" fill="rgba(255,255,255,0.05)"/>
+          <text x="40" y="134" font-family="Inter,sans-serif" font-size="11" fill="rgba(255,255,255,0.5)">Мій проєкт</text>
+          <rect x="20" y="158" width="140" height="32" rx="6" fill="rgba(255,255,255,0.05)"/>
+          <text x="40" y="178" font-family="Inter,sans-serif" font-size="11" fill="rgba(255,255,255,0.5)">Ринок</text>
+          <!-- Main area -->
+          <text x="200" y="38" font-family="Oswald,sans-serif" font-size="16" fill="#2d2d3a" font-weight="600">ЦІНОВЕ ПОЗИЦІОНУВАННЯ</text>
+          <rect x="200" y="50" width="200" height="5" rx="2" fill="#C3BD9F" opacity="0.3"/>
+          <!-- Scatter plot area -->
+          <rect x="200" y="70" width="340" height="250" rx="8" fill="white" stroke="#e5e7eb"/>
+          <text x="215" y="92" font-family="Inter,sans-serif" font-size="9" fill="#6b7280">Ціна ₴/м²</text>
+          <line x1="240" y1="100" x2="240" y2="300" stroke="#e5e7eb" stroke-width="1"/>
+          <line x1="240" y1="300" x2="520" y2="300" stroke="#e5e7eb" stroke-width="1"/>
+          <text x="370" y="316" font-family="Inter,sans-serif" font-size="9" fill="#6b7280" text-anchor="middle">Споживча цінність (Value Score)</text>
+          <!-- Grid lines -->
+          <line x1="240" y1="200" x2="520" y2="200" stroke="#f0f0f0" stroke-width="1" stroke-dasharray="4"/>
+          <line x1="240" y1="150" x2="520" y2="150" stroke="#f0f0f0" stroke-width="1" stroke-dasharray="4"/>
+          <line x1="380" y1="100" x2="380" y2="300" stroke="#f0f0f0" stroke-width="1" stroke-dasharray="4"/>
+          <!-- Scatter dots (competitors) -->
+          <circle cx="290" cy="230" r="6" fill="#B1C4D4" opacity="0.7"/>
+          <circle cx="320" cy="200" r="5" fill="#B1C4D4" opacity="0.7"/>
+          <circle cx="350" cy="180" r="7" fill="#B1C4D4" opacity="0.7"/>
+          <circle cx="310" cy="250" r="5" fill="#B1C4D4" opacity="0.7"/>
+          <circle cx="370" cy="210" r="6" fill="#B1C4D4" opacity="0.7"/>
+          <circle cx="400" cy="170" r="5" fill="#B1C4D4" opacity="0.7"/>
+          <circle cx="430" cy="150" r="6" fill="#B1C4D4" opacity="0.7"/>
+          <circle cx="340" cy="270" r="5" fill="#B1C4D4" opacity="0.7"/>
+          <circle cx="460" cy="140" r="5" fill="#B1C4D4" opacity="0.7"/>
+          <circle cx="280" cy="260" r="4" fill="#B1C4D4" opacity="0.7"/>
+          <circle cx="490" cy="120" r="5" fill="#B1C4D4" opacity="0.7"/>
+          <circle cx="440" cy="190" r="4" fill="#B1C4D4" opacity="0.7"/>
+          <!-- Trend line -->
+          <line x1="260" y1="275" x2="510" y2="115" stroke="#C3BD9F" stroke-width="2" stroke-dasharray="6" opacity="0.6"/>
+          <!-- Your project (highlighted) -->
+          <circle cx="390" cy="160" r="10" fill="#C3BD9F" stroke="#8a7e64" stroke-width="2"/>
+          <text x="405" y="155" font-family="Inter,sans-serif" font-size="9" fill="#2d2d3a" font-weight="600">Ваш проєкт</text>
+          <!-- Right panel — KPIs -->
+          <rect x="556" y="70" width="186" height="250" rx="8" fill="white" stroke="#e5e7eb"/>
+          <text x="572" y="95" font-family="Oswald,sans-serif" font-size="11" fill="#6b7280" letter-spacing="1">КЛЮЧОВІ МЕТРИКИ</text>
+          <rect x="572" y="110" width="155" height="50" rx="6" fill="#f8f9fa"/>
+          <text x="582" y="128" font-family="Inter,sans-serif" font-size="9" fill="#6b7280">Середня ціна ринку</text>
+          <text x="582" y="148" font-family="Oswald,sans-serif" font-size="20" fill="#2d2d3a" font-weight="600">42 800 ₴/м²</text>
+          <rect x="572" y="170" width="155" height="50" rx="6" fill="#f8f9fa"/>
+          <text x="582" y="188" font-family="Inter,sans-serif" font-size="9" fill="#6b7280">Рекомендована ціна</text>
+          <text x="582" y="208" font-family="Oswald,sans-serif" font-size="20" fill="#5a6e4a" font-weight="600">45 200 ₴/м²</text>
+          <rect x="572" y="230" width="155" height="50" rx="6" fill="#f8f9fa"/>
+          <text x="582" y="248" font-family="Inter,sans-serif" font-size="9" fill="#6b7280">Конкурентів в аналізі</text>
+          <text x="582" y="268" font-family="Oswald,sans-serif" font-size="20" fill="#2d2d3a" font-weight="600">24</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="tier-card" style="margin-top: 24px;">
+      <span class="tier-badge v3">Підписка</span>
+      <div class="tier-name">Доступ до P/ARC</div>
+      <div class="tier-desc">
+        Готовий аналітичний звіт у середовищі Microsoft Power BI. Формування стартових цінових орієнтирів, порівняльний аналіз конкурентів, моніторинг ринку в реальному часі. Необмежена кількість користувачів у межах домену.
+      </div>
+      <table class="parc-table">
+        <thead>
+          <tr><th>Тариф</th><th>Ціна</th><th>Економія</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Місячна підписка</td>
+            <td class="td-price">€490 <span style="font-size:13px; font-weight:400; color: var(--muted);">/міс</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>6 місяців (авансом)</td>
+            <td class="td-price">€390 <span style="font-size:13px; font-weight:400; color: var(--muted);">/міс</span></td>
+            <td class="td-save">–20%</td>
+          </tr>
+          <tr>
+            <td>12 місяців (авансом)</td>
+            <td class="td-price">€290 <span style="font-size:13px; font-weight:400; color: var(--muted);">/міс</span></td>
+            <td class="td-save">–41%</td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- CHANGE #3: Power BI Pro note -->
+      <div class="note-box" style="margin-top:16px;">
+        <strong>Важливо:</strong> для роботи з P/ARC кожному користувачу необхідний обліковий запис Microsoft Power BI Pro (≈$10/міс на користувача). Це стандартна ліцензія Microsoft, яка оплачується окремо.
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ЕТАП 3: MAXIFY (CHANGE #4: new SVG mockup) ===== -->
+  <div class="section">
+    <div class="section-label">Етап 3</div>
+    <div class="section-title">Maxify — динамічне ціноутворення</div>
+    <p class="intro-text">
+      SaaS-платформа для автоматизованого управління цінами в житловій нерухомості. Система аналізує динаміку попиту та коригує ціни для досягнення оптимальної дохідності.
+    </p>
+
+    <!-- MAXIFY MOCKUP — redesigned chess board (шахматка) -->
+    <div class="mockup-wrapper">
+      <div class="mockup-bar">
+        <div class="mockup-dot r"></div>
+        <div class="mockup-dot y"></div>
+        <div class="mockup-dot g"></div>
+        <span class="mockup-bar-title">Maxify — Dynamic Pricing</span>
+      </div>
+      <div class="mockup-body">
+        <svg viewBox="0 0 760 440" xmlns="http://www.w3.org/2000/svg" style="display:block; width:100%;">
+          <rect width="760" height="440" fill="#E9EFF4"/>
+
+          <!-- Top nav -->
+          <rect x="0" y="0" width="760" height="36" fill="#0B0D58"/>
+          <rect x="12" y="8" width="16" height="5" rx="1" fill="#68A8F9"/>
+          <rect x="12" y="15" width="16" height="2" rx="1" fill="#68A8F9" opacity="0.5"/>
+          <text x="34" y="23" font-family="Inter,sans-serif" font-size="10" fill="#68A8F9" font-weight="700">maxify</text>
+          <text x="300" y="23" font-family="Inter,sans-serif" font-size="9" fill="white" font-weight="600">Мої ЖК</text>
+          <text x="380" y="23" font-family="Inter,sans-serif" font-size="9" fill="rgba(255,255,255,0.6)">Допомога</text>
+          <text x="450" y="23" font-family="Inter,sans-serif" font-size="9" fill="rgba(255,255,255,0.6)">Історія</text>
+          <circle cx="730" cy="18" r="12" fill="rgba(255,255,255,0.15)"/>
+
+          <!-- Statistics panel -->
+          <rect x="16" y="48" width="728" height="110" rx="4" fill="white"/>
+
+          <!-- Stat: Status -->
+          <text x="32" y="68" font-family="Inter,sans-serif" font-size="10" fill="#0B0D58" font-weight="600">Статус</text>
+          <!-- Mini donut -->
+          <circle cx="52" cy="98" r="18" fill="none" stroke="#A1A1BD" stroke-width="8"/>
+          <circle cx="52" cy="98" r="18" fill="none" stroke="#AAEBAA" stroke-width="8" stroke-dasharray="75 113" stroke-dashoffset="0"/>
+          <circle cx="52" cy="98" r="18" fill="none" stroke="#FED774" stroke-width="8" stroke-dasharray="20 113" stroke-dashoffset="-75"/>
+          <text x="90" y="82" font-family="Inter,sans-serif" font-size="8" fill="#545584">ВСЬОГО</text>
+          <text x="145" y="82" font-family="Inter,sans-serif" font-size="9" fill="#0B0D58" font-weight="600">4 103</text>
+          <text x="90" y="96" font-family="Inter,sans-serif" font-size="8" fill="#545584">Вільно</text>
+          <text x="145" y="96" font-family="Inter,sans-serif" font-size="9" fill="#0B0D58" font-weight="600">3 200</text>
+          <text x="90" y="110" font-family="Inter,sans-serif" font-size="8" fill="#545584">Продано</text>
+          <text x="145" y="110" font-family="Inter,sans-serif" font-size="9" fill="#0B0D58" font-weight="600">903</text>
+          <text x="90" y="124" font-family="Inter,sans-serif" font-size="8" fill="#545584">Резерв</text>
+          <text x="145" y="124" font-family="Inter,sans-serif" font-size="9" fill="#0B0D58" font-weight="600">—</text>
+
+          <!-- Divider -->
+          <line x1="190" y1="62" x2="190" y2="145" stroke="#E9EFF4" stroke-width="1"/>
+
+          <!-- Stat: Average price -->
+          <text x="206" y="68" font-family="Inter,sans-serif" font-size="10" fill="#0B0D58" font-weight="600">Середня ціна за м²</text>
+          <text x="206" y="88" font-family="Inter,sans-serif" font-size="8" fill="#545584">ВСЬОГО</text>
+          <text x="310" y="88" font-family="Inter,sans-serif" font-size="9" fill="#0B0D58" font-weight="600" text-anchor="end">923</text>
+          <text x="206" y="104" font-family="Inter,sans-serif" font-size="8" fill="#545584">Вільно</text>
+          <text x="310" y="104" font-family="Inter,sans-serif" font-size="9" fill="#00BC00" font-weight="600" text-anchor="end">923</text>
+          <rect x="206" y="112" width="110" height="1" fill="#E9EFF4"/>
+          <text x="206" y="128" font-family="Inter,sans-serif" font-size="8" fill="#545584">min/м²</text>
+          <text x="250" y="128" font-family="Inter,sans-serif" font-size="8" fill="#0B0D58" font-weight="600">795</text>
+          <text x="276" y="128" font-family="Inter,sans-serif" font-size="8" fill="#545584">max/м²</text>
+          <text x="310" y="128" font-family="Inter,sans-serif" font-size="8" fill="#0B0D58" font-weight="600">1 033</text>
+
+          <!-- Divider -->
+          <line x1="340" y1="62" x2="340" y2="145" stroke="#E9EFF4" stroke-width="1"/>
+
+          <!-- Stat: Value -->
+          <text x="356" y="68" font-family="Inter,sans-serif" font-size="10" fill="#0B0D58" font-weight="600">Вартість</text>
+          <text x="356" y="88" font-family="Inter,sans-serif" font-size="8" fill="#545584">ПОТОЧНА</text>
+          <text x="500" y="88" font-family="Inter,sans-serif" font-size="9" fill="#0B0D58" font-weight="600" text-anchor="end">3 785 305</text>
+          <text x="356" y="104" font-family="Inter,sans-serif" font-size="8" fill="#545584">Вільно</text>
+          <text x="500" y="104" font-family="Inter,sans-serif" font-size="9" fill="#00BC00" font-weight="600" text-anchor="end">3 785 305</text>
+          <rect x="356" y="112" width="150" height="1" fill="#E9EFF4"/>
+          <text x="356" y="128" font-family="Inter,sans-serif" font-size="8" fill="#545584">Стартова вартість</text>
+          <text x="500" y="128" font-family="Inter,sans-serif" font-size="8" fill="#0B0D58" font-weight="600" text-anchor="end">3 785 305</text>
+
+          <!-- Divider -->
+          <line x1="520" y1="62" x2="520" y2="145" stroke="#E9EFF4" stroke-width="1"/>
+
+          <!-- Stat: Plan/Fact -->
+          <text x="536" y="68" font-family="Inter,sans-serif" font-size="10" fill="#0B0D58" font-weight="600">План/Факт</text>
+          <text x="536" y="88" font-family="Inter,sans-serif" font-size="8" fill="#545584">ПЛАНОВА ВАРТІСТЬ</text>
+          <text x="728" y="88" font-family="Inter,sans-serif" font-size="9" fill="#0B0D58" font-weight="600" text-anchor="end">3 692 412</text>
+          <text x="536" y="104" font-family="Inter,sans-serif" font-size="8" fill="#545584">Різниця</text>
+          <text x="728" y="104" font-family="Inter,sans-serif" font-size="9" fill="#00BC00" font-weight="600" text-anchor="end">92 893</text>
+          <text x="536" y="120" font-family="Inter,sans-serif" font-size="8" fill="#545584">Прогноз виконання</text>
+          <text x="728" y="120" font-family="Inter,sans-serif" font-size="9" fill="#00BC00" font-weight="600" text-anchor="end">102.34%</text>
+
+          <!-- Buttons row -->
+          <rect x="16" y="170" width="110" height="28" rx="14" fill="none" stroke="#68A8F9" stroke-width="1"/>
+          <text x="71" y="188" font-family="Inter,sans-serif" font-size="9" fill="#0B0D58" text-anchor="middle" font-weight="500">Відміна</text>
+          <rect x="136" y="170" width="180" height="28" rx="14" fill="#0B0D58"/>
+          <text x="226" y="188" font-family="Inter,sans-serif" font-size="9" fill="white" text-anchor="middle" font-weight="500">Надіслати на погодження</text>
+
+          <!-- View mode tabs -->
+          <rect x="518" y="170" width="226" height="24" rx="12" fill="#F0F6FE"/>
+          <rect x="522" y="173" width="60" height="18" rx="9" fill="white"/>
+          <text x="552" y="185" font-family="Inter,sans-serif" font-size="8" fill="#0B0D58" text-anchor="middle" font-weight="600">шахматка</text>
+          <text x="610" y="185" font-family="Inter,sans-serif" font-size="8" fill="#545584" text-anchor="middle">таблиця</text>
+          <text x="695" y="185" font-family="Inter,sans-serif" font-size="8" fill="#545584" text-anchor="middle">теплова мапа</text>
+
+          <!-- Chess board (шахматка) -->
+          <rect x="16" y="208" width="728" height="224" rx="4" fill="white"/>
+
+          <!-- Column headers: під'їзди -->
+          <rect x="60" y="212" width="220" height="18" fill="#D4E0EB"/>
+          <text x="170" y="225" font-family="Inter,sans-serif" font-size="8" fill="#0B0D58" text-anchor="middle" font-weight="600">1 під'їзд</text>
+          <rect x="60" y="230" width="220" height="14" fill="none" stroke="#D4E0EB" stroke-width="1"/>
+
+          <rect x="284" y="212" width="330" height="18" fill="#D4E0EB"/>
+          <text x="449" y="225" font-family="Inter,sans-serif" font-size="8" fill="#0B0D58" text-anchor="middle" font-weight="600">2 під'їзд</text>
+          <rect x="284" y="230" width="330" height="14" fill="none" stroke="#D4E0EB" stroke-width="1"/>
+
+          <rect x="618" y="212" width="122" height="18" fill="#D4E0EB"/>
+          <text x="679" y="225" font-family="Inter,sans-serif" font-size="8" fill="#0B0D58" text-anchor="middle" font-weight="600">3 під'їзд</text>
+          <rect x="618" y="230" width="122" height="14" fill="none" stroke="#D4E0EB" stroke-width="1"/>
+
+          <!-- Sub-column numbers -->
+          <text x="96" y="241" font-family="Inter,sans-serif" font-size="7" fill="#0B0D58" text-anchor="middle" font-weight="600">1</text>
+          <text x="168" y="241" font-family="Inter,sans-serif" font-size="7" fill="#0B0D58" text-anchor="middle" font-weight="600">2</text>
+          <text x="240" y="241" font-family="Inter,sans-serif" font-size="7" fill="#0B0D58" text-anchor="middle" font-weight="600">3</text>
+          <text x="320" y="241" font-family="Inter,sans-serif" font-size="7" fill="#0B0D58" text-anchor="middle" font-weight="600">4</text>
+          <text x="392" y="241" font-family="Inter,sans-serif" font-size="7" fill="#0B0D58" text-anchor="middle" font-weight="600">5</text>
+          <text x="464" y="241" font-family="Inter,sans-serif" font-size="7" fill="#0B0D58" text-anchor="middle" font-weight="600">6</text>
+          <text x="536" y="241" font-family="Inter,sans-serif" font-size="7" fill="#0B0D58" text-anchor="middle" font-weight="600">7</text>
+          <text x="643" y="241" font-family="Inter,sans-serif" font-size="7" fill="#0B0D58" text-anchor="middle" font-weight="600">8</text>
+          <text x="710" y="241" font-family="Inter,sans-serif" font-size="7" fill="#0B0D58" text-anchor="middle" font-weight="600">9</text>
+
+          <!-- Row labels (floors) -->
+          <text x="24" y="252" font-family="Inter,sans-serif" font-size="7" fill="#545584">ЮНІТ →</text>
+          <text x="24" y="262" font-family="Inter,sans-serif" font-size="7" fill="#545584">ПОВЕРХ ↓</text>
+
+          <!-- Floor 8 -->
+          <text x="44" y="278" font-family="Inter,sans-serif" font-size="8" fill="#0B0D58" font-weight="600">8</text>
+          <!-- Green cells (price up) -->
+          <rect x="62" y="268" width="66" height="22" rx="2" fill="#F2FDF9" stroke="#00BC00" stroke-width="0.5"/>
+          <text x="95" y="282" font-family="Inter,sans-serif" font-size="7" fill="#00BC00" text-anchor="middle" font-weight="600">▲ 860</text>
+          <!-- Orange cell (price down) -->
+          <rect x="132" y="268" width="66" height="22" rx="2" fill="#FFF6E6" stroke="#FFA000" stroke-width="0.5"/>
+          <text x="165" y="282" font-family="Inter,sans-serif" font-size="7" fill="#FFA000" text-anchor="middle" font-weight="600">▼ 840</text>
+          <!-- Dark green (heavily increased) -->
+          <rect x="202" y="268" width="66" height="22" rx="2" fill="#BAFFE6" stroke="#00BC00" stroke-width="0.5"/>
+          <text x="235" y="282" font-family="Inter,sans-serif" font-size="7" fill="#00BC00" text-anchor="middle" font-weight="600">▲ 795</text>
+          <!-- Green -->
+          <rect x="272" y="268" width="66" height="22" rx="2" fill="#F2FDF9" stroke="#00BC00" stroke-width="0.5"/>
+          <text x="305" y="282" font-family="Inter,sans-serif" font-size="7" fill="#00BC00" text-anchor="middle" font-weight="600">▲ 820</text>
+          <!-- Neutral (no change) -->
+          <rect x="342" y="268" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="375" y="282" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">910</text>
+          <!-- Green -->
+          <rect x="412" y="268" width="66" height="22" rx="2" fill="#F2FDF9" stroke="#00BC00" stroke-width="0.5"/>
+          <text x="445" y="282" font-family="Inter,sans-serif" font-size="7" fill="#00BC00" text-anchor="middle" font-weight="600">▲ 870</text>
+          <!-- Orange -->
+          <rect x="482" y="268" width="66" height="22" rx="2" fill="#FFF6E6" stroke="#FFA000" stroke-width="0.5"/>
+          <text x="515" y="282" font-family="Inter,sans-serif" font-size="7" fill="#FFA000" text-anchor="middle" font-weight="600">▼ 865</text>
+          <!-- Neutral -->
+          <rect x="552" y="268" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="585" y="282" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">930</text>
+          <!-- Green -->
+          <rect x="622" y="268" width="66" height="22" rx="2" fill="#F2FDF9" stroke="#00BC00" stroke-width="0.5"/>
+          <text x="655" y="282" font-family="Inter,sans-serif" font-size="7" fill="#00BC00" text-anchor="middle" font-weight="600">▲ 915</text>
+
+          <!-- Floor 7 -->
+          <text x="44" y="302" font-family="Inter,sans-serif" font-size="8" fill="#0B0D58" font-weight="600">7</text>
+          <rect x="62" y="292" width="66" height="22" rx="2" fill="#F2FDF9" stroke="#00BC00" stroke-width="0.5"/>
+          <text x="95" y="306" font-family="Inter,sans-serif" font-size="7" fill="#00BC00" text-anchor="middle" font-weight="600">▲ 892,925</text>
+          <rect x="132" y="292" width="66" height="22" rx="2" fill="#BAFFE6" stroke="#00BC00" stroke-width="0.5"/>
+          <text x="165" y="306" font-family="Inter,sans-serif" font-size="7" fill="#00BC00" text-anchor="middle" font-weight="600">▲ 878,026</text>
+          <rect x="202" y="292" width="66" height="22" rx="2" fill="#BAFFE6" stroke="#00BC00" stroke-width="0.5"/>
+          <text x="235" y="306" font-family="Inter,sans-serif" font-size="7" fill="#00BC00" text-anchor="middle" font-weight="600">▲ 834,432</text>
+          <rect x="272" y="292" width="66" height="22" rx="2" fill="#F2FDF9" stroke="#00BC00" stroke-width="0.5"/>
+          <text x="305" y="306" font-family="Inter,sans-serif" font-size="7" fill="#00BC00" text-anchor="middle" font-weight="600">▲ 858,362</text>
+          <rect x="342" y="292" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="375" y="306" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">946,448</text>
+          <rect x="412" y="292" width="66" height="22" rx="2" fill="#F2FDF9" stroke="#00BC00" stroke-width="0.5"/>
+          <text x="445" y="306" font-family="Inter,sans-serif" font-size="7" fill="#00BC00" text-anchor="middle" font-weight="600">▲ 901,001</text>
+          <rect x="482" y="292" width="66" height="22" rx="2" fill="#F2FDF9" stroke="#00BC00" stroke-width="0.5"/>
+          <text x="515" y="306" font-family="Inter,sans-serif" font-size="7" fill="#00BC00" text-anchor="middle" font-weight="600">▲ 897,609</text>
+          <rect x="552" y="292" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="585" y="306" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">968,129</text>
+          <rect x="622" y="292" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="655" y="306" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">947,65</text>
+
+          <!-- Floor 6 -->
+          <text x="44" y="326" font-family="Inter,sans-serif" font-size="8" fill="#0B0D58" font-weight="600">6</text>
+          <rect x="62" y="316" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#545584" stroke-width="0.5"/>
+          <text x="95" y="330" font-family="Inter,sans-serif" font-size="7" fill="#0B0D58" text-anchor="middle" font-weight="600">905,956</text>
+          <rect x="132" y="316" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#545584" stroke-width="0.5"/>
+          <text x="165" y="330" font-family="Inter,sans-serif" font-size="7" fill="#0B0D58" text-anchor="middle" font-weight="600">891,056</text>
+          <rect x="202" y="316" width="66" height="22" rx="2" fill="#BAFFE6" stroke="#00BC00" stroke-width="0.5"/>
+          <text x="235" y="330" font-family="Inter,sans-serif" font-size="7" fill="#00BC00" text-anchor="middle" font-weight="600">▲ 847,451</text>
+          <rect x="272" y="316" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="305" y="330" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">868,889</text>
+          <rect x="342" y="316" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="375" y="330" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">959,479</text>
+          <rect x="412" y="316" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="445" y="330" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">914,032</text>
+          <rect x="482" y="316" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="515" y="330" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">910,64</text>
+          <rect x="552" y="316" width="66" height="22" rx="2" fill="#FFF6E6" stroke="#FFA000" stroke-width="0.5"/>
+          <text x="585" y="330" font-family="Inter,sans-serif" font-size="7" fill="#FFA000" text-anchor="middle" font-weight="600">▼ 981,16</text>
+          <rect x="622" y="316" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="655" y="330" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">960,681</text>
+
+          <!-- Floor 5 -->
+          <text x="44" y="350" font-family="Inter,sans-serif" font-size="8" fill="#0B0D58" font-weight="600">5</text>
+          <rect x="62" y="340" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="95" y="354" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">922,989</text>
+          <rect x="132" y="340" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="165" y="354" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">904,034</text>
+          <rect x="202" y="340" width="66" height="22" rx="2" fill="#F2FDF9" stroke="#00BC00" stroke-width="0.5"/>
+          <text x="235" y="354" font-family="Inter,sans-serif" font-size="7" fill="#00BC00" text-anchor="middle" font-weight="600">▲ 860,482</text>
+          <rect x="272" y="340" width="66" height="22" rx="2" fill="#F2FDF9" stroke="#00BC00" stroke-width="0.5"/>
+          <text x="305" y="354" font-family="Inter,sans-serif" font-size="7" fill="#00BC00" text-anchor="middle" font-weight="600">▲ 882,997</text>
+          <rect x="342" y="340" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="375" y="354" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">972,509</text>
+          <rect x="412" y="340" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="445" y="354" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">925,822</text>
+          <rect x="482" y="340" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="515" y="354" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">929,78</text>
+          <rect x="552" y="340" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="585" y="354" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">990,476</text>
+          <rect x="622" y="340" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="655" y="354" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">979,464</text>
+
+          <!-- Floor 4 -->
+          <text x="44" y="374" font-family="Inter,sans-serif" font-size="8" fill="#0B0D58" font-weight="600">4</text>
+          <rect x="62" y="364" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="95" y="378" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">936,02</text>
+          <rect x="132" y="364" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="165" y="378" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">916,115</text>
+          <rect x="202" y="364" width="66" height="22" rx="2" fill="#F2FDF9" stroke="#00BC00" stroke-width="0.5"/>
+          <text x="235" y="378" font-family="Inter,sans-serif" font-size="7" fill="#00BC00" text-anchor="middle" font-weight="600">▲ 873,513</text>
+          <rect x="272" y="364" width="66" height="22" rx="2" fill="#FFF6E6" stroke="#FFA000" stroke-width="0.5"/>
+          <text x="305" y="378" font-family="Inter,sans-serif" font-size="7" fill="#FFA000" text-anchor="middle" font-weight="600">▼ 894,951</text>
+          <rect x="342" y="364" width="66" height="22" rx="2" fill="#BAFFE6" stroke="#00BC00" stroke-width="0.5"/>
+          <text x="375" y="378" font-family="Inter,sans-serif" font-size="7" fill="#00BC00" text-anchor="middle" font-weight="600">▲ 985,54</text>
+          <rect x="412" y="364" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="445" y="378" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">937,235</text>
+          <rect x="482" y="364" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="515" y="378" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">939,068</text>
+          <rect x="552" y="364" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="585" y="378" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">1 003,51</text>
+          <rect x="622" y="364" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="655" y="378" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">992,37</text>
+
+          <!-- Floor 3 -->
+          <text x="44" y="398" font-family="Inter,sans-serif" font-size="8" fill="#0B0D58" font-weight="600">3</text>
+          <rect x="62" y="388" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="95" y="402" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">949,05</text>
+          <rect x="132" y="388" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="165" y="402" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">929,146</text>
+          <rect x="202" y="388" width="66" height="22" rx="2" fill="#F2FDF9" stroke="#00BC00" stroke-width="0.5"/>
+          <text x="235" y="402" font-family="Inter,sans-serif" font-size="7" fill="#00BC00" text-anchor="middle" font-weight="600">▲ 886,555</text>
+          <rect x="272" y="388" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="305" y="402" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">910,399</text>
+          <rect x="342" y="388" width="66" height="22" rx="2" fill="#BAFFE6" stroke="#00BC00" stroke-width="0.5"/>
+          <text x="375" y="402" font-family="Inter,sans-serif" font-size="7" fill="#00BC00" text-anchor="middle" font-weight="600">▲ 998,571</text>
+          <rect x="412" y="388" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="445" y="402" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">950,266</text>
+          <rect x="482" y="388" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="515" y="402" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">949,105</text>
+          <rect x="552" y="388" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="585" y="402" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">1 016,54</text>
+          <rect x="622" y="388" width="66" height="22" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="655" y="402" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">1 002,58</text>
+
+          <!-- Floor 2 row -->
+          <text x="44" y="422" font-family="Inter,sans-serif" font-size="8" fill="#0B0D58" font-weight="600">2</text>
+          <rect x="62" y="412" width="66" height="20" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="95" y="425" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">962,081</text>
+          <rect x="132" y="412" width="66" height="20" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="165" y="425" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">942,176</text>
+          <rect x="202" y="412" width="66" height="20" rx="2" fill="#F2FDF9" stroke="#00BC00" stroke-width="0.5"/>
+          <text x="235" y="425" font-family="Inter,sans-serif" font-size="7" fill="#00BC00" text-anchor="middle" font-weight="600">▲ 899,586</text>
+          <rect x="272" y="412" width="66" height="20" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="305" y="425" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">924,808</text>
+          <rect x="342" y="412" width="66" height="20" rx="2" fill="#BAFFE6" stroke="#00BC00" stroke-width="0.5"/>
+          <text x="375" y="425" font-family="Inter,sans-serif" font-size="7" fill="#00BC00" text-anchor="middle" font-weight="600">▲ 1 011,6</text>
+          <rect x="412" y="412" width="66" height="20" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="445" y="425" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">963,297</text>
+          <rect x="482" y="412" width="66" height="20" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="515" y="425" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">963,502</text>
+          <rect x="552" y="412" width="66" height="20" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="585" y="425" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">1 033,28</text>
+          <rect x="622" y="412" width="66" height="20" rx="2" fill="#FBFBFB" stroke="#D0D0DE" stroke-width="0.5"/>
+          <text x="655" y="425" font-family="Inter,sans-serif" font-size="7" fill="#D0D0DE" text-anchor="middle">1 015,57</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Maxify pricing models -->
+    <div class="maxify-box" style="margin-top: 24px;">
+      <h3>Моделі оплати Maxify</h3>
+      <p class="sub">Три варіанти — залежно від рівня залучення M4U до управління цінами</p>
+
+      <div class="maxify-options">
+        <div class="maxify-opt">
+          <div class="opt-label">Self-service</div>
+          <div class="opt-rate">0.1% <span>від продажів</span></div>
+          <div class="opt-desc">Самостійне управління цінами через інтерфейс Maxify. M4U забезпечує платформу та підтримку</div>
+        </div>
+        <div class="or-divider">або</div>
+        <div class="maxify-opt">
+          <div class="opt-label">Full management</div>
+          <div class="opt-rate">0.15% <span>від продажів</span></div>
+          <div class="opt-desc">M4U бере на себе повне управління ціновою стратегією. Онбординг будинків включено</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <div class="or-divider" style="margin-bottom: 14px;">або фіксована підписка</div>
+        <table class="maxify-sub-table">
+          <thead>
+            <tr><th>Кількість будинків</th><th>Вартість</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>До 3 будинків</td><td class="td-price-w">€990 <span style="font-size:13px; font-weight:400; opacity:0.6;">/міс</span></td></tr>
+            <tr><td>До 10 будинків</td><td class="td-price-w">€2 900 <span style="font-size:13px; font-weight:400; opacity:0.6;">/міс</span></td></tr>
+            <tr><td>Безлімітно</td><td class="td-price-w">€4 900 <span style="font-size:13px; font-weight:400; opacity:0.6;">/міс</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top: 18px; padding: 16px 20px; background: rgba(255,255,255,0.06); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+        <p style="font-size: 13px; opacity: 0.7; line-height: 1.6;">
+          <strong style="opacity:1; color: var(--olive);">Онбординг:</strong> €440 разово за будинок (наші сили). У рамках пакету Full management (0.15%) — безкоштовно.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== УМОВИ ===== -->
+  <div class="section">
+    <div class="section-label">Умови</div>
+    <div class="section-title">Організаційні деталі</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+      <div class="service-card">
+        <div class="service-icon" style="background:#f0f4ec;">📅</div>
+        <h3>Старт робіт</h3>
+        <p>За умови підписання договору та отримання передплати</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:#f0f1f5;">💳</div>
+        <h3>Оплата</h3>
+        <p>Передплата на місяць вперед або придбання пакету на триваліший період з дисконтом. ПДВ не нараховується</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:#f5f3ed;">📄</div>
+        <h3>Договір</h3>
+        <p>Надання програмного забезпечення за підпискою</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:#eef2f6;">🤝</div>
+        <h3>Гнучкі умови</h3>
+        <p>Стандартні умови — готові обговорити детальніше з урахуванням обсягів</p>
+      </div>
+    </div>
+    <div class="note-box">
+      <strong>Примітка:</strong> У цій пропозиції наведено стандартні умови співпраці. Ми готові обговорити індивідуальні умови з урахуванням кількості будинків та обсягу проєктів «Ковальська Нерухомість».
+    </div>
+  </div>
+
+  <!-- ===== КРОС-ПРОДАЖІ (CHANGE #5) ===== -->
+  <div class="section">
+    <div class="section-label">Також</div>
+    <div class="section-title">Інші напрямки співпраці</div>
+    <p class="intro-text">
+      Окрім послуг, описаних вище, M4U може допомогти з такими напрямками:
+    </p>
+    <div class="cross-sell-grid">
+      <div class="cross-sell-item">
+        <h4>Цінове дослідження</h4>
+        <p>Визначення оптимальних цін на основі конкурентного аналізу, собівартості та реакції покупців</p>
+      </div>
+      <div class="cross-sell-item">
+        <h4>Організація продажів</h4>
+        <p>Побудова структури відділу продажів, процесів, звітності та системи мотивації</p>
+      </div>
+      <div class="cross-sell-item">
+        <h4>CRM та IT-екосистема</h4>
+        <p>Налаштування CRM, документообігу, дебіторської, клієнтського кабінету, AI-інтеграція в процеси продажів</p>
+      </div>
+      <div class="cross-sell-item">
+        <h4>Аудит продажів</h4>
+        <p>AS-IS діагностика воронки, CRM-процесів та ефективності команди</p>
+      </div>
+    </div>
+
+    <!-- Education -->
+    <div class="edu-block">
+      <div class="edu-header">
+        <span class="edu-badge">Навчання</span>
+        <span class="edu-partner">спільно з Київською Школою Девелопменту</span>
+      </div>
+      <h3>Професійні курси для команди</h3>
+      <div class="edu-courses">
+        <div class="edu-course">
+          <h4>Комерційне управління</h4>
+          <p>Побудова системи комерційного управління девелоперським проєктом: від стратегії до операційного контролю продажів, маркетингу та ціноутворення</p>
+          <span class="edu-tag">📚 Для комерційних директорів, керівників відділів продажів, власників</span>
+        </div>
+        <div class="edu-course">
+          <h4>Прайс-менеджмент</h4>
+          <p>Управління ціноутворенням у девелопменті: методології визначення цін, динамічне ціноутворення, аналіз конкурентів та моделювання дохідності</p>
+          <span class="edu-tag">📚 Для комерційних директорів, аналітиків, керівників продажів, власників</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== КАЛЬКУЛЯТОР ===== -->
+  <div class="section calc-section">
+    <div class="section-label">Калькулятор</div>
+    <div class="section-title">Розрахунок вартості підписки</div>
+    <p class="intro-text">
+      Оберіть сервіси, кількість будинків та тривалість передплати — калькулятор покаже загальну вартість, середньомісячну ціну та економію.
+    </p>
+
+    <div class="calc-box">
+      <!-- Service toggles -->
+      <label style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); font-weight: 600; margin-bottom: 8px; display: block;">Сервіси</label>
+      <div class="calc-toggles">
+        <button class="calc-toggle active" onclick="setService('both', this)">P/ARC + Maxify</button>
+        <button class="calc-toggle" onclick="setService('parc', this)">Тільки P/ARC</button>
+        <button class="calc-toggle" onclick="setService('maxify', this)">Тільки Maxify</button>
+      </div>
+
+      <div class="calc-row">
+        <div class="calc-field" id="calcParcPeriodWrap">
+          <label>P/ARC — період підписки</label>
+          <select id="calcParcPeriod" onchange="calculate()">
+            <option value="1">Місячна підписка</option>
+            <option value="6">6 місяців (авансом)</option>
+            <option value="12">12 місяців (авансом)</option>
+          </select>
+        </div>
+        <div class="calc-field" id="calcMaxBuildingsWrap">
+          <label>Maxify — кількість будинків</label>
+          <select id="calcMaxBuildings" onchange="calculate()">
+            <option value="3">До 3 будинків</option>
+            <option value="10">До 10 будинків</option>
+            <option value="999">Безлімітно</option>
+          </select>
+        </div>
+        <div class="calc-field" id="calcMaxPeriodWrap">
+          <label>Maxify — період підписки</label>
+          <select id="calcMaxPeriod" onchange="calculate()">
+            <option value="1">Місячна підписка</option>
+            <option value="6">6 місяців (–10%)</option>
+            <option value="12">12 місяців (–21%)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="calc-results" id="calcResults"></div>
+    </div>
+  </div>
+
+  <script>
+    var currentService = 'both';
+
+    var PARC = {1: 490, 6: 390, 12: 290};
+    var PARC_BASE = 490;
+
+    var MXF_BASE = {3: 990, 10: 2900, 999: 4900};
+    var MXF_DISC = {1: 0, 6: 0.10, 12: 0.21};
+
+    function setService(svc, btn) {
+      currentService = svc;
+      var btns = document.querySelectorAll('.calc-toggle');
+      for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+      btn.classList.add('active');
+
+      document.getElementById('calcParcPeriodWrap').style.display = (svc === 'maxify') ? 'none' : '';
+      document.getElementById('calcMaxBuildingsWrap').style.display = (svc === 'parc') ? 'none' : '';
+      document.getElementById('calcMaxPeriodWrap').style.display = (svc === 'parc') ? 'none' : '';
+      calculate();
+    }
+
+    function fmt(n) {
+      return n.toLocaleString('uk-UA', {maximumFractionDigits: 0}).replace(/\s/g, ' ');
+    }
+
+    function calculate() {
+      var html = '';
+      var grandTotal = 0;
+      var grandSavings = 0;
+
+      if (currentService === 'parc' || currentService === 'both') {
+        var pMonths = parseInt(document.getElementById('calcParcPeriod').value);
+        var pMonthly = PARC[pMonths];
+        var pTotal = pMonthly * pMonths;
+        var pBaseline = PARC_BASE * pMonths;
+        var pSaved = pBaseline - pTotal;
+        var pPct = pMonths > 1 ? Math.round((1 - pMonthly / PARC_BASE) * 100) : 0;
+
+        grandTotal += pTotal;
+        grandSavings += pSaved;
+
+        html += '<div class="calc-result-card">';
+        html += '<h4>P/ARC — ринкова аналітика</h4>';
+        html += '<div class="calc-result-grid">';
+        html += '<div class="calc-metric"><div class="cm-label">Загалом за ' + pMonths + ' міс.</div><div class="cm-value green">€' + fmt(pTotal) + '</div></div>';
+        html += '<div class="calc-metric"><div class="cm-label">Середньомісячна</div><div class="cm-value">€' + fmt(pMonthly) + '</div></div>';
+        html += '<div class="calc-metric"><div class="cm-label">Економія</div><div class="cm-value green">€' + fmt(pSaved) + '</div>';
+        if (pPct > 0) html += '<div class="cm-note">–' + pPct + '% від базової ціни</div>';
+        html += '</div>';
+        html += '</div></div>';
+      }
+
+      if (currentService === 'maxify' || currentService === 'both') {
+        var mBuildings = parseInt(document.getElementById('calcMaxBuildings').value);
+        var mMonths = parseInt(document.getElementById('calcMaxPeriod').value);
+        var mBase = MXF_BASE[mBuildings];
+        var mDisc = MXF_DISC[mMonths];
+        var mMonthly = Math.round(mBase * (1 - mDisc));
+        var mTotal = mMonthly * mMonths;
+        var mBaseline = mBase * mMonths;
+        var mSaved = mBaseline - mTotal;
+        var mPct = mDisc > 0 ? Math.round(mDisc * 100) : 0;
+
+        var bLabel = mBuildings === 3 ? 'до 3 будинків' : mBuildings === 10 ? 'до 10 будинків' : 'безлімітно';
+
+        grandTotal += mTotal;
+        grandSavings += mSaved;
+
+        html += '<div class="calc-result-card">';
+        html += '<h4>Maxify — динамічне ціноутворення (' + bLabel + ')</h4>';
+        html += '<div class="calc-result-grid">';
+        html += '<div class="calc-metric"><div class="cm-label">Загалом за ' + mMonths + ' міс.</div><div class="cm-value green">€' + fmt(mTotal) + '</div></div>';
+        html += '<div class="calc-metric"><div class="cm-label">Середньомісячна</div><div class="cm-value">€' + fmt(mMonthly) + '</div></div>';
+        html += '<div class="calc-metric"><div class="cm-label">Економія</div><div class="cm-value green">€' + fmt(mSaved) + '</div>';
+        if (mPct > 0) html += '<div class="cm-note">–' + mPct + '% від базової ціни</div>';
+        html += '</div>';
+        html += '</div></div>';
+      }
+
+      // Bundle discount (5% for both services)
+      var bundleDiscount = 0;
+      if (currentService === 'both' && grandTotal > 0) {
+        bundleDiscount = Math.round(grandTotal * 0.05);
+        grandSavings += bundleDiscount;
+        grandTotal -= bundleDiscount;
+
+        html += '<div class="calc-result-card" style="background: linear-gradient(135deg, #f7f6f2, #f0efe8); border-color: #e0ddd0;">';
+        html += '<h4 style="color: #8a7e64;">Знижка за пакет P/ARC + Maxify</h4>';
+        html += '<div class="calc-result-grid">';
+        html += '<div class="calc-metric"><div class="cm-label">Додаткова знижка</div><div class="cm-value green">–5%</div></div>';
+        html += '<div class="calc-metric"><div class="cm-label">Економія за пакет</div><div class="cm-value green">€' + fmt(bundleDiscount) + '</div></div>';
+        html += '<div class="calc-metric"><div class="cm-label">Вартість після знижки</div><div class="cm-value green">€' + fmt(grandTotal) + '</div></div>';
+        html += '</div></div>';
+      }
+
+      // Total bar
+      html += '<div class="calc-total-bar">';
+      html += '<div><div class="ct-label">Загальна вартість</div>';
+      if (grandSavings > 0) html += '<div class="ct-savings">Загальна економія: €' + fmt(grandSavings) + (bundleDiscount > 0 ? ' (вкл. –5% за пакет)' : '') + '</div>';
+      html += '</div>';
+      html += '<div class="ct-value">€' + fmt(grandTotal) + '</div>';
+      html += '</div>';
+
+      document.getElementById('calcResults').innerHTML = html;
+    }
+
+    calculate();
+  </script>
+
+  <!-- ===== CTA ===== -->
+  <div class="cta-section">
+    <h2>Готові обговорити деталі?</h2>
+    <p>Зв'яжіться з нами для уточнення обсягу робіт та старту співпраці</p>
+    <div class="cta-contacts">
+      <span id="ctaEmail">📧</span>
+      <span>📞 +380 98 904 88 10</span>
+    </div>
+    <script>
+      document.getElementById('ctaEmail').textContent = '\u{1F4E7} v.danylenko' + '@' + 'm4u.com.ua';
+    </script>
+  </div>
+
+  <!-- ===== PDF ===== -->
+  <div class="save-pdf-section">
+    <button class="save-pdf-btn" onclick="window.print()">📄 Зберегти в PDF</button>
+  </div>
+
+</div>
+
+</body>
+</html>
