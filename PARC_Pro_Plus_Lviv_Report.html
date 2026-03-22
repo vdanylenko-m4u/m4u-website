@@ -580,6 +580,157 @@
     color: var(--bg-primary);
   }
 
+  /* ===== MOBILE RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .header {
+      flex-direction: column;
+      gap: 16px;
+      padding: 20px 20px;
+      text-align: center;
+    }
+    .header-left { justify-content: center; }
+    .header-right { justify-content: center; gap: 16px; }
+
+    .nav-tab { padding: 10px 16px; font-size: 11px; }
+
+    .price-hero {
+      flex-direction: column;
+      gap: 20px;
+      padding: 24px 20px;
+    }
+    .price-arrow { transform: rotate(90deg); }
+    .price-value { font-size: 24px; }
+
+    .page { padding: 0 16px; }
+
+    .section { padding: 28px 16px; }
+
+    .gauges-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .gauge-card { padding: 20px; }
+    .gauge-top { flex-direction: column; gap: 12px; }
+    .gauge-info { padding-right: 0; }
+    .gauge-visual { width: 120px; height: 70px; align-self: center; }
+    .gauge-svg { width: 120px; height: 70px; }
+    .gauge-percent { font-size: 18px; }
+    .gauge-name { font-size: 13px; }
+    .gauge-desc { font-size: 10px; }
+
+    .gauge-legend { flex-direction: column; gap: 6px; }
+
+    /* Infrastructure detail: 2x2 on tablet, 1col on phone */
+    .section-title { font-size: 16px; letter-spacing: 1px; }
+    .section-subtitle { font-size: 11px; }
+
+    .data-table { font-size: 11px; }
+    .data-table thead th { padding: 8px 8px; font-size: 9px; }
+    .data-table tbody td { padding: 8px 8px; }
+    .data-table tbody td.num { font-size: 11px; }
+
+    .map-container { border-radius: 8px; }
+
+    .assort-table { font-size: 10px; }
+    .assort-table thead th { padding: 6px 4px; font-size: 8px; }
+    .assort-table tbody td { padding: 6px 4px; font-size: 9px; }
+
+    .price-calc-card {
+      flex-direction: column;
+      gap: 16px;
+      padding: 20px;
+    }
+    .price-calc-value {
+      font-size: 28px;
+      min-width: unset;
+      width: 100%;
+      padding: 12px 20px;
+    }
+    .price-calc-title { font-size: 12px; }
+    .price-calc-desc { font-size: 10px; }
+
+    .page-header-repeat {
+      padding: 10px 16px;
+    }
+    .page-header-repeat .logo-mini { font-size: 14px; }
+    .page-header-repeat .prices-mini { font-size: 10px; gap: 10px; }
+
+    .footer {
+      flex-direction: column;
+      gap: 8px;
+      padding: 16px 20px;
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .logo { font-size: 24px; }
+    .logo-brand { font-size: 9px; padding-left: 12px; }
+
+    .price-hero { gap: 14px; padding: 18px 16px; }
+    .price-value { font-size: 20px; }
+    .price-label { font-size: 9px; }
+
+    .section { padding: 20px 12px; }
+    .section-header { gap: 10px; margin-bottom: 20px; }
+    .section-icon { width: 32px; height: 32px; font-size: 14px; border-radius: 8px; }
+    .section-title { font-size: 14px; }
+
+    .gauge-card { padding: 16px; }
+    .gauge-visual { width: 100px; height: 60px; }
+    .gauge-svg { width: 100px; height: 60px; }
+    .gauge-percent { font-size: 16px; }
+
+    /* Data tables scroll horizontally */
+    .data-table { display: block; overflow-x: auto; white-space: nowrap; }
+    .assort-table { display: block; overflow-x: auto; white-space: nowrap; }
+
+    /* Infrastructure detail: stack vertically */
+    [style*="grid-template-columns:repeat(4"] {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 16px !important;
+    }
+
+    /* Price calc */
+    .price-calc-value { font-size: 24px; }
+
+    /* SVG charts scroll */
+    .chart-wide { display: block; min-width: 700px; }
+
+    /* Ensure wide content doesn't break layout */
+    .page { overflow-x: auto; }
+
+    /* Insight boxes stack */
+    [style*="display:grid; grid-template-columns:1fr 1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+    [style*="display:flex; gap:24px;"] {
+      flex-direction: column !important;
+    }
+
+    .page-header-repeat .prices-mini { font-size: 9px; gap: 6px; }
+
+    .growth-note { font-size: 10px; }
+    .growth-value { font-size: 12px; }
+
+    .segment-badge { font-size: 11px; }
+  }
+
+  @media (max-width: 400px) {
+    .header { padding: 14px 12px; }
+    .logo { font-size: 20px; }
+    .page { padding: 0 8px; }
+    .section { padding: 16px 8px; }
+    .gauge-card { padding: 12px; }
+    .price-hero { padding: 14px 12px; }
+    .price-value { font-size: 18px; }
+
+    [style*="grid-template-columns:repeat(4"] {
+      grid-template-columns: 1fr 1fr !important;
+    }
+  }
+
   /* Page break helpers */
   .page-break {
     page-break-before: always;
@@ -3354,7 +3505,7 @@ aD2r403yo7aN5ZRvvhb+SzHlW22H/wCZxf8A8NH+Se1kvu4vuDMVZghZE1m81jQ0cdTwWLqllvOF
   </div>
 
   <div style="background:var(--bg-card); border-radius:12px; padding:32px; border:1px solid var(--border); margin-top:16px;">
-    <svg viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
+    <svg viewBox="0 0 900 560" class="chart-wide" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
       <defs>
         <linearGradient id="gridGrad" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#3a4f6a" stop-opacity="0.3"/>
@@ -3526,7 +3677,7 @@ aD2r403yo7aN5ZRvvhb+SzHlW22H/wCZxf8A8NH+Se1kvu4vuDMVZghZE1m81jQ0cdTwWLqllvOF
           <div style="font-size:11px; color:var(--text-muted);">Діапазон площ: 36 — 63 м² &nbsp;|&nbsp; 8 із 10 проєктів</div>
         </div>
       </div>
-      <svg viewBox="0 0 860 240" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
+      <svg viewBox="0 0 860 240" class="chart-wide" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
         <!-- Scale: 30..70 sq.m, chart x: 180..830 -->
         <!-- Grid -->
         <line x1="180" y1="0" x2="180" y2="220" stroke="#3a4f6a" stroke-width="0.5"/>
@@ -3595,7 +3746,7 @@ aD2r403yo7aN5ZRvvhb+SzHlW22H/wCZxf8A8NH+Se1kvu4vuDMVZghZE1m81jQ0cdTwWLqllvOF
           <div style="font-size:11px; color:var(--text-muted);">Діапазон площ: 57 — 90 м² &nbsp;|&nbsp; 10 із 10 проєктів</div>
         </div>
       </div>
-      <svg viewBox="0 0 860 295" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
+      <svg viewBox="0 0 860 295" class="chart-wide" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
         <!-- Scale: 55..95 sq.m, chart x: 180..830 -->
         <line x1="180" y1="0" x2="180" y2="275" stroke="#3a4f6a" stroke-width="0.5"/>
         <line x1="342" y1="0" x2="342" y2="275" stroke="#3a4f6a" stroke-width="0.5" stroke-dasharray="3,3"/>
@@ -3673,7 +3824,7 @@ aD2r403yo7aN5ZRvvhb+SzHlW22H/wCZxf8A8NH+Se1kvu4vuDMVZghZE1m81jQ0cdTwWLqllvOF
           <div style="font-size:11px; color:var(--text-muted);">Діапазон площ: 73 — 149 м² &nbsp;|&nbsp; 7 із 10 проєктів</div>
         </div>
       </div>
-      <svg viewBox="0 0 860 210" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
+      <svg viewBox="0 0 860 210" class="chart-wide" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
         <!-- Scale: 70..155 sq.m, chart x: 180..830 -->
         <line x1="180" y1="0" x2="180" y2="195" stroke="#3a4f6a" stroke-width="0.5"/>
         <line x1="371" y1="0" x2="371" y2="195" stroke="#3a4f6a" stroke-width="0.5" stroke-dasharray="3,3"/>
@@ -3772,7 +3923,7 @@ aD2r403yo7aN5ZRvvhb+SzHlW22H/wCZxf8A8NH+Se1kvu4vuDMVZghZE1m81jQ0cdTwWLqllvOF
           <div style="font-size:11px; color:var(--text-muted);">Діапазон: 56 450 — 88 900 грн/м² &nbsp;|&nbsp; 8 із 10 проєктів</div>
         </div>
       </div>
-      <svg viewBox="0 0 860 240" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
+      <svg viewBox="0 0 860 240" class="chart-wide" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
         <!-- Scale: 55000..90000, chart x: 180..830, 650px for 35k -->
         <line x1="180" y1="0" x2="180" y2="220" stroke="#3a4f6a" stroke-width="0.5"/>
         <line x1="366" y1="0" x2="366" y2="220" stroke="#3a4f6a" stroke-width="0.5" stroke-dasharray="3,3"/>
@@ -3842,7 +3993,7 @@ aD2r403yo7aN5ZRvvhb+SzHlW22H/wCZxf8A8NH+Se1kvu4vuDMVZghZE1m81jQ0cdTwWLqllvOF
           <div style="font-size:11px; color:var(--text-muted);">Діапазон: 52 000 — 88 900 грн/м² &nbsp;|&nbsp; 10 із 10 проєктів</div>
         </div>
       </div>
-      <svg viewBox="0 0 860 295" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
+      <svg viewBox="0 0 860 295" class="chart-wide" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
         <!-- Scale: 50000..90000, chart x: 180..830, 650px for 40k -->
         <line x1="180" y1="0" x2="180" y2="275" stroke="#3a4f6a" stroke-width="0.5"/>
         <line x1="343" y1="0" x2="343" y2="275" stroke="#3a4f6a" stroke-width="0.5" stroke-dasharray="3,3"/>
@@ -3923,7 +4074,7 @@ aD2r403yo7aN5ZRvvhb+SzHlW22H/wCZxf8A8NH+Se1kvu4vuDMVZghZE1m81jQ0cdTwWLqllvOF
           <div style="font-size:11px; color:var(--text-muted);">Діапазон: 55 150 — 93 350 грн/м² &nbsp;|&nbsp; 7 із 10 проєктів</div>
         </div>
       </div>
-      <svg viewBox="0 0 860 210" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
+      <svg viewBox="0 0 860 210" class="chart-wide" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
         <!-- Scale: 53000..95000, chart x: 180..830, 650px for 42k -->
         <line x1="180" y1="0" x2="180" y2="195" stroke="#3a4f6a" stroke-width="0.5"/>
         <line x1="335" y1="0" x2="335" y2="195" stroke="#3a4f6a" stroke-width="0.5" stroke-dasharray="3,3"/>
