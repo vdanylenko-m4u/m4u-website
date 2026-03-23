@@ -26,7 +26,13 @@
       <svg viewBox="0 0 204.29 204.29" xmlns="http://www.w3.org/2000/svg" style="width:48px;height:48px;margin-bottom:16px"><path fill="#fff" d="M204.29,204.29H0V0H204.29ZM9.88,194.4H194.4V9.88H9.88Z"/><polygon fill="#fff" points="32.07 116.51 32.07 32.07 43.69 32.07 59.23 76.78 59.47 76.78 74.89 32.07 86.63 32.07 86.63 116.51 74.53 116.51 74.53 65.16 74.29 65.16 62.31 101.45 56.26 101.45 44.41 65.16 44.16 65.16 44.16 116.51 32.07 116.51"/><path fill="#fff" d="M172.21,32.07V97.54a19.09,19.09,0,0,1-5.69,13.87,20.14,20.14,0,0,1-6.28,4.27,18.9,18.9,0,0,1-7.59,1.54,18.47,18.47,0,0,1-7.53-1.54,20.62,20.62,0,0,1-10.5-10.5,18.76,18.76,0,0,1-1.54-7.65V32.07h12.09V96.35q0,4.51,2.14,6.64A7.73,7.73,0,0,0,158,103q2.13-2.13,2.13-6.64V32.07Z"/><polygon fill="#fff" points="122.37 79.09 122.37 60.38 111.54 60.38 111.54 79.09 103.89 79.09 118 32.07 106.55 32.07 92.85 79.6 92.82 89.36 111.54 89.36 111.54 99.13 122.37 99.13 122.37 89.36 126.88 89.36 126.88 79.09 122.37 79.09"/><rect fill="#fff" x="92.82" y="106.38" width="34.06" height="10.14"/><rect fill="#fff" x="4.94" y="136.58" width="194.4" height="9.88"/><polygon fill="#fff" points="44.13 179.82 37.66 179.82 37.66 166.02 32.92 166.02 32.92 160.55 48.87 160.55 48.87 166.02 44.13 166.02 44.13 179.82"/><polygon fill="#fff" points="70.19 160.55 83.44 160.55 83.44 165.94 76.28 165.94 76.28 167.6 83 167.6 83 172.63 76.28 172.63 76.28 174.43 83.9 174.43 83.9 179.82 70.19 179.82 70.19 160.55"/><path fill="#fff" d="M112.1,160.55H119l7.51,19.26h-7l-1-2.83h-6.12l-1,2.83h-6.86Zm3.35,6.72L113.87,172H117Z"/><polygon fill="#fff" points="153.27 168.93 153.57 179.82 147.53 179.82 147.53 160.55 155.99 160.55 159.47 170.92 159.61 170.92 162.63 160.55 171.36 160.55 171.36 179.82 165.08 179.82 165.27 168.99 165.1 168.96 161.51 179.82 156.94 179.82 153.41 168.93 153.27 168.93"/></svg>
       <h2>Unit.Home А04</h2>
       <p>Цінова аналітика · Введіть пароль</p>
-      <input type="password" id="pwd-input" placeholder="Пароль"/>
+      <div style="position:relative">
+        <input type="password" id="pwd-input" placeholder="Пароль" style="padding-right:44px"/>
+        <button type="button" id="pwd-toggle" onclick="togglePwd()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;padding:4px;color:#666;font-size:18px;line-height:1" title="Показати пароль">
+          <svg id="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg id="eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
+      </div>
       <button id="pwd-btn">Увійти</button>
       <div class="login-error" id="login-error">Невірний пароль</div>
     </div>
@@ -39,6 +45,13 @@
   <script crossorigin src="https://unpkg.com/recharts@2.12.7/umd/Recharts.js"></script>
 
   <script>
+    function togglePwd(){
+      var inp=document.getElementById('pwd-input');
+      var open=document.getElementById('eye-open');
+      var closed=document.getElementById('eye-closed');
+      if(inp.type==='password'){inp.type='text';open.style.display='none';closed.style.display='inline';}
+      else{inp.type='password';open.style.display='inline';closed.style.display='none';}
+    }
     function hashStr(s){var h=0;for(var i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0;}return h;}
     function tryLogin(){
       if(hashStr(document.getElementById('pwd-input').value)===-1803094841){
