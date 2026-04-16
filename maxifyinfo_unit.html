@@ -197,14 +197,23 @@ function heatColor(value,min,max){
   else{const p=(t-0.5)*2;return`rgb(${lerp(251,239,p)},${lerp(191,68,p)},${lerp(36,68,p)})`;}
 }
 
-const ChessBoard=({data,building,metric})=>{
+const ChessBoard=({data,building,metric:globalMetric})=>{
+  const[localMetric,setLocalMetric]=useState(globalMetric);
+  React.useEffect(()=>{setLocalMetric(globalMetric);},[globalMetric]);
+  const metric=localMetric;
   const bd=data.filter(d=>d.building===building);
   if(!bd.length)return null;
   const floors=[...new Set(bd.map(d=>d.floor))].sort((a,b)=>b-a);
   const vals=bd.map(d=>d[metric]).filter(v=>v!=null&&!Number.isNaN(v));
   const vMin=Math.min(...vals),vMax=Math.max(...vals);
   return(<div style={{marginBottom:24}}>
-    <div style={{fontSize:14,fontWeight:700,color:COLORS[building]||"#ccc",marginBottom:10}}>{LABELS[building]||building}</div>
+    <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:10,flexWrap:"wrap"}}>
+      <div style={{fontSize:14,fontWeight:700,color:COLORS[building]||"#ccc"}}>{LABELS[building]||building}</div>
+      <div style={{display:"flex",gap:4,background:"rgba(255,255,255,0.03)",borderRadius:8,padding:3}}>
+        <button className={`tbtn ${metric==="priceM2"?"on":""}`} style={{fontSize:11,padding:"5px 12px"}} onClick={()=>setLocalMetric("priceM2")}>$/м²</button>
+        <button className={`tbtn ${metric==="totalPrice"?"on":""}`} style={{fontSize:11,padding:"5px 12px"}} onClick={()=>setLocalMetric("totalPrice")}>Вартість</button>
+      </div>
+    </div>
     <div style={{overflowX:"auto"}}>
     {floors.map(f=>{
       const units=bd.filter(d=>d.floor===f).sort((a,b)=>a.position-b.position);
