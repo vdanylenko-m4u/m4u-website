@@ -442,7 +442,7 @@ function Dashboard(){
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)"/>
           <XAxis dataKey="x" tick={{fill:"#888",fontSize:11}} tickFormatter={v=>fmtK(v)} label={{value:mLabel,position:"bottom",offset:0,fill:"#666",fontSize:12}}/>
           <YAxis tick={false}/>
-          <Tooltip labelFormatter={v=>`${fmt(v)} ${metric==="priceM2"?"грн/м²":"грн"}`} contentStyle={{background:"#1a1a2e",border:"1px solid rgba(255,255,255,0.12)",borderRadius:10,fontSize:13,color:"#ccc"}}/>
+          <Tooltip labelFormatter={v=>`${fmt(v)} ${metric==="priceM2"?"грн/м²":"грн"}`} contentStyle={{background:"#1a1a2e",border:"1px solid rgba(255,255,255,0.12)",borderRadius:10,fontSize:13,color:"#ccc"}} labelStyle={{color:"#fff",fontWeight:700}} itemStyle={{color:"#ccc"}}/>
           <Area type="monotone" dataKey="all" stroke="#fbbf24" fill="#fbbf24" fillOpacity={0.06} strokeWidth={2.5} dot={false} name="Загальний"/>
           {BUILDINGS.filter(b=>activeBuildings.has(b)&&distData.byB[b]?.count>2).map(b=>(<Line key={b} type="monotone" dataKey={b} stroke={COLORS[b]} strokeWidth={2} dot={false} strokeDasharray="6 3" name={LABELS[b]}/>))}
           {distData.statsAll?.count>0&&<ReferenceLine x={Math.round(distData.statsAll.mean)} stroke="#fbbf24" strokeDasharray="4 4" strokeWidth={1.5}/>}
@@ -459,7 +459,7 @@ function Dashboard(){
           <XAxis dataKey="lo" tick={{fill:"#888",fontSize:10}} tickFormatter={v=>fmtK(v)} angle={-35} textAnchor="end" label={{value:mLabel,position:"bottom",offset:30,fill:"#666",fontSize:11}}/>
           <YAxis tick={{fill:"#888",fontSize:11}} label={{value:"Кількість",angle:-90,position:"insideLeft",offset:10,fill:"#666",fontSize:11}}/>
           <Bar dataKey="count" radius={[6,6,0,0]}>{distData.histogram.map((d,i)=>{const t=distData.histogram.length>1?i/(distData.histogram.length-1):0;const r=Math.round(59+(251-59)*Math.min(t*2,1)*(t<=0.5?1:0)+(251+(239-251)*Math.min((t-0.5)*2,1))*(t>0.5?1:0));const g=Math.round(130+(191-130)*Math.min(t*2,1)*(t<=0.5?1:0)+(191+(68-191)*Math.min((t-0.5)*2,1))*(t>0.5?1:0));const b2=Math.round(246+(36-246)*Math.min(t*2,1)*(t<=0.5?1:0)+(36+(68-36)*Math.min((t-0.5)*2,1))*(t>0.5?1:0));return<Cell key={i} fill={`rgb(${r},${g},${b2})`}/>;})}</Bar>
-          <Tooltip formatter={(v,n,p)=>[`${v} квартир`,`${fmt(p.payload.lo)} – ${fmt(p.payload.hi)}`]} contentStyle={{background:"#1a1a2e",border:"1px solid rgba(255,255,255,0.12)",borderRadius:10,fontSize:12,color:"#ccc"}}/>
+          <Tooltip formatter={(v,n,p)=>[`${v} квартир`,`${fmt(p.payload.lo)} – ${fmt(p.payload.hi)}`]} contentStyle={{background:"#1a1a2e",border:"1px solid rgba(255,255,255,0.12)",borderRadius:10,fontSize:12,color:"#ccc"}} labelStyle={{color:"#fff",fontWeight:700}} itemStyle={{color:"#ccc"}}/>
         </BarChart></ResponsiveContainer>
       </div>}
 
@@ -499,7 +499,7 @@ function Dashboard(){
           <XAxis dataKey="month" tick={{fill:"#888",fontSize:10}} angle={-35} textAnchor="end"/>
           <YAxis tick={{fill:"#888",fontSize:11}} tickFormatter={v=>fmtK(v)} domain={["dataMin-500","dataMax+500"]}/>
           <Line type="monotone" dataKey="planPriceM2" stroke="#fbbf24" strokeWidth={2.5} dot={{r:3,fill:"#fbbf24"}} name="Планова ціна/м²"/>
-          <Tooltip formatter={(v)=>[`${fmt(v)} грн/м²`]} contentStyle={{background:"#1a1a2e",border:"1px solid rgba(255,255,255,0.12)",borderRadius:10,fontSize:12,color:"#ccc"}}/>
+          <Tooltip formatter={(v)=>[`${fmt(v)} грн/м²`]} contentStyle={{background:"#1a1a2e",border:"1px solid rgba(255,255,255,0.12)",borderRadius:10,fontSize:12,color:"#ccc"}} labelStyle={{color:"#fff",fontWeight:700}} itemStyle={{color:"#ccc"}}/>
         </ComposedChart></ResponsiveContainer>
       </div>
       <div style={{background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.05)",borderRadius:14,padding:"20px 12px 12px 0",marginBottom:16}}>
@@ -509,7 +509,7 @@ function Dashboard(){
           <XAxis dataKey="month" tick={{fill:"#888",fontSize:10}} angle={-35} textAnchor="end"/>
           <YAxis tick={{fill:"#888",fontSize:11}} tickFormatter={v=>(v/1e9).toFixed(1)+"B"}/>
           <Area type="monotone" dataKey="cumAmount" stroke="#22c55e" fill="#22c55e" fillOpacity={0.08} strokeWidth={2.5} name="Кумулятивна виручка"/>
-          <Tooltip formatter={(v)=>[`${(v/1e6).toFixed(1)} млн грн`]} contentStyle={{background:"#1a1a2e",border:"1px solid rgba(255,255,255,0.12)",borderRadius:10,fontSize:12,color:"#ccc"}}/>
+          <Tooltip formatter={(v)=>[`${(v/1e6).toFixed(1)} млн грн`]} contentStyle={{background:"#1a1a2e",border:"1px solid rgba(255,255,255,0.12)",borderRadius:10,fontSize:12,color:"#ccc"}} labelStyle={{color:"#fff",fontWeight:700}} itemStyle={{color:"#ccc"}}/>
         </ComposedChart></ResponsiveContainer>
       </div>
       <div style={{background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.05)",borderRadius:14,padding:"20px 12px 12px 0",marginBottom:16}}>
@@ -519,7 +519,7 @@ function Dashboard(){
           <XAxis dataKey="month" tick={{fill:"#888",fontSize:10}} angle={-35} textAnchor="end"/>
           <YAxis tick={{fill:"#888",fontSize:11}} tickFormatter={v=>`${v} м²`}/>
           <Bar dataKey="planArea" name="Площа, м²" fill="#818cf8" radius={[4,4,0,0]} maxBarSize={32}/>
-          <Tooltip formatter={(v)=>[`${Math.round(v).toLocaleString("uk-UA")} м²`]} contentStyle={{background:"#1a1a2e",border:"1px solid rgba(255,255,255,0.12)",borderRadius:10,fontSize:12,color:"#ccc"}}/>
+          <Tooltip formatter={(v)=>[`${Math.round(v).toLocaleString("uk-UA")} м²`]} contentStyle={{background:"#1a1a2e",border:"1px solid rgba(255,255,255,0.12)",borderRadius:10,fontSize:12,color:"#ccc"}} labelStyle={{color:"#fff",fontWeight:700}} itemStyle={{color:"#ccc"}}/>
         </BarChart></ResponsiveContainer>
       </div>
 
