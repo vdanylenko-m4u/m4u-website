@@ -782,17 +782,27 @@ function Dashboard(){
                   <div style={{fontSize:18,fontWeight:700,color:"#fff"}}>Кв. №{a.number}</div>
                   <button onClick={()=>setSelectedApt(null)} style={{background:"none",border:"none",color:"#666",fontSize:20,cursor:"pointer",padding:4,lineHeight:1}}>✕</button>
                 </div>
-                <div style={{display:"grid",gridTemplateColumns:"auto 1fr",rowGap:8,columnGap:16,fontSize:13,color:"#ccc"}}>
-                  <span style={{color:"#666"}}>Будинок</span><span>{LABELS[a.building]}</span>
-                  <span style={{color:"#666"}}>Поверх</span><span>{a.floor}</span>
-                  <span style={{color:"#666"}}>Секція</span><span>{"А0"+(a.entrance<10?"":"")+(a.entrance<=5?"5":a.entrance<=6?"6":"7")} (під'їзд {a.entrance})</span>
-                  <span style={{color:"#666"}}>Кімнатність</span><span>{a.rooms}-кімнатна</span>
-                  <span style={{color:"#666"}}>Площа</span><span>{a.area} м²</span>
-                  <span style={{color:"#666"}}>Планування</span><span>{a.layout}</span>
-                  <span style={{color:"#666"}}>Вид</span><span style={{fontSize:12}}>{a.view}</span>
-                  <span style={{color:"#666"}}>Тераси</span><span>{a.terraces>0?a.terraces:"Немає"}</span>
-                  <span style={{color:"#666"}}>Статус</span><span style={{color:a.status==="Продано"?"#f97316":"#22c55e",fontWeight:600}}>{a.status==="Продано"?"Заброньовано":"Вільно"}</span>
-                </div>
+                {(()=>{
+                  const all=revalData.bldg;
+                  const soldBadge=(filterFn)=>{
+                    const group=all.filter(filterFn);
+                    const s=group.filter(d=>d.status==="Продано").length;
+                    const t=group.length;
+                    const pct=t>0?Math.round(s/t*100):0;
+                    return(<span style={{fontSize:10,color:"#888",marginLeft:6}}>{s}/{t} <span style={{color:s>0?"#f97316":"#555"}}>{pct}%</span> <span style={{color:"#22c55e"}}>+{s}</span></span>);
+                  };
+                  return(<div style={{display:"grid",gridTemplateColumns:"auto 1fr",rowGap:8,columnGap:16,fontSize:13,color:"#ccc"}}>
+                    <span style={{color:"#666"}}>Будинок</span><span>{LABELS[a.building]}</span>
+                    <span style={{color:"#666"}}>Поверх</span><span>{a.floor}{soldBadge(d=>d.floor===a.floor)}</span>
+                    <span style={{color:"#666"}}>Секція</span><span>{"А0"+(a.entrance<=5?"5":a.entrance<=6?"6":"7")} (під'їзд {a.entrance})</span>
+                    <span style={{color:"#666"}}>Кімнатність</span><span>{a.rooms}-кімнатна{soldBadge(d=>d.rooms===a.rooms)}</span>
+                    <span style={{color:"#666"}}>Площа</span><span>{a.area} м²</span>
+                    <span style={{color:"#666"}}>Планування</span><span>{a.layout}{soldBadge(d=>d.layout===a.layout)}</span>
+                    <span style={{color:"#666"}}>Вид</span><span style={{fontSize:12}}>{a.view}{soldBadge(d=>d.view===a.view)}</span>
+                    <span style={{color:"#666"}}>Тераси</span><span>{a.terraces>0?a.terraces:"Немає"}{soldBadge(d=>d.terraces===a.terraces)}</span>
+                    <span style={{color:"#666"}}>Статус</span><span style={{color:a.status==="Продано"?"#f97316":"#22c55e",fontWeight:600}}>{a.status==="Продано"?"Заброньовано":"Вільно"}</span>
+                  </div>);
+                })()}
                 {a.status!=="Продано"&&a.oldPriceM2!=null&&(<>
                   <div style={{borderTop:"1px solid rgba(255,255,255,0.06)",marginTop:16,paddingTop:16}}>
                     <div style={{fontSize:11,color:"#666",textTransform:"uppercase",letterSpacing:1,marginBottom:10,fontWeight:600}}>Ціноутворення (приріст {revalSlider}%)</div>
