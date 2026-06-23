@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Scoring — презентація</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0B10; --bg-soft:#0E0F17; --surface:#14161F; --surface-2:#1A1D28;
+  --line:#262A38; --line-soft:rgba(255,255,255,.07);
+  --text:#ECEDF2; --muted:#8B90A3; --faint:#5A6072;
+  --accent:#8B6CFF; --accent-2:#46A6FF;
+  --good:#3FD08A; --warn:#F5B544; --bad:#F5685F;
+  --grad:linear-gradient(135deg,#8B6CFF 0%,#46A6FF 100%);
+  --grad-soft:linear-gradient(135deg,rgba(139,108,255,.16),rgba(70,166,255,.16));
+  --display:'Space Grotesk',sans-serif;
+  --body:'Inter',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--body); background:var(--bg); color:var(--text);
+  overflow:hidden; -webkit-font-smoothing:antialiased; line-height:1.5;
+}
+::selection{background:rgba(139,108,255,.35)}
+
+/* ---------- ambient background ---------- */
+.bg-glow{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.bg-glow::before,.bg-glow::after{content:"";position:absolute;border-radius:50%;filter:blur(120px);opacity:.5}
+.bg-glow::before{width:50vw;height:50vw;top:-15vw;right:-10vw;background:radial-gradient(circle,rgba(139,108,255,.30),transparent 70%)}
+.bg-glow::after{width:45vw;height:45vw;bottom:-15vw;left:-12vw;background:radial-gradient(circle,rgba(70,166,255,.22),transparent 70%)}
+.grid-tex{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4;
+  background-image:linear-gradient(var(--line-soft) 1px,transparent 1px),linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,#000 35%,transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,#000 35%,transparent 100%);
+}
+
+/* ---------- typography helpers ---------- */
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);display:inline-flex;align-items:center;gap:9px}
+.eyebrow.muted{color:var(--faint)}
+.eyebrow::before{content:"";width:22px;height:1px;background:currentColor;opacity:.7}
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.02em;line-height:1.05}
+.h1{font-size:clamp(38px,5.6vw,82px);font-weight:700}
+.h2{font-size:clamp(30px,4vw,56px)}
+.h3{font-size:clamp(24px,2.8vw,40px)}
+.lead{font-size:clamp(16px,1.35vw,20px);color:var(--muted);max-width:60ch;line-height:1.6}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.mono{font-family:var(--mono)}
+.powered{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--faint);margin-top:14px}
+.powered b{color:var(--accent);font-weight:600}
+
+/* ---------- login ---------- */
+#login{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:var(--bg);transition:opacity .8s var(--ease),visibility .8s}
+#login.hide{opacity:0;visibility:hidden}
+.login-card{position:relative;z-index:2;width:min(440px,92vw);padding:44px 40px 36px;text-align:center}
+.lock{width:54px;height:54px;border-radius:14px;background:var(--grad-soft);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;margin:0 auto 26px}
+.lock svg{width:24px;height:24px;stroke:var(--accent)}
+.login-card .conf{font-family:var(--mono);font-size:10.5px;letter-spacing:.3em;color:var(--faint);margin-bottom:14px}
+.login-card .brand{font-family:var(--display);font-size:34px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
+.login-card .brand b{color:var(--accent);font-weight:700}
+.login-card .sub{font-size:13.5px;color:var(--muted);margin-bottom:28px}
+.creds{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:22px;text-align:left}
+.creds .ct{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--faint);margin-bottom:10px;text-transform:uppercase}
+.creds .row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:13.5px}
+.creds .row span{color:var(--muted)}
+.creds .row code{font-family:var(--mono);color:var(--text);background:var(--surface-2);padding:3px 9px;border-radius:6px;font-size:13px;border:1px solid var(--line)}
+.field{text-align:left;margin-bottom:14px}
+.field label{display:block;font-size:11px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.field input{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--text);font-family:var(--mono);font-size:14px;transition:border-color .2s,box-shadow .2s}
+.field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(139,108,255,.18)}
+.pw-wrap{position:relative}
+.pw-wrap input{padding-right:46px}
+.pw-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:34px;height:34px;border:none;background:transparent;color:var(--faint);cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:color .2s,background .2s}
+.pw-eye:hover{color:var(--muted);background:var(--surface-2)}
+.pw-eye svg{width:18px;height:18px;stroke:currentColor}
+.btn{width:100%;border:none;cursor:pointer;font-family:var(--body);font-weight:600;font-size:15px;color:#fff;padding:13px;border-radius:10px;background:var(--grad);transition:transform .15s,box-shadow .25s;box-shadow:0 8px 24px -8px rgba(139,108,255,.6)}
+.btn:hover{transform:translateY(-1px);box-shadow:0 12px 30px -8px rgba(139,108,255,.75)}
+.btn:active{transform:translateY(0)}
+.login-err{height:18px;margin-top:10px;font-size:12.5px;color:var(--bad);opacity:0;transition:opacity .2s}
+.login-err.show{opacity:1}
+.login-foot{margin-top:18px;font-size:11px;color:var(--faint);font-family:var(--mono);letter-spacing:.05em}
+.login-wave{margin:0 auto 30px;width:200px}
+
+/* ---------- deck shell ---------- */
+#deck{position:fixed;inset:0;z-index:1;opacity:0;transition:opacity .9s var(--ease) .15s}
+#deck.show{opacity:1}
+#track{display:flex;height:100%;transition:transform .7s var(--ease)}
+.slide{position:relative;flex:0 0 100vw;width:100vw;height:100vh;display:flex;align-items:center;overflow-y:auto}
+.s{position:relative;z-index:2;width:100%;max-width:1240px;margin:0 auto;padding:84px 7vw}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.slide.is-active .reveal{opacity:1;transform:none}
+.slide.is-active .reveal.d1{transition-delay:.08s}
+.slide.is-active .reveal.d2{transition-delay:.16s}
+.slide.is-active .reveal.d3{transition-delay:.24s}
+.slide.is-active .reveal.d4{transition-delay:.32s}
+.slide.is-active .reveal.d5{transition-delay:.40s}
+.slide.is-active .reveal.d6{transition-delay:.48s}
+
+/* ---------- waveform signature ---------- */
+.wave{display:flex;align-items:center;gap:3px;height:46px}
+.wave span{flex:1;min-width:2px;border-radius:3px;background:var(--grad);height:28%;transform-origin:center;animation:wv 1.5s ease-in-out infinite}
+@keyframes wv{0%,100%{transform:scaleY(.32)}50%{transform:scaleY(1)}}
+
+/* ---------- generic UI ---------- */
+.badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1px solid var(--line)}
+.badge i{width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block}
+.badge--live{color:var(--good);background:rgba(63,208,138,.08);border-color:rgba(63,208,138,.25)}
+.badge--partial{color:var(--warn);background:rgba(245,181,68,.08);border-color:rgba(245,181,68,.25)}
+.badge--soon{color:var(--accent);background:rgba(139,108,255,.08);border-color:rgba(139,108,255,.28)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.tag{font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line);border-radius:7px;padding:5px 10px;display:inline-flex;align-items:center;gap:7px}
+
+/* ---------- app frame (mockups) ---------- */
+.app{background:var(--bg-soft);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 30px 70px -30px rgba(0,0,0,.8);width:100%}
+.app__bar{display:flex;align-items:center;gap:18px;padding:11px 16px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.015)}
+.app__logo{font-family:var(--display);font-weight:600;font-size:13.5px;letter-spacing:-.01em;white-space:nowrap}
+.app__logo b{color:var(--accent)}
+.app__tabs{display:flex;gap:18px;font-size:12px;color:var(--faint)}
+.app__tabs .on{color:var(--text);position:relative}
+.app__tabs .on::after{content:"";position:absolute;left:0;right:0;bottom:-12px;height:2px;background:var(--accent);border-radius:2px}
+.app__av{margin-left:auto;width:26px;height:26px;border-radius:50%;background:var(--grad);flex:0 0 auto}
+.app__body{padding:18px}
+
+/* ---------- slide-specific bits reused ---------- */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:13px 15px}
+.kpi .v{font-family:var(--display);font-size:26px;font-weight:600;letter-spacing:-.02em}
+.kpi .l{font-size:11px;color:var(--muted);margin-top:3px}
+.kpi .v.good{color:var(--good)} .kpi .v.acc{color:var(--accent)}
+
+.rank{display:flex;flex-direction:column;gap:11px}
+.rank .r{display:grid;grid-template-columns:118px 1fr 42px;align-items:center;gap:12px;font-size:13px}
+.rank .nm{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank .bar{height:8px;border-radius:6px;background:var(--surface-2);overflow:hidden}
+.rank .bar i{display:block;height:100%;border-radius:6px;width:0;transition:width 1s var(--ease) .3s}
+.rank .pc{font-family:var(--mono);font-size:12.5px;text-align:right}
+
+/* score circle */
+.scorecirc{position:relative;width:120px;height:120px}
+.scorecirc svg{transform:rotate(-90deg)}
+.scorecirc .mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.scorecirc .mid b{font-family:var(--display);font-size:30px;font-weight:600}
+.scorecirc .mid small{font-size:10px;color:var(--muted);font-family:var(--mono)}
+
+/* chips for context core */
+.col-h{font-size:12px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.chip{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:9px 12px;margin-bottom:8px;font-size:13px}
+.chip .pc{font-family:var(--mono);font-size:12px;color:var(--accent)}
+.chip.warn .pc{color:var(--warn)} .chip.bad .pc{color:var(--bad)}
+
+/* simple table */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);font-weight:500}
+.tbl td{padding:11px 12px;border-bottom:1px solid var(--line-soft)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl .num{font-family:var(--mono)}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;vertical-align:middle}
+
+/* transcript */
+.tr-line{display:flex;gap:10px;margin-bottom:11px;font-size:12.5px;line-height:1.5}
+.tr-line .who{font-family:var(--mono);font-size:10px;letter-spacing:.04em;color:var(--faint);flex:0 0 70px;padding-top:2px}
+.tr-line .who.mgr{color:var(--accent-2)} .tr-line .who.cli{color:var(--muted)}
+.tr-line .tx{color:var(--text);opacity:.92}
+.tc{font-family:var(--mono);font-size:10px;color:var(--faint)}
+
+/* AI review card */
+.review{background:var(--grad-soft);border:1px solid rgba(139,108,255,.28);border-radius:12px;padding:15px}
+.review .rh{display:flex;align-items:center;gap:8px;font-size:11.5px;font-family:var(--mono);letter-spacing:.05em;color:var(--accent);margin-bottom:9px;text-transform:uppercase}
+.review .quote{font-size:13px;color:var(--text);border-left:2px solid var(--accent);padding-left:11px;margin-bottom:9px;font-style:italic;opacity:.92}
+.review .rec{font-size:12.5px;color:var(--muted)}
+
+/* generic two-col */
+.two{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,4vw,64px);align-items:center}
+.two.flip{grid-template-columns:.95fr 1.05fr}
+.feat{list-style:none;display:flex;flex-direction:column;gap:14px;margin-top:26px}
+.feat li{display:flex;gap:12px;align-items:flex-start;font-size:15px;color:var(--text)}
+.feat li .ic{flex:0 0 22px;height:22px;border-radius:6px;background:var(--grad-soft);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;margin-top:1px}
+.feat li .ic svg{width:12px;height:12px;stroke:var(--accent)}
+.feat li b{font-weight:600}
+.feat li p{color:var(--muted);font-size:13.5px;margin-top:2px}
+
+/* divider slide */
+.divider{text-align:left}
+.divider .num{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.2em;margin-bottom:22px}
+.divider .wave{max-width:340px;margin-top:36px}
+
+/* level cards */
+.levels{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:34px}
+.level{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 18px;position:relative;transition:transform .3s var(--ease),border-color .3s}
+.level:hover{transform:translateY(-4px);border-color:var(--accent)}
+.level .ln{font-family:var(--mono);font-size:11px;color:var(--faint);margin-bottom:14px}
+.level h4{font-family:var(--display);font-size:18px;font-weight:600;margin-bottom:8px;letter-spacing:-.01em}
+.level .q{font-size:12.5px;color:var(--muted);margin-bottom:18px;min-height:36px}
+
+/* pipeline */
+.pipe{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:38px;position:relative}
+.pstep{padding:22px 20px;position:relative}
+.pstep:not(:last-child)::after{content:"";position:absolute;top:42px;right:-1px;width:2px;bottom:18px;background:var(--line)}
+.pstep .pn{font-family:var(--mono);font-size:11px;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:9px}
+.pstep .pn b{width:24px;height:24px;border-radius:7px;background:var(--grad-soft);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--accent)}
+.pstep h4{font-family:var(--display);font-size:17px;font-weight:600;margin-bottom:7px}
+.pstep p{font-size:12.5px;color:var(--muted)}
+
+/* problem slide */
+.bigstat{font-family:var(--display);font-weight:700;font-size:clamp(96px,16vw,220px);line-height:.85;letter-spacing:-.04em;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.ministats{display:flex;gap:34px;flex-wrap:wrap;margin-top:8px}
+.ministat b{font-family:var(--display);font-size:30px;font-weight:600;display:block;letter-spacing:-.02em}
+.ministat span{font-size:12.5px;color:var(--muted);max-width:22ch;display:block;margin-top:4px}
+.pull{font-family:var(--display);font-size:clamp(20px,2.2vw,30px);font-weight:500;letter-spacing:-.01em;line-height:1.3;margin-top:26px;max-width:24ch}
+
+/* now/horizon columns */
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:34px}
+.colbox{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:26px 26px 28px}
+.colbox.soon{background:linear-gradient(180deg,rgba(139,108,255,.05),transparent);border-color:rgba(139,108,255,.25)}
+.colbox .ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.colbox .ch h4{font-family:var(--display);font-size:19px;font-weight:600}
+.ck{list-style:none;display:flex;flex-direction:column;gap:13px}
+.ck li{display:flex;gap:11px;align-items:flex-start;font-size:14px;color:var(--text)}
+.ck li svg{flex:0 0 16px;height:16px;margin-top:2px}
+.ck.muted li{color:var(--muted)}
+
+/* integrations */
+.integ{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px}
+.intcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:14px;min-height:150px;transition:transform .3s var(--ease),border-color .3s}
+.intcard:hover{transform:translateY(-4px);border-color:var(--accent)}
+.intcard .nm{font-family:var(--display);font-size:22px;font-weight:600;letter-spacing:-.01em}
+.intcard .ty{font-size:12px;color:var(--muted)}
+.intcard .st{margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.05em;color:var(--good);display:flex;align-items:center;gap:7px}
+.integ-note{margin-top:0;display:inline-flex;align-items:center;gap:10px;font-size:13.5px;color:var(--muted)}
+
+/* pricing */
+.price-wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;margin-top:34px;align-items:stretch}
+.price-main{background:linear-gradient(160deg,var(--surface-2),var(--surface));border:1px solid var(--line);border-radius:18px;padding:34px}
+.price-main .amt{font-family:var(--display);font-weight:700;letter-spacing:-.03em;font-size:clamp(40px,5vw,60px);line-height:1}
+.price-main .amt small{font-size:18px;color:var(--muted);font-weight:500;font-family:var(--body);letter-spacing:0}
+.price-main .plus{font-size:15px;color:var(--accent);margin-top:10px;font-weight:500}
+.price-list{list-style:none;display:flex;flex-direction:column;gap:16px;margin-top:26px}
+.price-list li{display:flex;gap:12px;font-size:14px;color:var(--muted);align-items:flex-start}
+.price-list li svg{flex:0 0 18px;height:18px;margin-top:1px;stroke:var(--accent)}
+.price-list li b{color:var(--text);font-weight:600}
+.price-ex{background:var(--surface);border:1px dashed var(--line);border-radius:18px;padding:30px;display:flex;flex-direction:column;justify-content:center}
+.price-ex .exl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:18px}
+.price-ex .exrow{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--line-soft);font-size:14px}
+.price-ex .exrow span{color:var(--muted)} .price-ex .exrow b{font-family:var(--mono);font-weight:500}
+.price-ex .extot{display:flex;justify-content:space-between;align-items:baseline;padding-top:16px;margin-top:6px;font-size:15px}
+.price-ex .extot b{font-family:var(--display);font-size:24px;font-weight:600;color:var(--accent)}
+
+/* cta */
+.cta-wrap{text-align:center;max-width:760px;margin:0 auto}
+.cta-wrap .wave{max-width:300px;margin:30px auto 0}
+.cta-link{margin-top:30px;display:inline-flex;flex-direction:column;gap:8px;align-items:center}
+.cta-link .url{font-family:var(--display);font-size:22px;font-weight:600;color:var(--text)}
+.cta-link .url b{color:var(--accent)}
+.cta-link .sub{font-size:13.5px;color:var(--muted)}
+.tg-btn{display:inline-flex;align-items:center;gap:11px;margin-top:34px;padding:15px 28px;border-radius:12px;background:var(--grad);color:#fff;font-family:var(--body);font-weight:600;font-size:16px;text-decoration:none;box-shadow:0 10px 30px -10px rgba(139,108,255,.65);transition:transform .15s,box-shadow .25s}
+.tg-btn:hover{transform:translateY(-2px);box-shadow:0 16px 38px -10px rgba(139,108,255,.85)}
+.tg-btn svg{width:20px;height:20px}
+
+/* roadmap overlay texture on mockup */
+.mock-soon{position:relative}
+.mock-soon::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 14px,rgba(139,108,255,.04) 14px,rgba(139,108,255,.04) 28px);border-radius:14px;pointer-events:none;z-index:3}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;z-index:20;bottom:26px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:22px;pointer-events:none}
+.nav>*{pointer-events:auto}
+.arrow{width:42px;height:42px;border-radius:11px;background:var(--surface);border:1px solid var(--line);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s}
+.arrow:hover{color:var(--text);border-color:var(--accent);background:var(--surface-2)}
+.arrow:disabled{opacity:.3;cursor:default;color:var(--faint)}
+.arrow:disabled:hover{border-color:var(--line);background:var(--surface)}
+.arrow svg{width:18px;height:18px}
+.dots{display:flex;gap:7px;align-items:center}
+.dots button{width:7px;height:7px;border-radius:50%;background:var(--line);border:none;cursor:pointer;padding:0;transition:.25s}
+.dots button.on{width:22px;border-radius:5px;background:var(--grad)}
+.counter{position:fixed;top:26px;right:7vw;z-index:20;font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--faint)}
+.counter b{color:var(--text)}
+.brandmark{position:fixed;top:24px;left:7vw;z-index:20;font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:-.01em}
+.brandmark b{color:var(--accent)}
+.progress{position:fixed;top:0;left:0;height:2px;background:var(--grad);z-index:30;width:0;transition:width .7s var(--ease)}
+.hint{position:fixed;bottom:30px;right:7vw;z-index:20;font-family:var(--mono);font-size:10.5px;color:var(--faint);letter-spacing:.05em}
+
+@media (max-width:880px){
+  .two,.two.flip,.price-wrap,.cols2{grid-template-columns:1fr;gap:30px}
+  .levels,.pipe,.kpis,.integ{grid-template-columns:1fr 1fr}
+  .pstep:not(:last-child)::after{display:none}
+  .slide{align-items:flex-start}
+  .s{padding:72px 7vw 90px}
+  .ministats{gap:22px}
+  .brandmark,.counter{font-size:11px}
+  .hint{display:none}
+}
+@media (max-width:560px){
+  .levels,.pipe,.kpis,.integ{grid-template-columns:1fr}
+  .app__tabs{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.2s!important}
+  .wave span{animation:none;height:60%}
+}
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<div class="grid-tex"></div>
+
+<!-- ===================== LOGIN ===================== -->
+<div id="login">
+  <div class="login-card">
+    <div class="conf">К&nbsp;О&nbsp;Н&nbsp;Ф&nbsp;І&nbsp;Д&nbsp;Е&nbsp;Н&nbsp;Ц&nbsp;І&nbsp;Й&nbsp;Н&nbsp;О</div>
+    <div class="lock">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+    </div>
+    <div class="brand">AI&nbsp;<b>Scoring</b></div>
+    <div class="powered" style="margin-top:4px;margin-bottom:12px">powered by <b>M4U</b></div>
+    <div class="sub">Закритий доступ до презентації для партнерів</div>
+    <div class="login-wave wave" data-bars="34"></div>
+    <div class="field"><label for="lg">Логін</label><input id="lg" type="text" autocomplete="off" spellcheck="false" placeholder="Введіть логін"></div>
+    <div class="field">
+      <label for="pw">Пароль</label>
+      <div class="pw-wrap">
+        <input id="pw" type="password" autocomplete="off" spellcheck="false" placeholder="Введіть пароль">
+        <button type="button" class="pw-eye" id="pwEye" aria-label="Показати пароль">
+          <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3.2"/></svg>
+          <svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M3 3l18 18"/><path d="M10.6 6.2A9.8 9.8 0 0 1 12 6c7 0 10.5 6 10.5 6a16.3 16.3 0 0 1-3.3 3.9M6.3 7.8A16.1 16.1 0 0 0 1.5 12S5 18 12 18a9.7 9.7 0 0 0 3.3-.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
+        </button>
+      </div>
+    </div>
+    <button class="btn" id="enter">Відкрити доступ</button>
+    <div class="login-err" id="err">Невірний пароль — спробуйте ще раз</div>
+    <div class="login-foot">Матеріали для обмеженого кола осіб</div>
+  </div>
+</div>
+
+<!-- ===================== DECK ===================== -->
+<div id="deck">
+  <div class="progress" id="prog"></div>
+  <div class="brandmark">AI <b>Scoring</b></div>
+  <div class="counter"><b id="cur">01</b> / <span id="total">15</span></div>
+
+  <div id="track">
+
+    <!-- 1. COVER -->
+    <section class="slide" data-name="Обкладинка">
+      <div class="s">
+        <div class="eyebrow reveal">Голосова аналітика продажів</div>
+        <h1 class="h1 reveal d1" style="margin-top:26px;max-width:14ch">Чути <span class="grad-text">кожен</span> дзвінок.</h1>
+        <div class="powered reveal d2">powered by <b>M4U</b></div>
+        <p class="lead reveal d3" style="margin-top:22px;max-width:52ch">AI Scoring перетворює телефонні розмови з клієнтами на дані для управління продажами та маркетингом.</p>
+        <div class="reveal d4 wave" data-bars="56" style="max-width:520px;margin-top:42px"></div>
+        <div class="reveal d5 tag" style="margin-top:38px">Платформа для відділів продажів нерухомості</div>
+      </div>
+    </section>
+
+    <!-- 2. PROBLEM -->
+    <section class="slide" data-name="Сліпа зона">
+      <div class="s">
+        <div class="two">
+          <div>
+            <div class="eyebrow reveal">З чого все починається</div>
+            <h2 class="h2 reveal d1" style="margin-top:22px;max-width:15ch">Більшість розмов із клієнтами ніхто не чує</h2>
+            <p class="lead reveal d2" style="margin-top:22px">Керівник встигає прослухати кілька дзвінків зі ста. Усе інше — про що питав клієнт, що його зупинило, кого він згадав — лишається в записах, до яких ніхто не повертається.</p>
+            <div class="pull reveal d3 grad-text">Найцінніше живе в голосі. У CRM його немає.</div>
+          </div>
+          <div>
+            <div class="reveal d2 bigstat"><span data-count="97" data-suffix="%">0%</span></div>
+            <div class="reveal d3" style="font-size:13px;color:var(--muted);margin-top:16px;max-width:28ch">дзвінків лишаються без уваги при ручному контролі</div>
+            <div class="ministats reveal d4" style="margin-top:32px">
+              <div class="ministat"><b>3–5</b><span>стільки дзвінків зі ста реально слухають вручну</span></div>
+              <div class="ministat"><b>$100</b><span>вартість одного дзвінка «таємного покупця»</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SOLUTION + 4 LEVELS -->
+    <section class="slide" data-name="Рішення">
+      <div class="s">
+        <div class="eyebrow reveal">Як ми це вирішуємо</div>
+        <h2 class="h2 reveal d1" style="margin-top:20px;max-width:20ch">Одна платформа. Чотири рівні розуміння.</h2>
+        <p class="lead reveal d2" style="margin-top:18px">AI Scoring слухає, розшифровує й аналізує кожну розмову — і віддає готові висновки тим, хто приймає рішення.</p>
+        <div class="levels">
+          <div class="level reveal d2"><div class="ln">Рівень 01</div><h4>Voice Analytics</h4><div class="q">Як працює менеджер?</div><span class="badge badge--live"><i></i>Працює</span></div>
+          <div class="level reveal d3"><div class="ln">Рівень 02</div><h4>Customer Intelligence</h4><div class="q">Хто клієнт і чого він хоче?</div><span class="badge badge--partial"><i></i>Частково</span></div>
+          <div class="level reveal d4"><div class="ln">Рівень 03</div><h4>Sales Intelligence</h4><div class="q">Як рухається угода?</div><span class="badge badge--soon"><i></i>Скоро</span></div>
+          <div class="level reveal d5"><div class="ln">Рівень 04</div><h4>Marketing Intelligence</h4><div class="q">Яка якість залучення?</div><span class="badge badge--soon"><i></i>Скоро</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. HOW IT WORKS -->
+    <section class="slide" data-name="Як працює">
+      <div class="s">
+        <div class="eyebrow reveal">Під капотом</div>
+        <h2 class="h2 reveal d1" style="margin-top:20px;max-width:22ch">Від запису до висновку — автоматично</h2>
+        <p class="lead reveal d2" style="margin-top:18px">Менеджерам не треба нічого робити вручну. Розмова заходить у систему й проходить весь шлях сама.</p>
+        <div class="pipe">
+          <div class="pstep reveal d2"><div class="pn"><b>1</b>Транскрипція</div><h4>Текст із аудіо</h4><p>Розпізнає українську, російську та суржик.</p></div>
+          <div class="pstep reveal d3"><div class="pn"><b>2</b>Тип розмови</div><h4>Що це за дзвінок</h4><p>Система визначає тип і обирає, як його обробляти.</p></div>
+          <div class="pstep reveal d4"><div class="pn"><b>3</b>Оцінка</div><h4>19 факторів</h4><p>Шість зважених блоків — від привітання до закриття.</p></div>
+          <div class="pstep reveal d5"><div class="pn"><b>4</b>Контекстне ядро</div><h4>Жива мова</h4><p>Питання, заперечення й згадки конкурентів із цитатами.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. DIVIDER — SALES -->
+    <section class="slide" data-name="Для продажів">
+      <div class="s divider">
+        <div class="num reveal">01 / ДЛЯ ВІДДІЛУ ПРОДАЖІВ</div>
+        <h2 class="h1 reveal d1" style="max-width:16ch">Для керівника<br>з продажів</h2>
+        <p class="lead reveal d2" style="margin-top:24px">Уся команда як на долоні — без ручного прослуховування.</p>
+        <div class="wave reveal d3" data-bars="40"></div>
+      </div>
+    </section>
+
+    <!-- 6. DASHBOARD + SKILLS -->
+    <section class="slide" data-name="Команда">
+      <div class="s">
+        <div class="two">
+          <div>
+            <div class="eyebrow reveal">Команда</div>
+            <h3 class="h3 reveal d1" style="margin-top:18px;max-width:18ch">Рейтинг, тренди й профіль навичок кожного</h3>
+            <p class="lead reveal d2" style="margin-top:18px">Відкриваєте платформу зранку й одразу бачите, як працює відділ: хто лідирує, у кого просідає якість, куди рухається динаміка.</p>
+            <ul class="feat reveal d3">
+              <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M5 12l5 5L20 6"/></svg></span><div><b>100% дзвінків проаналізовано</b><p>жодна розмова не лишається без оцінки</p></div></li>
+              <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M5 12l5 5L20 6"/></svg></span><div><b>Рейтинг за будь-який період</b><p>видно лідерів і тих, кому потрібна увага</p></div></li>
+              <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M5 12l5 5L20 6"/></svg></span><div><b>Профіль навичок по 6 блоках</b><p>сильні та слабкі сторони кожного менеджера</p></div></li>
+            </ul>
+          </div>
+          <div class="reveal d2">
+            <div class="app">
+              <div class="app__bar"><span class="app__logo">AI <b>Scoring</b></span><div class="app__tabs"><span class="on">Дашборд</span><span>Дзвінки</span><span>Аналітика</span><span>Команда</span></div><span class="app__av"></span></div>
+              <div class="app__body">
+                <div class="kpis">
+                  <div class="kpi"><div class="v">1 247</div><div class="l">Дзвінків за місяць</div></div>
+                  <div class="kpi"><div class="v good">68%</div><div class="l">Середній бал</div></div>
+                  <div class="kpi"><div class="v acc">12</div><div class="l">Активних менеджерів</div></div>
+                </div>
+                <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-top:16px">
+                  <div class="card" style="padding:15px">
+                    <div class="col-h" style="margin-bottom:14px">Рейтинг менеджерів</div>
+                    <div class="rank">
+                      <div class="r"><span class="nm">Олексій К.</span><span class="bar"><i data-w="84" style="background:var(--good)"></i></span><span class="pc" style="color:var(--good)">84%</span></div>
+                      <div class="r"><span class="nm">Марина С.</span><span class="bar"><i data-w="76" style="background:var(--good)"></i></span><span class="pc" style="color:var(--good)">76%</span></div>
+                      <div class="r"><span class="nm">Дмитро Р.</span><span class="bar"><i data-w="71" style="background:var(--warn)"></i></span><span class="pc" style="color:var(--warn)">71%</span></div>
+                      <div class="r"><span class="nm">Ірина В.</span><span class="bar"><i data-w="63" style="background:var(--warn)"></i></span><span class="pc" style="color:var(--warn)">63%</span></div>
+                      <div class="r"><span class="nm">Сергій М.</span><span class="bar"><i data-w="52" style="background:var(--bad)"></i></span><span class="pc" style="color:var(--bad)">52%</span></div>
+                    </div>
+                  </div>
+                  <div class="card" style="padding:15px">
+                    <div class="col-h" style="margin-bottom:6px">Динаміка якості</div>
+                    <svg viewBox="0 0 300 150" style="width:100%;height:auto;margin-top:6px">
+                      <defs>
+                        <linearGradient id="ar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8B6CFF" stop-opacity=".35"/><stop offset="1" stop-color="#8B6CFF" stop-opacity="0"/></linearGradient>
+                        <linearGradient id="grl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8B6CFF"/><stop offset="1" stop-color="#46A6FF"/></linearGradient>
+                      </defs>
+                      <line x1="0" y1="112" x2="300" y2="112" stroke="var(--line)" stroke-width="1"/>
+                      <line x1="0" y1="74" x2="300" y2="74" stroke="var(--line-soft)" stroke-width="1"/>
+                      <path d="M0,118 L43,108 L86,112 L129,92 L172,82 L215,68 L258,58 L300,44 L300,140 L0,140 Z" fill="url(#ar)"/>
+                      <path d="M0,118 L43,108 L86,112 L129,92 L172,82 L215,68 L258,58 L300,44" fill="none" stroke="url(#grl)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <circle cx="300" cy="44" r="3.5" fill="#46A6FF"/>
+                    </svg>
+                    <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;color:var(--faint);margin-top:4px"><span>Тиж 1</span><span>Тиж 8</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. CALL DETAIL + AI REVIEW -->
+    <section class="slide" data-name="Коучинг">
+      <div class="s">
+        <div class="two flip">
+          <div class="reveal d2">
+            <div class="app">
+              <div class="app__bar"><span class="app__logo">AI <b>Scoring</b></span><div class="app__tabs"><span>Дашборд</span><span class="on">Дзвінки</span><span>Аналітика</span></div><span class="app__av"></span></div>
+              <div class="app__body">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+                  <span class="tag">Дмитро Р.</span>
+                  <span class="tag mono">06:18</span>
+                  <span class="badge" style="color:var(--accent-2);border-color:rgba(70,166,255,.3);background:rgba(70,166,255,.08)"><i></i>Кваліфікація</span>
+                </div>
+                <div class="card" style="padding:13px 15px;margin-bottom:14px">
+                  <div style="display:flex;align-items:center;gap:13px">
+                    <div style="width:34px;height:34px;border-radius:50%;background:var(--grad);flex:0 0 auto;display:flex;align-items:center;justify-content:center">
+                      <svg viewBox="0 0 24 24" width="13" height="13" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                    <div class="wave" data-bars="44" data-played="22" style="height:34px;flex:1"></div>
+                    <span class="tc">03:41</span>
+                  </div>
+                </div>
+                <div style="display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;margin-bottom:14px">
+                  <div class="scorecirc">
+                    <svg width="120" height="120" viewBox="0 0 120 120">
+                      <circle cx="60" cy="60" r="52" fill="none" stroke="var(--surface-2)" stroke-width="9"/>
+                      <circle id="scoreArc" cx="60" cy="60" r="52" fill="none" stroke="url(#grl2)" stroke-width="9" stroke-linecap="round" stroke-dasharray="0 327" />
+                      <linearGradient id="grl2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8B6CFF"/><stop offset="1" stop-color="#46A6FF"/></linearGradient>
+                    </svg>
+                    <div class="mid"><b id="scoreNum">0</b><small>загальний</small></div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:9px">
+                    <div class="rank"><div class="r" style="grid-template-columns:96px 1fr 34px"><span class="nm">Привітання</span><span class="bar"><i data-w="86" style="background:var(--good)"></i></span><span class="pc">86</span></div></div>
+                    <div class="rank"><div class="r" style="grid-template-columns:96px 1fr 34px"><span class="nm">Діагностика</span><span class="bar"><i data-w="74" style="background:var(--good)"></i></span><span class="pc">74</span></div></div>
+                    <div class="rank"><div class="r" style="grid-template-columns:96px 1fr 34px"><span class="nm">Заперечення</span><span class="bar"><i data-w="41" style="background:var(--bad)"></i></span><span class="pc" style="color:var(--bad)">41</span></div></div>
+                    <div class="rank"><div class="r" style="grid-template-columns:96px 1fr 34px"><span class="nm">Закриття</span><span class="bar"><i data-w="58" style="background:var(--warn)"></i></span><span class="pc" style="color:var(--warn)">58</span></div></div>
+                  </div>
+                </div>
+                <div class="review">
+                  <div class="rh"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7.4-6.3-4.6L5.7 21 8 14 2 9.4h7.6z"/></svg>AI Review · робота з запереченнями</div>
+                  <div class="quote">«Клієнт: дорогувато виходить… — Менеджер: ну, ціни зараз такі»</div>
+                  <div class="rec">Заперечення по ціні лишилось без відпрацювання. Варто перейти до цінності об'єкта й варіантів розстрочки.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="eyebrow reveal">Коучинг</div>
+            <h3 class="h3 reveal d1" style="margin-top:18px;max-width:18ch">Конкретні цитати замість загального «працюй краще»</h3>
+            <p class="lead reveal d2" style="margin-top:18px">Кожен дзвінок розкладено по блоках, а слабкі місця підкріплені цитатою з розмови. Підготовка до розбору з менеджером займає 15 хвилин.</p>
+            <ul class="feat reveal d3">
+              <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M5 12l5 5L20 6"/></svg></span><div><b>Транскрипт із таймкодами</b><p>швидко знайти й переслухати потрібний момент</p></div></li>
+              <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M5 12l5 5L20 6"/></svg></span><div><b>AI Tune під ваш регламент</b><p>завантажте свій регламент — оцінка підлаштується під ваші стандарти</p></div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. DIVIDER — MARKETING -->
+    <section class="slide" data-name="Для маркетингу">
+      <div class="s divider">
+        <div class="num reveal">02 / ДЛЯ МАРКЕТИНГУ</div>
+        <h2 class="h1 reveal d1" style="max-width:16ch">Для керівника<br>з маркетингу</h2>
+        <p class="lead reveal d2" style="margin-top:24px">Жива мова клієнта з реальних розмов.</p>
+        <div class="wave reveal d3" data-bars="40"></div>
+      </div>
+    </section>
+
+    <!-- 9. CONTEXT CORE -->
+    <section class="slide" data-name="Контекстне ядро">
+      <div class="s">
+        <div class="eyebrow reveal">Контекстне ядро</div>
+        <h3 class="h3 reveal d1" style="margin-top:18px;max-width:24ch">Що клієнти питають, що їх зупиняє, кого згадують</h3>
+        <p class="lead reveal d2" style="margin-top:16px">Система збирає з кожної розмови питання, заперечення й згадки конкурентів — з точними цитатами. Видно реальні слова, якими говорить ваша аудиторія.</p>
+        <div class="app reveal d3" style="margin-top:28px">
+          <div class="app__bar"><span class="app__logo">AI <b>Scoring</b></span><div class="app__tabs"><span>Дашборд</span><span>Дзвінки</span><span class="on">Інсайти</span></div><span class="app__av"></span></div>
+          <div class="app__body">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+              <div>
+                <div class="col-h"><span class="dot" style="background:var(--accent-2)"></span>Питання клієнтів</div>
+                <div class="chip"><span>Паркінг</span><span class="pc">60%</span></div>
+                <div class="chip"><span>Розстрочка</span><span class="pc">48%</span></div>
+                <div class="chip"><span>Терміни здачі</span><span class="pc">35%</span></div>
+                <div class="chip"><span>Інфраструктура</span><span class="pc">22%</span></div>
+              </div>
+              <div>
+                <div class="col-h"><span class="dot" style="background:var(--warn)"></span>Заперечення</div>
+                <div class="chip warn"><span>Ціна</span><span class="pc">45%</span></div>
+                <div class="chip warn"><span>Район</span><span class="pc">30%</span></div>
+                <div class="chip warn"><span>Готовність дому</span><span class="pc">25%</span></div>
+                <div class="chip warn"><span>Планування</span><span class="pc">17%</span></div>
+              </div>
+              <div>
+                <div class="col-h"><span class="dot" style="background:var(--bad)"></span>Згадки конкурентів</div>
+                <div class="chip bad"><span>Сусідній ЖК</span><span class="pc">18</span></div>
+                <div class="chip bad"><span>Інший забудовник</span><span class="pc">11</span></div>
+                <div class="chip bad"><span>Вторинний ринок</span><span class="pc">9</span></div>
+                <div class="chip bad"><span>Оренда</span><span class="pc">6</span></div>
+              </div>
+            </div>
+            <div class="review" style="margin-top:18px;background:rgba(70,166,255,.06);border-color:rgba(70,166,255,.25)">
+              <div class="rh" style="color:var(--accent-2)">Інсайт тижня</div>
+              <div class="rec" style="color:var(--text)">За тиждень 60% клієнтів питали про паркінг — готова тема для наступної кампанії та оновлення лендингу.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. MARKETING INTELLIGENCE (ROADMAP) -->
+    <section class="slide" data-name="Marketing Intelligence">
+      <div class="s">
+        <div class="two">
+          <div>
+            <span class="badge badge--soon reveal"><i></i>На горизонті</span>
+            <h3 class="h3 reveal d1" style="margin-top:18px;max-width:20ch">Якість лідів за каналами, а не лише їх кількість</h3>
+            <p class="lead reveal d2" style="margin-top:18px">Кожен канал отримує оцінку за реальними розмовами: скільки якісних лідів, які в них заперечення, яка температура. Бюджет іде туди, звідки приходять клієнти, готові купувати.</p>
+            <ul class="feat reveal d3">
+              <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"><path d="M3 17l6-6 4 4 7-7"/></svg></span><div><b>Якісні та нецільові ліди per канал</b></div></li>
+              <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"><path d="M3 17l6-6 4 4 7-7"/></svg></span><div><b>Контекст і заперечення кожного джерела</b></div></li>
+              <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"><path d="M3 17l6-6 4 4 7-7"/></svg></span><div><b>Температура ліда з контексту розмови</b></div></li>
+            </ul>
+          </div>
+          <div class="reveal d2 mock-soon">
+            <div class="app">
+              <div class="app__bar"><span class="app__logo">AI <b>Scoring</b></span><div class="app__tabs"><span>Інсайти</span><span class="on">Кампанії</span></div><span class="badge badge--soon" style="margin-left:auto"><i></i>Скоро</span></div>
+              <div class="app__body">
+                <table class="tbl">
+                  <thead><tr><th>Канал</th><th>Дзвінків</th><th>Якісні</th><th>CPqL</th><th>Темп.</th></tr></thead>
+                  <tbody>
+                    <tr><td><span class="dot" style="background:var(--good)"></span>Google Ads</td><td class="num">214</td><td class="num" style="color:var(--good)">72%</td><td class="num">₴340</td><td class="num">7.4</td></tr>
+                    <tr><td><span class="dot" style="background:var(--good)"></span>Прямі</td><td class="num">98</td><td class="num" style="color:var(--good)">81%</td><td class="num">₴—</td><td class="num">8.1</td></tr>
+                    <tr><td><span class="dot" style="background:var(--warn)"></span>Facebook</td><td class="num">176</td><td class="num" style="color:var(--warn)">54%</td><td class="num">₴520</td><td class="num">5.2</td></tr>
+                    <tr><td><span class="dot" style="background:var(--bad)"></span>Instagram</td><td class="num">132</td><td class="num" style="color:var(--bad)">38%</td><td class="num">₴690</td><td class="num">4.1</td></tr>
+                  </tbody>
+                </table>
+                <div style="font-family:var(--mono);font-size:10.5px;color:var(--faint);padding:12px 12px 2px">CPqL — вартість одного якісного ліда</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. INTEGRATIONS -->
+    <section class="slide" data-name="Інтеграції">
+      <div class="s">
+        <div class="eyebrow reveal">Підключення</div>
+        <h3 class="h3 reveal d1" style="margin-top:18px;max-width:22ch">Працює з вашою телефонією та CRM</h3>
+        <p class="lead reveal d2" style="margin-top:16px">Дзвінки надходять у систему й аналізуються автоматично. Менеджерам не треба нічого завантажувати руками.</p>
+        <div class="integ">
+          <div class="intcard reveal d2"><div class="nm">Ringostat</div><div class="ty">Телефонія та колтрекінг</div><div class="st"><span class="dot" style="background:var(--good)"></span>Підключено</div></div>
+          <div class="intcard reveal d3"><div class="nm">Binotel</div><div class="ty">Телефонія та АТС</div><div class="st"><span class="dot" style="background:var(--good)"></span>Підключено</div></div>
+          <div class="intcard reveal d4"><div class="nm">NetHunt</div><div class="ty">CRM</div><div class="st"><span class="dot" style="background:var(--good)"></span>Підключено</div></div>
+        </div>
+        <div class="reveal d5" style="margin-top:16px">
+          <div class="card" style="padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+            <div style="font-size:14px;color:var(--muted)">Інші CRM і телефонія — <b style="color:var(--text)">за запитом</b></div>
+            <div class="integ-note">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M16 4l-4 4-2-2"/></svg>
+              Дзвінки збираються й аналізуються автоматично
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. NOW vs HORIZON -->
+    <section class="slide" data-name="Зараз і попереду">
+      <div class="s">
+        <div class="eyebrow reveal">Чесно про статус</div>
+        <h3 class="h3 reveal d1" style="margin-top:18px;max-width:22ch">Що працює зараз і що попереду</h3>
+        <p class="lead reveal d2" style="margin-top:16px">Показуємо обидва списки, щоб ви бачили, що отримаєте сьогодні, а що — найближчими місяцями.</p>
+        <div class="cols2">
+          <div class="colbox reveal d2">
+            <div class="ch"><h4>Працює зараз</h4><span class="badge badge--live"><i></i>Live</span></div>
+            <ul class="ck">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2.4" stroke-linecap="round"><path d="M5 12l5 5L20 6"/></svg>Транскрипція укр / рос / суржик</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2.4" stroke-linecap="round"><path d="M5 12l5 5L20 6"/></svg>Оцінка за 19 факторами у 6 блоках</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2.4" stroke-linecap="round"><path d="M5 12l5 5L20 6"/></svg>AI Review з цитатами для коучингу</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2.4" stroke-linecap="round"><path d="M5 12l5 5L20 6"/></svg>AI Tune під ваш регламент</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2.4" stroke-linecap="round"><path d="M5 12l5 5L20 6"/></svg>Профіль навичок і тренди</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2.4" stroke-linecap="round"><path d="M5 12l5 5L20 6"/></svg>Контекстне ядро з розмов</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2.4" stroke-linecap="round"><path d="M5 12l5 5L20 6"/></svg>Типи розмов і авто-збір з телефонії та CRM</li>
+            </ul>
+          </div>
+          <div class="colbox soon reveal d3">
+            <div class="ch"><h4>На горизонті</h4><span class="badge badge--soon"><i></i>Скоро</span></div>
+            <ul class="ck muted">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>Ранковий брифінг для керівника</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>Здоров'я угоди та проактивні сигнали</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>Задачі для коучингу з авто-перевіркою</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>Звіти керівництву по кнопці</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>Якість лідів за рекламними каналами</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>Портрет клієнта з усіх його розмов</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13. WHY US + SOCIAL PROOF -->
+    <section class="slide" data-name="Чому AI Scoring">
+      <div class="s">
+        <div class="eyebrow reveal">Чому AI Scoring</div>
+        <h3 class="h3 reveal d1" style="margin-top:18px;max-width:22ch">Зроблено для українських продажів нерухомості</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 40px;margin-top:32px;max-width:1000px">
+          <ul class="feat reveal d2" style="margin-top:0;gap:18px">
+            <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7.4-6.3-4.6L5.7 21 8 14 2 9.4h7.6z"/></svg></span><div><b>Методологія під нерухомість</b><p>19 факторів — від привітання до закриття угоди</p></div></li>
+            <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7.4-6.3-4.6L5.7 21 8 14 2 9.4h7.6z"/></svg></span><div><b>AI Tune під ваш регламент</b><p>оцінка підлаштовується під ваші стандарти продажів</p></div></li>
+            <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7.4-6.3-4.6L5.7 21 8 14 2 9.4h7.6z"/></svg></span><div><b>Українська, російська та суржик</b><p>розпізнає так, як реально говорять менеджери</p></div></li>
+          </ul>
+          <ul class="feat reveal d3" style="margin-top:0;gap:18px">
+            <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7.4-6.3-4.6L5.7 21 8 14 2 9.4h7.6z"/></svg></span><div><b>Контекстне ядро для маркетингу</b><p>жива мова клієнта йде в роботу над кампаніями</p></div></li>
+            <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7.4-6.3-4.6L5.7 21 8 14 2 9.4h7.6z"/></svg></span><div><b>Гнучкий вибір AI-моделей</b><p>під задачу й під бюджет</p></div></li>
+            <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7.4-6.3-4.6L5.7 21 8 14 2 9.4h7.6z"/></svg></span><div><b>Швидкий розвиток</b><p>продукт росте разом із потребами клієнтів</p></div></li>
+          </ul>
+        </div>
+        <div class="reveal d4" style="margin-top:38px;display:inline-flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 22px">
+          <span style="font-family:var(--display);font-size:34px;font-weight:700" class="grad-text" data-count="3000">0</span>
+          <span style="font-size:14px;color:var(--muted);max-width:30ch">розмов, проаналізованих за місяць</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14. PRICING -->
+    <section class="slide" data-name="Тарифи">
+      <div class="s">
+        <div class="eyebrow reveal">Тарифи</div>
+        <h3 class="h3 reveal d1" style="margin-top:18px">Прозора тарифікація</h3>
+        <div class="price-wrap">
+          <div class="price-main reveal d2">
+            <div class="amt">490 ₴ <small>/ користувач · міс</small></div>
+            <div class="plus">+ вартість обробки розмов</div>
+            <ul class="price-list">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M5 12l5 5L20 6"/></svg><div>Тарифікуються лише <b>менеджери, яких оцінюємо</b>. Адміністратори — безкоштовно.</div></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M5 12l5 5L20 6"/></svg><div>Обробка рахується за фактом: <b>середній дзвінок ≈ $0.1–0.2</b>.</div></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M5 12l5 5L20 6"/></svg><div>Платите за тих, хто продає, і за реально оброблені розмови.</div></li>
+            </ul>
+          </div>
+          <div class="price-ex reveal d3">
+            <div class="exl">Приклад розрахунку</div>
+            <div class="exrow"><span>10 менеджерів × 490 ₴</span><b>4 900 ₴</b></div>
+            <div class="exrow"><span>Адміністратори</span><b style="color:var(--good)">0 ₴</b></div>
+            <div class="exrow"><span>Обробка розмов</span><b>за фактом</b></div>
+            <div class="extot"><span style="color:var(--muted)">Фікс на місяць</span><b>4 900 ₴</b></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 15. CTA -->
+    <section class="slide" data-name="Наступний крок">
+      <div class="s">
+        <div class="cta-wrap">
+          <div class="eyebrow reveal" style="justify-content:center">Наступний крок</div>
+          <h2 class="h1 reveal d1" style="margin-top:24px;font-size:clamp(34px,5vw,68px)">Подивимось на <span class="grad-text">ваших</span> дзвінках?</h2>
+          <p class="lead reveal d2" style="margin:22px auto 0;max-width:50ch">Запустимо пілот на ваших реальних розмовах — і вже за тиждень ви побачите перші результати: рейтинг команди, слабкі місця, живу мову клієнтів.</p>
+          <div class="reveal d3 wave" data-bars="48"></div>
+          <a class="tg-btn reveal d4" href="https://t.me/+380930364839" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.27 18.6 19.96c-.25 1.1-.9 1.37-1.83.85l-5.02-3.7-2.42 2.33c-.27.27-.5.5-1.01.5l.36-5.12 9.32-8.42c.4-.36-.09-.56-.63-.2L5.55 13.3.55 11.73c-1.09-.34-1.11-1.09.23-1.61L20.5 2.78c.9-.34 1.69.2 1.4 1.49z"/></svg>
+            Написати нашому експерту в Telegram
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- nav -->
+  <div class="nav">
+    <button class="arrow" id="prev" aria-label="Назад"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <div class="dots" id="dots"></div>
+    <button class="arrow" id="next" aria-label="Далі"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+  </div>
+  <div class="hint">← / → або пробіл</div>
+</div>
+
+<script>
+(function(){
+  /* ---- build waveforms ---- */
+  function buildWaves(){
+    document.querySelectorAll('.wave').forEach(function(w){
+      if(w.dataset.built) return; w.dataset.built="1";
+      var n=parseInt(w.dataset.bars||"40",10);
+      var played=parseInt(w.dataset.played||"-1",10);
+      for(var i=0;i<n;i++){
+        var s=document.createElement('span');
+        var h=22+Math.round(Math.abs(Math.sin(i*1.3)*52)+Math.random()*26);
+        s.style.height=Math.min(h,100)+'%';
+        s.style.animationDelay=(i*0.045)+'s';
+        s.style.animationDuration=(1.2+(i%5)*0.12)+'s';
+        if(played>=0 && i>=played){ s.style.background='var(--surface-2)'; s.style.animation='none'; }
+        else if(played>=0){ s.style.animation='none'; }
+        w.appendChild(s);
+      }
+    });
+  }
+  buildWaves();
+
+  /* ---- login ---- */
+  var login=document.getElementById('login'),
+      deck=document.getElementById('deck'),
+      enter=document.getElementById('enter'),
+      pw=document.getElementById('pw'),
+      lg=document.getElementById('lg'),
+      err=document.getElementById('err');
+  var PASS="unheard-2026";
+  var unlocked=false;
+  function tryEnter(){
+    if(pw.value.trim().toLowerCase()===PASS){
+      unlocked=true;
+      login.classList.add('hide');
+      setTimeout(function(){ login.style.display='none'; },800);
+      deck.classList.add('show');
+      go(0,true);
+    } else {
+      err.classList.add('show');
+      pw.focus(); pw.select();
+    }
+  }
+  enter.addEventListener('click',tryEnter);
+  pw.addEventListener('keydown',function(e){ if(e.key==='Enter') tryEnter(); });
+  lg.addEventListener('keydown',function(e){ if(e.key==='Enter') pw.focus(); });
+  pw.addEventListener('input',function(){ err.classList.remove('show'); });
+
+  /* ---- password show/hide ---- */
+  var pwEye=document.getElementById('pwEye');
+  if(pwEye){
+    pwEye.addEventListener('click',function(){
+      var open=pwEye.querySelector('.eye-open'), off=pwEye.querySelector('.eye-off');
+      if(pw.type==='password'){ pw.type='text'; open.style.display='none'; off.style.display='block'; pwEye.setAttribute('aria-label','Сховати пароль'); }
+      else { pw.type='password'; open.style.display='block'; off.style.display='none'; pwEye.setAttribute('aria-label','Показати пароль'); }
+      pw.focus();
+    });
+  }
+
+  /* ---- deck nav ---- */
+  var track=document.getElementById('track'),
+      slides=Array.prototype.slice.call(track.querySelectorAll('.slide')),
+      dotsWrap=document.getElementById('dots'),
+      prev=document.getElementById('prev'),
+      next=document.getElementById('next'),
+      curEl=document.getElementById('cur'),
+      totalEl=document.getElementById('total'),
+      prog=document.getElementById('prog');
+  var idx=0, N=slides.length;
+  totalEl.textContent=String(N).padStart(2,'0');
+
+  slides.forEach(function(_,i){
+    var b=document.createElement('button');
+    b.addEventListener('click',function(){ go(i); });
+    dotsWrap.appendChild(b);
+  });
+  var dots=Array.prototype.slice.call(dotsWrap.children);
+
+  function go(i,instant){
+    idx=Math.max(0,Math.min(N-1,i));
+    track.style.transition=instant?'none':'';
+    track.style.transform='translateX('+(-idx*100)+'vw)';
+    dots.forEach(function(d,k){ d.classList.toggle('on',k===idx); });
+    curEl.textContent=String(idx+1).padStart(2,'0');
+    prog.style.width=(idx/(N-1)*100)+'%';
+    prev.disabled=idx===0; next.disabled=idx===N-1;
+    slides.forEach(function(s,k){ s.classList.toggle('is-active',k===idx); });
+    activate(slides[idx]);
+  }
+  function nextS(){ go(idx+1); }
+  function prevS(){ go(idx-1); }
+  prev.addEventListener('click',prevS);
+  next.addEventListener('click',nextS);
+
+  document.addEventListener('keydown',function(e){
+    if(!unlocked) return;
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){ e.preventDefault(); nextS(); }
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); prevS(); }
+    else if(e.key==='Home'){ go(0); } else if(e.key==='End'){ go(N-1); }
+  });
+
+  /* touch swipe */
+  var tx=0;
+  track.addEventListener('touchstart',function(e){ tx=e.touches[0].clientX; },{passive:true});
+  track.addEventListener('touchend',function(e){
+    var dx=e.changedTouches[0].clientX-tx;
+    if(Math.abs(dx)>60){ dx<0?nextS():prevS(); }
+  },{passive:true});
+
+  /* ---- per-slide activation: counters, bars, arc ---- */
+  function activate(slide){
+    if(!slide) return;
+    slide.querySelectorAll('.bar i[data-w]').forEach(function(b){
+      if(b.dataset.run) return; b.dataset.run="1";
+      setTimeout(function(){ b.style.width=b.dataset.w+'%'; },120);
+    });
+    slide.querySelectorAll('[data-count]').forEach(function(el){
+      if(el.dataset.run) return; el.dataset.run="1";
+      var target=parseFloat(el.dataset.count), suf=el.dataset.suffix||'', t0=null, dur=1100;
+      function step(ts){ if(!t0)t0=ts; var p=Math.min((ts-t0)/dur,1);
+        var e=1-Math.pow(1-p,3);
+        el.textContent=Math.round(target*e).toString().replace(/\B(?=(\d{3})+(?!\d))/g,'\u00A0')+suf;
+        if(p<1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+    var arc=slide.querySelector('#scoreArc'), num=slide.querySelector('#scoreNum');
+    if(arc && !arc.dataset.run){ arc.dataset.run="1";
+      var C=2*Math.PI*52, val=72;
+      setTimeout(function(){ arc.style.transition='stroke-dasharray 1.2s cubic-bezier(.22,.61,.36,1)';
+        arc.setAttribute('stroke-dasharray',(C*val/100)+' '+C); },200);
+      var t0=null;
+      function sstep(ts){ if(!t0)t0=ts; var p=Math.min((ts-t0)/1100,1); var e=1-Math.pow(1-p,3);
+        num.textContent=Math.round(val*e); if(p<1) requestAnimationFrame(sstep); }
+      requestAnimationFrame(sstep);
+    }
+  }
+})();
+</script>
+</body>
+</html>
