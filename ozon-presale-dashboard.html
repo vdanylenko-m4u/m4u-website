@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Озон — Цінова аналітика пресейлу | Maxify</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
+<style>
+  html, body, #root { margin: 0; padding: 0; min-height: 100vh; background: #0f0f1a; }
+  body { font-family: 'DM Sans', 'Segoe UI', sans-serif; }
+  #login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+  .login-card { width: 100%; max-width: 380px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 36px 32px; box-sizing: border-box; }
+  .login-brand { font-size: 11px; color: #fbbf24; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px; }
+  .login-title { font-size: 22px; font-weight: 700; color: #e2e8f0; margin: 0 0 4px; }
+  .login-sub { font-size: 13px; color: #888; margin-bottom: 28px; }
+  .login-label { font-size: 11px; color: #777; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; margin-bottom: 8px; display: block; }
+  .login-input { width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px 14px; color: #e2e8f0; font-size: 15px; font-family: inherit; margin-bottom: 18px; outline: none; }
+  .login-input:focus { border-color: rgba(251,191,36,0.5); }
+  .login-btn { width: 100%; background: #fbbf24; color: #0f0f1a; border: none; border-radius: 10px; padding: 13px; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 6px; }
+  .login-btn:hover { background: #f5b40e; }
+  .login-error { color: #f87171; font-size: 13px; min-height: 18px; margin-top: 14px; text-align: center; }
+  .login-loading { color: #888; font-size: 13px; margin-top: 14px; text-align: center; }
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-brand">Maxify · Цінова аналітика</div>
+    <h1 class="login-title">Озон — пресейл</h1>
+    <div class="login-sub">Введіть логін і пароль для доступу до дашборду</div>
+    <label class="login-label" for="lg-user">Логін</label>
+    <input class="login-input" id="lg-user" type="text" autocomplete="username" autofocus>
+    <label class="login-label" for="lg-pass">Пароль</label>
+    <input class="login-input" id="lg-pass" type="password" autocomplete="current-password">
+    <button class="login-btn" id="lg-btn">Увійти</button>
+    <div class="login-error" id="lg-err"></div>
+  </div>
+</div>
+
+<div id="root"></div>
+
+<!-- React -->
+<script crossorigin src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+<!-- Recharts (UMD, потребує prop-types ПЕРЕД собою) -->
+<script crossorigin src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+<script crossorigin src="https://unpkg.com/recharts@2.12.7/umd/Recharts.js"></script>
+<!-- Babel: компіляція JSX після авторизації -->
+<script crossorigin src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+
+<!-- Код застосунку: не виконується, компілюється Babel лише після входу -->
+<script type="text/plain" id="app-source">
+const { useState, useMemo } = React;
+const { ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, ComposedChart, Line, Area, ReferenceLine, Legend } = Recharts;
+
+
+const RAW = [{"number":25,"entrance":1,"unit":1,"floor":-1,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2151.0,"totalPrice":168444.81,"status":"Вільно"},{"number":35,"entrance":1,"unit":1,"floor":1,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2194.0,"totalPrice":171812.14,"status":"Вільно"},{"number":43,"entrance":1,"unit":1,"floor":2,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2215.0,"totalPrice":173456.65,"status":"Вільно"},{"number":49,"entrance":1,"unit":1,"floor":3,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2235.0,"totalPrice":175022.85,"status":"Вільно"},{"number":55,"entrance":1,"unit":1,"floor":4,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2252.0,"totalPrice":176354.12,"status":"Вільно"},{"number":61,"entrance":1,"unit":1,"floor":5,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2268.0,"totalPrice":177607.08,"status":"Вільно"},{"number":67,"entrance":1,"unit":1,"floor":6,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2282.0,"totalPrice":178703.42,"status":"Вільно"},{"number":73,"entrance":1,"unit":1,"floor":7,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2295.0,"totalPrice":179721.45,"status":"Вільно"},{"number":77,"entrance":1,"unit":1,"floor":8,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2306.0,"totalPrice":180582.86,"status":"Вільно"},{"number":81,"entrance":1,"unit":1,"floor":9,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2316.0,"totalPrice":181365.96,"status":"Вільно"},{"number":85,"entrance":1,"unit":1,"floor":10,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2325.0,"totalPrice":182070.75,"status":"Вільно"},{"number":89,"entrance":1,"unit":1,"floor":11,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2334.0,"totalPrice":182775.54,"status":"Вільно"},{"number":93,"entrance":1,"unit":1,"floor":12,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2341.0,"totalPrice":183323.71,"status":"Вільно"},{"number":97,"entrance":1,"unit":1,"floor":13,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2348.0,"totalPrice":183871.88,"status":"Вільно"},{"number":124,"entrance":1,"unit":2,"floor":-1,"rooms":1,"layout":"1К-1.1","view":"Будинок 2","area":47.64,"priceM2":2064.0,"totalPrice":98328.96,"status":"Вільно"},{"number":125,"entrance":1,"unit":3,"floor":-1,"rooms":1,"layout":"1К-2.1","view":"Будинок 2","area":46.45,"priceM2":2072.0,"totalPrice":96244.4,"status":"Вільно"},{"number":126,"entrance":1,"unit":4,"floor":-1,"rooms":1,"layout":"1К-2.3","view":"Будинок 2","area":45.92,"priceM2":2085.0,"totalPrice":95743.2,"status":"Вільно"},{"number":128,"entrance":1,"unit":5,"floor":-1,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2013.0,"totalPrice":129677.46,"status":"Вільно"},{"number":137,"entrance":1,"unit":2,"floor":1,"rooms":1,"layout":"1К-1.1","view":"Будинок 2","area":47.64,"priceM2":2105.0,"totalPrice":100282.2,"status":"Вільно"},{"number":138,"entrance":1,"unit":3,"floor":1,"rooms":1,"layout":"1К-2.1","view":"Будинок 2","area":46.45,"priceM2":2113.0,"totalPrice":98148.85,"status":"Вільно"},{"number":139,"entrance":1,"unit":4,"floor":1,"rooms":1,"layout":"1К-2.3","view":"Будинок 2","area":45.92,"priceM2":2127.0,"totalPrice":97671.84,"status":"Вільно"},{"number":141,"entrance":1,"unit":5,"floor":1,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2053.0,"totalPrice":132254.26,"status":"Вільно"},{"number":150,"entrance":1,"unit":2,"floor":2,"rooms":1,"layout":"1К-1.1","view":"Будинок 2","area":47.64,"priceM2":2126.0,"totalPrice":101282.64,"status":"Вільно"},{"number":151,"entrance":1,"unit":3,"floor":2,"rooms":1,"layout":"1К-2.1","view":"Будинок 2","area":46.45,"priceM2":2134.0,"totalPrice":99124.3,"status":"Вільно"},{"number":152,"entrance":1,"unit":4,"floor":2,"rooms":1,"layout":"1К-2.3","view":"Будинок 2","area":45.92,"priceM2":2148.0,"totalPrice":98636.16,"status":"Вільно"},{"number":154,"entrance":1,"unit":5,"floor":2,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2073.0,"totalPrice":133542.66,"status":"Вільно"},{"number":163,"entrance":1,"unit":2,"floor":3,"rooms":1,"layout":"1К-1.1","view":"Будинок 2","area":47.64,"priceM2":2144.0,"totalPrice":102140.16,"status":"Вільно"},{"number":164,"entrance":1,"unit":3,"floor":3,"rooms":1,"layout":"1К-2.1","view":"Будинок 2","area":46.45,"priceM2":2152.0,"totalPrice":99960.4,"status":"Вільно"},{"number":165,"entrance":1,"unit":4,"floor":3,"rooms":1,"layout":"1К-2.3","view":"Будинок 2","area":45.92,"priceM2":2167.0,"totalPrice":99508.64,"status":"Вільно"},{"number":167,"entrance":1,"unit":5,"floor":3,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2092.0,"totalPrice":134766.64,"status":"Вільно"},{"number":175,"entrance":1,"unit":2,"floor":4,"rooms":1,"layout":"1К-1.1","view":"Будинок 2","area":47.64,"priceM2":2161.0,"totalPrice":102950.04,"status":"Вільно"},{"number":176,"entrance":1,"unit":3,"floor":4,"rooms":1,"layout":"1К-2.1","view":"Будинок 2","area":46.45,"priceM2":2169.0,"totalPrice":100750.05,"status":"Вільно"},{"number":177,"entrance":1,"unit":4,"floor":4,"rooms":1,"layout":"1К-2.3","view":"Будинок 2","area":45.92,"priceM2":2183.0,"totalPrice":100243.36,"status":"Вільно"},{"number":179,"entrance":1,"unit":5,"floor":4,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2108.0,"totalPrice":135797.36,"status":"Вільно"},{"number":187,"entrance":1,"unit":2,"floor":5,"rooms":1,"layout":"1К-1.1","view":"Будинок 2","area":47.64,"priceM2":2176.0,"totalPrice":103664.64,"status":"Вільно"},{"number":188,"entrance":1,"unit":3,"floor":5,"rooms":1,"layout":"1К-2.1","view":"Будинок 2","area":46.45,"priceM2":2184.0,"totalPrice":101446.8,"status":"Вільно"},{"number":189,"entrance":1,"unit":4,"floor":5,"rooms":1,"layout":"1К-2.3","view":"Будинок 2","area":45.92,"priceM2":2199.0,"totalPrice":100978.08,"status":"Вільно"},{"number":191,"entrance":1,"unit":5,"floor":5,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2123.0,"totalPrice":136763.66,"status":"Вільно"},{"number":199,"entrance":1,"unit":2,"floor":6,"rooms":1,"layout":"1К-1.1","view":"Будинок 2","area":47.64,"priceM2":2190.0,"totalPrice":104331.6,"status":"Вільно"},{"number":200,"entrance":1,"unit":3,"floor":6,"rooms":1,"layout":"1К-2.1","view":"Будинок 2","area":46.45,"priceM2":2198.0,"totalPrice":102097.1,"status":"Вільно"},{"number":201,"entrance":1,"unit":4,"floor":6,"rooms":1,"layout":"1К-2.3","view":"Будинок 2","area":45.92,"priceM2":2212.0,"totalPrice":101575.04,"status":"Вільно"},{"number":203,"entrance":1,"unit":5,"floor":6,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2136.0,"totalPrice":137601.12,"status":"Вільно"},{"number":208,"entrance":1,"unit":2,"floor":7,"rooms":1,"layout":"1К-1.1","view":"Будинок 2","area":47.64,"priceM2":2202.0,"totalPrice":104903.28,"status":"Вільно"},{"number":209,"entrance":1,"unit":3,"floor":7,"rooms":1,"layout":"1К-2.1","view":"Будинок 2","area":46.45,"priceM2":2210.0,"totalPrice":102654.5,"status":"Вільно"},{"number":210,"entrance":1,"unit":4,"floor":7,"rooms":1,"layout":"1К-2.3","view":"Будинок 2","area":45.92,"priceM2":2225.0,"totalPrice":102172.0,"status":"Вільно"},{"number":212,"entrance":1,"unit":5,"floor":7,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2148.0,"totalPrice":138374.16,"status":"Вільно"},{"number":217,"entrance":1,"unit":2,"floor":8,"rooms":1,"layout":"1К-1.1","view":"Будинок 2","area":47.64,"priceM2":2213.0,"totalPrice":105427.32,"status":"Вільно"},{"number":218,"entrance":1,"unit":3,"floor":8,"rooms":1,"layout":"1К-2.1","view":"Будинок 2","area":46.45,"priceM2":2221.0,"totalPrice":103165.45,"status":"Вільно"},{"number":219,"entrance":1,"unit":4,"floor":8,"rooms":1,"layout":"1К-2.3","view":"Будинок 2","area":45.92,"priceM2":2236.0,"totalPrice":102677.12,"status":"Вільно"},{"number":221,"entrance":1,"unit":5,"floor":8,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2158.0,"totalPrice":139018.36,"status":"Вільно"},{"number":226,"entrance":1,"unit":2,"floor":9,"rooms":1,"layout":"1К-1.2","view":"Будинок 2","area":47.01,"priceM2":2205.0,"totalPrice":103657.05,"status":"Вільно"},{"number":227,"entrance":1,"unit":3,"floor":9,"rooms":1,"layout":"1К-2.2","view":"Будинок 2","area":45.83,"priceM2":2214.0,"totalPrice":101467.62,"status":"Вільно"},{"number":228,"entrance":1,"unit":4,"floor":9,"rooms":1,"layout":"1К-2.4","view":"Будинок 2","area":45.32,"priceM2":2239.0,"totalPrice":101471.48,"status":"Вільно"},{"number":230,"entrance":1,"unit":5,"floor":9,"rooms":2,"layout":"2К-2.2","view":"Бойчука+Двір","area":63.88,"priceM2":2151.0,"totalPrice":137405.88,"status":"Вільно"},{"number":233,"entrance":1,"unit":2,"floor":10,"rooms":1,"layout":"1К-2.2","view":"Будинок 2","area":45.83,"priceM2":2222.0,"totalPrice":101834.26,"status":"Вільно"},{"number":234,"entrance":1,"unit":3,"floor":10,"rooms":1,"layout":"1К-2.4","view":"Будинок 2","area":45.32,"priceM2":2248.0,"totalPrice":101879.36,"status":"Вільно"},{"number":236,"entrance":1,"unit":4,"floor":10,"rooms":2,"layout":"2К-2.2","view":"Бойчука+Двір","area":63.88,"priceM2":2159.0,"totalPrice":137916.92,"status":"Вільно"},{"number":238,"entrance":1,"unit":2,"floor":11,"rooms":1,"layout":"1К-2.2","view":"Будинок 2","area":45.83,"priceM2":2230.0,"totalPrice":102200.9,"status":"Вільно"},{"number":239,"entrance":1,"unit":3,"floor":11,"rooms":1,"layout":"1К-2.4","view":"Будинок 2","area":45.32,"priceM2":2256.0,"totalPrice":102241.92,"status":"Вільно"},{"number":241,"entrance":1,"unit":4,"floor":11,"rooms":2,"layout":"2К-2.2","view":"Бойчука+Двір","area":63.88,"priceM2":2167.0,"totalPrice":138427.96,"status":"Вільно"},{"number":244,"entrance":1,"unit":2,"floor":12,"rooms":1,"layout":"1К-2.2","view":"Будинок 2","area":45.83,"priceM2":2238.0,"totalPrice":102567.54,"status":"Вільно"},{"number":245,"entrance":1,"unit":3,"floor":12,"rooms":1,"layout":"1К-2.4","view":"Будинок 2","area":45.32,"priceM2":2263.0,"totalPrice":102559.16,"status":"Вільно"},{"number":247,"entrance":1,"unit":4,"floor":12,"rooms":2,"layout":"2К-2.2","view":"Бойчука+Двір","area":63.88,"priceM2":2174.0,"totalPrice":138875.12,"status":"Вільно"},{"number":250,"entrance":1,"unit":2,"floor":13,"rooms":1,"layout":"1К-2.2","view":"Будинок 2","area":45.83,"priceM2":2244.0,"totalPrice":102842.52,"status":"Вільно"},{"number":251,"entrance":1,"unit":3,"floor":13,"rooms":1,"layout":"1К-2.4","view":"Будинок 2","area":45.32,"priceM2":2270.0,"totalPrice":102876.4,"status":"Вільно"},{"number":253,"entrance":1,"unit":4,"floor":13,"rooms":2,"layout":"2К-2.2","view":"Бойчука+Двір","area":63.88,"priceM2":2180.0,"totalPrice":139258.4,"status":"Вільно"},{"number":255,"entrance":1,"unit":1,"floor":14,"rooms":1,"layout":"1К-2.2","view":"Будинок 2","area":45.83,"priceM2":2250.0,"totalPrice":103117.5,"status":"Вільно"},{"number":256,"entrance":1,"unit":2,"floor":14,"rooms":1,"layout":"1К-2.4","view":"Будинок 2","area":45.32,"priceM2":2276.0,"totalPrice":103148.32,"status":"Вільно"},{"number":260,"entrance":1,"unit":3,"floor":15,"rooms":1,"layout":"1К-2.2","view":"Будинок 2","area":45.83,"priceM2":2255.0,"totalPrice":103346.65,"status":"Вільно"},{"number":261,"entrance":1,"unit":4,"floor":15,"rooms":1,"layout":"1К-2.4","view":"Будинок 2","area":45.32,"priceM2":2281.0,"totalPrice":103374.92,"status":"Вільно"}];
+
+// ---- Config ----
+const VIEWS = ["Ботсад", "Будинок 2", "Бойчука+Двір"];
+const VIEW_C = { "Ботсад": "#34d399", "Будинок 2": "#60a5fa", "Бойчука+Двір": "#f472b6" };
+const VIEW_BG = { "Ботсад": "rgba(52,211,153,0.08)", "Будинок 2": "rgba(96,165,250,0.08)", "Бойчука+Двір": "rgba(244,114,182,0.08)" };
+const ROOM_C = { 1: "#60a5fa", 2: "#34d399" };
+const LAYOUT_ORDER = ["1К-1.1","1К-1.2","1К-2.1","1К-2.2","1К-2.3","1К-2.4","2К-1","2К-2.1","2К-2.2"];
+const FLOORS = [-1,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
+const GOLD = "#fbbf24";
+
+// ---- Конкуренти (джерело: P/ARC PRO+ звіт, 15 проєктів у радіусі до 3 км) ----
+const MARKET_AVG = 2679;
+const COMPETITORS = [
+  { name: "SALUT!", dist: 1.8, price: 1780, relValue: 1.25, totValue: 40, reliability: 68 },
+  { name: "Aria", dist: 1.0, price: 2028, relValue: 1.24, totValue: 39, reliability: 86 },
+  { name: "Maxima Residence", dist: 2.0, price: 2195, relValue: 1.23, totValue: 42, reliability: 87 },
+  { name: "Stanford", dist: 2.3, price: 2732, relValue: 0.99, totValue: 43, reliability: 70 },
+  { name: "Fjord", dist: 0.8, price: 1853, relValue: 0.98, totValue: 28, reliability: 78 },
+  { name: "Greenville на Печерську", dist: 1.9, price: 2458, relValue: 0.98, totValue: 37, reliability: 82 },
+  { name: "The Light", dist: 1.6, price: 2959, relValue: 0.97, totValue: 48, reliability: 54 },
+  { name: "Central Hills", dist: 2.8, price: 1475, relValue: 0.85, totValue: 20, reliability: 81 },
+  { name: "TRIIINITY", dist: 1.8, price: 3791, relValue: 0.79, totValue: 47, reliability: 98 },
+  { name: "A136 Highlight Tower", dist: 2.5, price: 3391, relValue: 0.78, totValue: 42, reliability: 85 },
+  { name: "Nordica Residence", dist: 1.2, price: 2013, relValue: 0.77, totValue: 23, reliability: 83 },
+  { name: "Новопечерські Липки", dist: 0.6, price: 3017, relValue: 0.75, totValue: 35, reliability: 84 },
+  { name: "Montreal House", dist: 2.9, price: 3757, relValue: 0.75, totValue: 44, reliability: 80 },
+  { name: "АРСЕНАЛ House", dist: 3.0, price: 4339, relValue: 0.70, totValue: 52, reliability: 78 },
+  { name: "БІОРИТМ", dist: 1.7, price: 3893, relValue: 0.66, totValue: 44, reliability: 58 }
+];
+// Діапазони $/м² конкурентів по кімнатності (P/ARC; одне значення = одна ціна на ринку)
+const COMP_ROOMS = {
+  1: [
+    { name: "АРСЕНАЛ House", min: 3841, max: 5257 }, { name: "A136 Highlight Tower", min: 2831, max: 4953 },
+    { name: "БІОРИТМ", min: 3480, max: 4280 }, { name: "Montreal House", min: 3133, max: 3741 },
+    { name: "Stanford", min: 2881, max: 3260 }, { name: "Новопечерські Липки", min: 2881, max: 3235 },
+    { name: "The Light", min: 3032, max: 3032 }, { name: "Greenville на Печерську", min: 2170, max: 2579 },
+    { name: "Maxima Residence", min: 1908, max: 2498 }, { name: "Aria", min: 2022, max: 2022 },
+    { name: "Fjord", min: 1584, max: 2457 }, { name: "SALUT!", min: 1446, max: 2537 },
+    { name: "Nordica Residence", min: 1700, max: 2262 }, { name: "Central Hills", min: 1517, max: 1517 }
+  ],
+  2: [
+    { name: "АРСЕНАЛ House", min: 3741, max: 5054 }, { name: "БІОРИТМ", min: 3248, max: 4564 },
+    { name: "TRIIINITY", min: 3841, max: 3841 }, { name: "A136 Highlight Tower", min: 2881, max: 3639 },
+    { name: "Montreal House", min: 3032, max: 3437 }, { name: "Новопечерські Липки", min: 2881, max: 3235 },
+    { name: "The Light", min: 3032, max: 3032 }, { name: "Stanford", min: 2755, max: 2982 },
+    { name: "Greenville на Печерську", min: 2386, max: 2628 }, { name: "Maxima Residence", min: 1904, max: 2513 },
+    { name: "Aria", min: 2022, max: 2022 }, { name: "Nordica Residence", min: 1537, max: 2212 },
+    { name: "Fjord", min: 1391, max: 2326 }, { name: "SALUT!", min: 1516, max: 2082 },
+    { name: "Central Hills", min: 1517, max: 1517 }
+  ],
+  3: [
+    { name: "АРСЕНАЛ House", min: 3639, max: 4852 }, { name: "БІОРИТМ", min: 3535, max: 4564 },
+    { name: "TRIIINITY", min: 3841, max: 3841 }, { name: "Montreal House", min: 3538, max: 3741 },
+    { name: "A136 Highlight Tower", min: 2881, max: 3437 }, { name: "Новопечерські Липки", min: 2881, max: 3235 },
+    { name: "The Light", min: 2932, max: 2932 }, { name: "Stanford", min: 2780, max: 2997 },
+    { name: "Maxima Residence", min: 1903, max: 2513 }, { name: "Nordica Residence", min: 2111, max: 2111 },
+    { name: "Aria", min: 1718, max: 2022 }, { name: "Fjord", min: 1424, max: 1938 },
+    { name: "SALUT!", min: 1486, max: 1759 }, { name: "Central Hills", min: 1451, max: 1451 }
+  ]
+};
+// Цільові коридори OZON зі стратегії P/ARC
+const OZON_STRATEGY = { 1: [2153, 2667], 2: [2022, 2584], 3: [2085, 2477] };
+
+// ---- Utils ----
+const fmtM2 = (v) => v == null ? "—" : "$" + Math.round(v).toLocaleString("uk-UA");
+const fmtTotal = (v) => v == null ? "—" : "$" + Math.round(v).toLocaleString("uk-UA");
+const fmtK = (v) => { if (v == null) return "—"; if (v >= 1e6) return "$" + (v / 1e6).toFixed(2) + "M"; if (v >= 1e3) return "$" + (v / 1e3).toFixed(0) + "K"; return "$" + Math.round(v); };
+
+const calcStats = (arr) => {
+  if (!arr.length) return { n: 0, min: 0, max: 0, mean: 0, std: 0, q1: 0, q3: 0, median: 0, iqr: 0 };
+  const s = [...arr].sort((a, b) => a - b), n = s.length;
+  const mean = s.reduce((a, b) => a + b, 0) / n;
+  const std = Math.sqrt(s.reduce((a, v) => a + (v - mean) ** 2, 0) / n);
+  const q = (p) => { const i = p * (n - 1), lo = Math.floor(i); return s[lo] + (s[Math.min(Math.ceil(i), n - 1)] - s[lo]) * (i - lo); };
+  return { n, min: s[0], max: s[n - 1], mean, std, q1: q(0.25), q3: q(0.75), median: q(0.5), iqr: q(0.75) - q(0.25) };
+};
+
+const buildHistogram = (values, nBins = 10) => {
+  if (values.length < 5) return [];
+  const s = [...values].sort((a, b) => a - b);
+  const vMin = s[0], vMax = s[s.length - 1];
+  const binW = (vMax - vMin) / nBins;
+  if (binW === 0) return [];
+  return Array.from({ length: nBins }, (_, i) => {
+    const lo = vMin + i * binW, hi = lo + binW;
+    const count = i < nBins - 1 ? s.filter(v => v >= lo && v < hi).length : s.filter(v => v >= lo && v <= hi).length;
+    return { x: Math.round((lo + hi) / 2), count, lo: Math.round(lo), hi: Math.round(hi) };
+  });
+};
+
+const lerp = (a, b, t) => Math.round(a + (b - a) * t);
+const heatColor = (value, min, max) => {
+  if (value == null || max === min) return "#3b82f6";
+  const t = Math.max(0, Math.min(1, (value - min) / (max - min)));
+  if (t <= 0.5) { const p = t * 2; return `rgb(${lerp(59, 251, p)},${lerp(130, 191, p)},${lerp(246, 36, p)})`; }
+  const p = (t - 0.5) * 2; return `rgb(${lerp(251, 239, p)},${lerp(191, 68, p)},${lerp(36, 68, p)})`;
+};
+
+// ---- UI ----
+const StatCard = ({ label, value, sub, accent }) => (
+  <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 12, padding: "16px 20px", flex: 1, minWidth: 150 }}>
+    <div style={{ fontSize: 11, color: "#777", textTransform: "uppercase", letterSpacing: 1.5, fontWeight: 600, marginBottom: 8 }}>{label}</div>
+    <div style={{ fontSize: 22, fontWeight: 700, color: accent || "#e2e8f0", fontVariantNumeric: "tabular-nums" }}>{value}</div>
+    {sub && <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>{sub}</div>}
+  </div>
+);
+
+const SectionTitle = ({ num, title, sub }) => (
+  <div style={{ margin: "48px 0 20px" }}>
+    <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
+      <span style={{ fontSize: 13, color: GOLD, fontWeight: 700, letterSpacing: 2 }}>{num}</span>
+      <h2 style={{ fontSize: 18, fontWeight: 700, color: "#e2e8f0", margin: 0 }}>{title}</h2>
+    </div>
+    {sub && <div style={{ fontSize: 13, color: "#888", marginTop: 6 }}>{sub}</div>}
+  </div>
+);
+
+const FilterBtn = ({ active, color, label, count, onClick }) => (
+  <button onClick={onClick} style={{
+    display: "flex", alignItems: "center", gap: 8, padding: "8px 14px", borderRadius: 10,
+    border: active ? `1px solid ${color}55` : "1px solid rgba(255,255,255,0.07)",
+    background: active ? `${color}18` : "rgba(255,255,255,0.02)",
+    color: active ? "#e2e8f0" : "#666", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit"
+  }}>
+    <span style={{ width: 9, height: 9, borderRadius: "50%", background: active ? color : "#444" }} />
+    {label}
+    <span style={{ fontSize: 11, color: active ? "#999" : "#555" }}>{count}</span>
+  </button>
+);
+
+const ChartTooltip = ({ active, payload, metric }) => {
+  if (!active || !payload || !payload.length) return null;
+  const d = payload[0].payload;
+  if (d.number == null) return null;
+  return (
+    <div style={{ background: "#1a1a2e", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 10, padding: "12px 14px", fontSize: 12.5, color: "#ccc", lineHeight: 1.7 }}>
+      <div style={{ color: "#fff", fontWeight: 700, marginBottom: 4 }}>Кв. №{d.number} · поверх {d.floor}</div>
+      <div>{d.rooms}к · {d.layout} · {d.area} м²</div>
+      <div>Вид: {d.view}</div>
+      <div style={{ color: GOLD, fontWeight: 700 }}>{fmtM2(d.priceM2)}/м² · {fmtTotal(d.totalPrice)}</div>
+    </div>
+  );
+};
+
+// ---- Box-plot ----
+const RangeChart = ({ title, groups, metric, preserveOrder }) => {
+  const [hover, setHover] = useState(null);
+  const rows = useMemo(() => {
+    const r = groups.map(g => ({ ...g, stats: calcStats(g.values) })).filter(g => g.stats.n > 0);
+    if (!preserveOrder) r.sort((a, b) => a.stats.median - b.stats.median);
+    return r;
+  }, [groups, preserveOrder]);
+  if (!rows.length) return null;
+  const gMin = Math.min(...rows.map(r => r.stats.min));
+  const gMax = Math.max(...rows.map(r => r.stats.max));
+  const span = gMax - gMin || 1;
+  const X = (v) => ((v - gMin) / span) * 100;
+  const fmt = metric === "priceM2" ? fmtM2 : fmtK;
+  return (
+    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: "20px 24px", marginBottom: 16 }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: "#aaa", textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 18 }}>{title}</div>
+      {rows.map((r, i) => (
+        <div key={r.label} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10, position: "relative" }}
+          onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}>
+          <div style={{ width: 92, fontSize: 12.5, color: "#bbb", fontWeight: 600, textAlign: "right", flexShrink: 0 }}>
+            {r.label} <span style={{ color: "#666", fontWeight: 400 }}>({r.stats.n})</span>
+          </div>
+          <div style={{ flex: 1, height: 26, position: "relative" }}>
+            <div style={{ position: "absolute", top: 12, left: `${X(r.stats.min)}%`, width: `${X(r.stats.max) - X(r.stats.min)}%`, height: 2, background: "rgba(255,255,255,0.18)" }} />
+            <div style={{ position: "absolute", top: 7, left: `${X(r.stats.min)}%`, width: 2, height: 12, background: "rgba(255,255,255,0.35)" }} />
+            <div style={{ position: "absolute", top: 7, left: `${X(r.stats.max)}%`, width: 2, height: 12, background: "rgba(255,255,255,0.35)" }} />
+            <div style={{ position: "absolute", top: 3, left: `${X(r.stats.q1)}%`, width: `${Math.max(X(r.stats.q3) - X(r.stats.q1), 0.5)}%`, height: 20, background: `${r.color || GOLD}30`, border: `1px solid ${r.color || GOLD}70`, borderRadius: 4 }} />
+            <div style={{ position: "absolute", top: 3, left: `${X(r.stats.median)}%`, width: 2, height: 20, background: r.color || GOLD }} />
+            <div style={{ position: "absolute", top: 8, left: `calc(${X(r.stats.mean)}% - 5px)`, width: 10, height: 10, borderRadius: "50%", background: "#fff", border: "2px solid #0f0f1a" }} />
+            {hover === i && (
+              <div style={{ position: "absolute", bottom: 30, left: `${Math.min(Math.max(X(r.stats.median), 15), 75)}%`, transform: "translateX(-50%)", background: "#1a1a2e", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "10px 14px", fontSize: 12, color: "#ccc", whiteSpace: "nowrap", zIndex: 10, lineHeight: 1.7, boxShadow: "0 6px 24px rgba(0,0,0,0.5)" }}>
+                <div style={{ color: "#fff", fontWeight: 700 }}>{r.label}</div>
+                <div>min {fmt(r.stats.min)} · Q1 {fmt(r.stats.q1)}</div>
+                <div>медіана <b style={{ color: r.color || GOLD }}>{fmt(r.stats.median)}</b> · середня {fmt(r.stats.mean)}</div>
+                <div>Q3 {fmt(r.stats.q3)} · max {fmt(r.stats.max)}</div>
+                <div style={{ color: "#888" }}>IQR {fmt(r.stats.iqr)} · σ {fmt(r.stats.std)}</div>
+              </div>
+            )}
+          </div>
+          <div style={{ width: 150, fontSize: 12, color: "#888", fontVariantNumeric: "tabular-nums", flexShrink: 0 }}>{fmt(r.stats.min)} – {fmt(r.stats.max)}</div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// ---- Порівняння діапазонів з конкурентами ----
+const CompRangeRows = ({ rows }) => {
+  const gMin = Math.min(...rows.map(r => r.min));
+  const gMax = Math.max(...rows.map(r => r.max));
+  const span = gMax - gMin || 1;
+  const X = (v) => 2 + ((v - gMin) / span) * 96;
+  return (
+    <div>
+      {rows.map(r => (
+        <div key={r.label} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 9 }}>
+          <div style={{ width: 190, fontSize: 12.5, color: r.ozon ? GOLD : "#bbb", fontWeight: r.ozon ? 800 : 600, textAlign: "right", flexShrink: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{r.label}</div>
+          <div style={{ flex: 1, height: 22, position: "relative" }}>
+            <div style={{ position: "absolute", top: 10, left: 0, right: 0, height: 1, background: "rgba(255,255,255,0.05)" }} />
+            {r.min === r.max ? (
+              <div style={{ position: "absolute", top: 5, left: `calc(${X(r.min)}% - 6px)`, width: 12, height: 12, borderRadius: "50%", background: r.ozon ? GOLD : (r.color || "#60a5fa"), opacity: r.dashed ? 0.9 : 1, border: r.dashed ? `2px dashed #0f0f1a` : "none" }} />
+            ) : (
+              <div style={{ position: "absolute", top: 4, left: `${X(r.min)}%`, width: `${X(r.max) - X(r.min)}%`, height: 14, borderRadius: 7, background: r.ozon ? (r.dashed ? "transparent" : `${GOLD}cc`) : `${r.color || "#60a5fa"}55`, border: r.ozon ? `2px ${r.dashed ? "dashed" : "solid"} ${GOLD}` : `1px solid ${(r.color || "#60a5fa")}88`, boxSizing: "border-box" }} />
+            )}
+          </div>
+          <div style={{ width: 130, fontSize: 12, color: r.ozon ? GOLD : "#888", fontWeight: r.ozon ? 700 : 400, fontVariantNumeric: "tabular-nums", flexShrink: 0 }}>
+            {r.min === r.max ? fmtM2(r.min) : `${fmtM2(r.min)} – ${fmtM2(r.max)}`}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// ---- Chessboard ----
+const ChessBoard = ({ data, metric }) => {
+  const vals = data.map(d => d[metric]).filter(v => v != null && !Number.isNaN(v));
+  if (!vals.length) return <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: 24, color: "#888", fontSize: 13 }}>Немає квартир у поточній вибірці — змініть фільтри.</div>;
+  const vMin = Math.min(...vals), vMax = Math.max(...vals), vMid = (vMin + vMax) / 2;
+  const positions = [1, 2, 3, 4, 5];
+  const byKey = {};
+  data.forEach(d => { byKey[`${d.floor}_${d.unit}`] = d; });
+  const floorsDesc = [...FLOORS].reverse();
+  const fmt = metric === "priceM2" ? fmtM2 : fmtK;
+  return (
+    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: "22px 24px" }}>
+      <div style={{ overflowX: "auto" }}>
+        <div style={{ display: "grid", gridTemplateColumns: `44px repeat(${positions.length}, minmax(92px, 1fr))`, gap: 5, minWidth: 560 }}>
+          {floorsDesc.map(fl => (
+            [<div key={`f${fl}`} style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: "#777", fontWeight: 700 }}>{fl}</div>,
+            ...positions.map(pos => {
+              const d = byKey[`${fl}_${pos}`];
+              if (!d) return <div key={`${fl}_${pos}`} style={{ borderRadius: 8, minHeight: 58, background: "rgba(255,255,255,0.015)" }} />;
+              const v = d[metric];
+              const bg = heatColor(v, vMin, vMax);
+              return (
+                <div key={`${fl}_${pos}`} title={`№${d.number} · ${d.layout} · ${d.view}`} style={{ borderRadius: 8, minHeight: 58, background: bg, padding: "6px 8px", display: "flex", flexDirection: "column", justifyContent: "space-between", color: "#0f0f1a", cursor: "default" }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, opacity: 0.75 }}>№{d.number}</div>
+                  <div style={{ fontSize: 13, fontWeight: 800, textAlign: "center" }}>{fmt(v)}</div>
+                  <div style={{ fontSize: 10, fontWeight: 600, opacity: 0.75 }}>{d.rooms}к · {d.area}м²</div>
+                </div>
+              );
+            })]
+          ))}
+        </div>
+      </div>
+      <div style={{ marginTop: 18, display: "flex", alignItems: "center", gap: 12 }}>
+        <span style={{ fontSize: 11.5, color: "#888" }}>{fmt(vMin)}</span>
+        <div style={{ flex: 1, height: 10, borderRadius: 5, background: "linear-gradient(90deg, #3b82f6, #fbbf24, #ef4444)" }} />
+        <span style={{ fontSize: 11.5, color: "#888" }}>{fmt(vMax)}</span>
+      </div>
+      <div style={{ marginTop: 6, textAlign: "center", fontSize: 11.5, color: "#666" }}>середина шкали ≈ {fmt(vMid)}</div>
+    </div>
+  );
+};
+
+// ---- Main ----
+function Dashboard() {
+  const [metric, setMetric] = useState("priceM2");
+  const [activeRooms, setActiveRooms] = useState(new Set([1, 2]));
+  const [activeViews, setActiveViews] = useState(new Set(VIEWS));
+  const [floorMode, setFloorMode] = useState("scatter");
+  const [compRooms, setCompRooms] = useState(1);
+
+  // Конкуренти: OZON завжди з повного лоту (не залежить від фільтрів)
+  const ozonWeighted = useMemo(() => {
+    const a = RAW.reduce((s, d) => s + d.area, 0);
+    return a > 0 ? RAW.reduce((s, d) => s + d.totalPrice, 0) / a : 0;
+  }, []);
+
+  const compBarData = useMemo(() => {
+    const rows = COMPETITORS.map(c => ({ name: c.name, price: c.price, ozon: false }));
+    rows.push({ name: "OZON Concept House", price: Math.round(ozonWeighted), ozon: true });
+    rows.sort((a, b) => b.price - a.price);
+    return rows;
+  }, [ozonWeighted]);
+
+  const compRangeRows = useMemo(() => {
+    const rows = [];
+    const lot = RAW.filter(d => d.rooms === compRooms);
+    if (lot.length) {
+      const prices = lot.map(d => d.priceM2);
+      rows.push({ label: "OZON — прайс лоту", min: Math.min(...prices), max: Math.max(...prices), ozon: true });
+    }
+    if (OZON_STRATEGY[compRooms]) {
+      rows.push({ label: "OZON — стратегія P/ARC", min: OZON_STRATEGY[compRooms][0], max: OZON_STRATEGY[compRooms][1], ozon: true, dashed: true });
+    }
+    COMP_ROOMS[compRooms].forEach(c => rows.push({ label: c.name, min: c.min, max: c.max, color: "#60a5fa" }));
+    return rows;
+  }, [compRooms]);
+
+  const toggle = (set, setter, val, all) => {
+    const next = new Set(set);
+    if (next.has(val)) { if (next.size > 1) next.delete(val); } else next.add(val);
+    setter(next);
+  };
+
+  const filtered = useMemo(() =>
+    RAW.filter(d => activeRooms.has(d.rooms) && activeViews.has(d.view) && d[metric] != null && !Number.isNaN(d[metric])),
+    [activeRooms, activeViews, metric]);
+
+  const metricLabel = metric === "priceM2" ? "$/м²" : "Вартість, $";
+  const fmt = metric === "priceM2" ? fmtM2 : fmtK;
+
+  // Stats
+  const totArea = filtered.reduce((a, d) => a + d.area, 0);
+  const totValue = filtered.reduce((a, d) => a + d.totalPrice, 0);
+  const wAvg = totArea > 0 ? totValue / totArea : 0;
+  const st = calcStats(filtered.map(d => d[metric]));
+
+  // 01 — floor data (розріз по кімнатності)
+  const scatterByRooms = useMemo(() => {
+    const m = {};
+    [1, 2].forEach(r => { m[r] = filtered.filter(d => d.rooms === r).map(d => ({ ...d, y: d[metric] })); });
+    return m;
+  }, [filtered, metric]);
+
+  const barData = useMemo(() => FLOORS.map(fl => {
+    const row = { floor: fl };
+    [1, 2].forEach(r => {
+      const items = filtered.filter(d => d.floor === fl && d.rooms === r);
+      if (items.length) {
+        const a = items.reduce((s, d) => s + d.area, 0);
+        row[`${r}-кімн.`] = metric === "priceM2" ? items.reduce((s, d) => s + d.totalPrice, 0) / a : items.reduce((s, d) => s + d.totalPrice, 0) / items.length;
+      }
+    });
+    return row;
+  }), [filtered, metric]);
+
+  const yDomain = useMemo(() => {
+    const vals = filtered.map(d => d[metric]);
+    if (!vals.length) return [0, 100];
+    const lo = Math.min(...vals), hi = Math.max(...vals);
+    const pad = metric === "priceM2" ? 50 : (hi - lo) * 0.08;
+    return [Math.floor((lo - pad) / 10) * 10, Math.ceil((hi + pad) / 10) * 10];
+  }, [filtered, metric]);
+
+  // 02 — distribution
+  const distData = useMemo(() => {
+    const vals = filtered.map(d => d[metric]);
+    if (vals.length < 5) return { curve: [], stats: {} };
+    const g = calcStats(vals);
+    const perView = {};
+    VIEWS.forEach(v => {
+      const vv = filtered.filter(d => d.view === v).map(d => d[metric]);
+      if (vv.length >= 5) perView[v] = calcStats(vv);
+    });
+    const pad = metric === "priceM2" ? 60 : (g.max - g.min) * 0.15;
+    const lo = g.min - pad, hi = g.max + pad, N = 80;
+    const pdf = (x, mu, sd) => sd > 0 ? (1 / (sd * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * ((x - mu) / sd) ** 2) : 0;
+    const curve = Array.from({ length: N }, (_, i) => {
+      const x = lo + (hi - lo) * i / (N - 1);
+      const row = { x: Math.round(x), total: pdf(x, g.mean, g.std) };
+      Object.entries(perView).forEach(([v, s]) => { row[v] = pdf(x, s.mean, s.std); });
+      return row;
+    });
+    return { curve, stats: g, perView };
+  }, [filtered, metric]);
+
+  const hist = useMemo(() => buildHistogram(filtered.map(d => d[metric]), 10), [filtered, metric]);
+
+  // 03 — box-plot groups
+  const groupsRooms = [1, 2].map(r => ({ label: `${r}-кімн.`, color: ROOM_C[r], values: filtered.filter(d => d.rooms === r).map(d => d[metric]) }));
+  const groupsView = VIEWS.map(v => ({ label: v, color: VIEW_C[v], values: filtered.filter(d => d.view === v).map(d => d[metric]) }));
+  const groupsLayout = [...LAYOUT_ORDER].reverse().map(l => ({ label: l, color: GOLD, values: filtered.filter(d => d.layout === l).map(d => d[metric]) }));
+  const groupsFloor = [...FLOORS].reverse().map(fl => ({ label: `Поверх ${fl}`, color: GOLD, values: filtered.filter(d => d.floor === fl).map(d => d[metric]) }));
+
+  const tbtn = (on) => ({
+    padding: "7px 16px", borderRadius: 8, border: "none", cursor: "pointer", fontFamily: "inherit",
+    fontSize: 13, fontWeight: 700, background: on ? GOLD : "transparent", color: on ? "#0f0f1a" : "#888"
+  });
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#0f0f1a", color: "#e2e8f0", fontFamily: "'DM Sans', 'Segoe UI', sans-serif", padding: "32px 28px 64px" }}>
+      <style>{`body{margin:0;} ::-webkit-scrollbar{height:8px;width:8px;} ::-webkit-scrollbar-thumb{background:#333;border-radius:4px;}`}</style>
+      <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+
+        {/* Header */}
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ fontSize: 11, color: GOLD, fontWeight: 700, letterSpacing: 3, textTransform: "uppercase", marginBottom: 8 }}>Maxify · Цінова аналітика · Пресейл</div>
+          <h1 style={{ fontSize: 28, fontWeight: 700, margin: 0 }}>Озон — лот квартир для пресейлу</h1>
+          <div style={{ fontSize: 13.5, color: "#888", marginTop: 8 }}>Під'їзд 1 · поверхи −1…15 · {RAW.length} квартир · усі вільні · ціни в USD</div>
+        </div>
+
+        {/* Filters */}
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 20, alignItems: "flex-end", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: "18px 20px" }}>
+          <div>
+            <div style={{ fontSize: 11, color: "#777", textTransform: "uppercase", letterSpacing: 1.5, fontWeight: 600, marginBottom: 10 }}>Кімнатність</div>
+            <div style={{ display: "flex", gap: 8 }}>
+              {[1, 2].map(r => (
+                <FilterBtn key={r} active={activeRooms.has(r)} color={ROOM_C[r]} label={`${r}-кімн.`}
+                  count={RAW.filter(d => d.rooms === r).length}
+                  onClick={() => toggle(activeRooms, setActiveRooms, r)} />
+              ))}
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: 11, color: "#777", textTransform: "uppercase", letterSpacing: 1.5, fontWeight: 600, marginBottom: 10 }}>Вид з вікна</div>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {VIEWS.map(v => (
+                <FilterBtn key={v} active={activeViews.has(v)} color={VIEW_C[v]} label={v}
+                  count={RAW.filter(d => d.view === v).length}
+                  onClick={() => toggle(activeViews, setActiveViews, v)} />
+              ))}
+            </div>
+          </div>
+          <div style={{ marginLeft: "auto" }}>
+            <div style={{ fontSize: 11, color: "#777", textTransform: "uppercase", letterSpacing: 1.5, fontWeight: 600, marginBottom: 10 }}>Метрика</div>
+            <div style={{ display: "flex", gap: 4, background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: 4 }}>
+              <button style={tbtn(metric === "priceM2")} onClick={() => setMetric("priceM2")}>$/м²</button>
+              <button style={tbtn(metric === "totalPrice")} onClick={() => setMetric("totalPrice")}>Вартість</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Stat cards */}
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 20 }}>
+          <StatCard label="Квартир у вибірці" value={filtered.length} sub={`з ${RAW.length} у лоті`} />
+          <StatCard label="Середня зважена" value={fmtM2(wAvg) + "/м²"} sub="вартість ÷ площа" accent={GOLD} />
+          <StatCard label={`Медіана, ${metricLabel}`} value={fmt(st.median)} sub={`σ = ${fmt(st.std)}`} />
+          <StatCard label={`Діапазон, ${metricLabel}`} value={`${fmt(st.min)} – ${fmt(st.max)}`} />
+          <StatCard label="Загальна площа" value={Math.round(totArea).toLocaleString("uk-UA") + " м²"} />
+          <StatCard label="Вартість лоту" value={fmtK(totValue)} accent="#34d399" />
+        </div>
+
+        {/* 01 Prices by floor */}
+        <SectionTitle num="01" title="Ціни по поверхах" sub="Кожна точка — квартира; колір — кількість кімнат. Перемикач: точки / середні по поверхах." />
+        <div style={{ display: "flex", gap: 4, background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: 4, width: "fit-content", marginBottom: 16 }}>
+          <button style={tbtn(floorMode === "scatter")} onClick={() => setFloorMode("scatter")}>Точки</button>
+          <button style={tbtn(floorMode === "bar")} onClick={() => setFloorMode("bar")}>Середні</button>
+        </div>
+        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: "20px 12px 8px" }}>
+          <ResponsiveContainer width="100%" height={380}>
+            {floorMode === "scatter" ? (
+              <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 10 }}>
+                <CartesianGrid stroke="rgba(255,255,255,0.05)" />
+                <XAxis type="number" dataKey="floor" domain={[-2, 16]} ticks={FLOORS} tick={{ fill: "#888", fontSize: 11 }} label={{ value: "Поверх", position: "insideBottom", offset: -6, fill: "#666", fontSize: 12 }} />
+                <YAxis type="number" dataKey="y" domain={yDomain} tick={{ fill: "#888", fontSize: 11 }} tickFormatter={(v) => metric === "priceM2" ? v : fmtK(v)} width={62} />
+                <ZAxis range={[70, 70]} />
+                <Tooltip content={<ChartTooltip metric={metric} />} />
+                {[1, 2].map(r => (
+                  <Scatter key={r} name={`${r}-кімн.`} data={scatterByRooms[r]} fill={ROOM_C[r]} fillOpacity={0.85} />
+                ))}
+              </ScatterChart>
+            ) : (
+              <BarChart data={barData} margin={{ top: 10, right: 20, bottom: 10, left: 10 }}>
+                <CartesianGrid stroke="rgba(255,255,255,0.05)" vertical={false} />
+                <XAxis dataKey="floor" tick={{ fill: "#888", fontSize: 11 }} label={{ value: "Поверх", position: "insideBottom", offset: -6, fill: "#666", fontSize: 12 }} />
+                <YAxis domain={yDomain} tick={{ fill: "#888", fontSize: 11 }} tickFormatter={(v) => metric === "priceM2" ? v : fmtK(v)} width={62} />
+                <Tooltip cursor={{ fill: "rgba(255,255,255,0.04)" }} contentStyle={{ background: "#1a1a2e", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 10 }} labelStyle={{ color: "#fff", fontWeight: 700 }} itemStyle={{ color: "#ccc" }} formatter={(v) => fmt(v)} labelFormatter={(l) => `Поверх ${l}`} />
+                {[1, 2].map(r => <Bar key={r} dataKey={`${r}-кімн.`} fill={ROOM_C[r]} maxBarSize={32} radius={[3, 3, 0, 0]} />)}
+              </BarChart>
+            )}
+          </ResponsiveContainer>
+          <div style={{ display: "flex", gap: 18, justifyContent: "center", padding: "6px 0 12px", flexWrap: "wrap" }}>
+            {[1, 2].map(r => (
+              <span key={r} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12.5, color: "#999" }}>
+                <span style={{ width: 10, height: 10, borderRadius: "50%", background: ROOM_C[r] }} />{r}-кімнатні
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* 02 Distribution */}
+        <SectionTitle num="02" title="Нормальний розподіл цін" sub="Крива Гауса по всій вибірці та окремо по вікновидах; гістограма — 10 рівних цінових інтервалів." />
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: "20px 12px 12px" }}>
+            <ResponsiveContainer width="100%" height={300}>
+              <ComposedChart data={distData.curve} margin={{ top: 10, right: 16, bottom: 6, left: 0 }}>
+                <CartesianGrid stroke="rgba(255,255,255,0.05)" />
+                <XAxis dataKey="x" tick={{ fill: "#888", fontSize: 11 }} tickFormatter={(v) => metric === "priceM2" ? v : fmtK(v)} />
+                <YAxis hide />
+                <ReferenceLine x={Math.round(distData.stats.mean)} stroke={GOLD} strokeDasharray="4 4" />
+                <Area type="monotone" dataKey="total" stroke={GOLD} strokeWidth={2} fill={GOLD} fillOpacity={0.06} name="Всі" />
+                {VIEWS.filter(v => distData.perView && distData.perView[v]).map(v => (
+                  <Line key={v} type="monotone" dataKey={v} stroke={VIEW_C[v]} strokeWidth={1.6} strokeDasharray="5 4" dot={false} name={v} />
+                ))}
+                <Tooltip contentStyle={{ background: "#1a1a2e", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 10 }} labelStyle={{ color: "#fff", fontWeight: 700 }} itemStyle={{ color: "#ccc" }} formatter={(v) => v.toExponential(2)} labelFormatter={(l) => (metric === "priceM2" ? fmtM2(l) : fmtK(l))} />
+              </ComposedChart>
+            </ResponsiveContainer>
+            <div style={{ fontSize: 12.5, color: "#999", padding: "4px 12px 8px", lineHeight: 1.8 }}>
+              μ = <b style={{ color: GOLD }}>{fmt(distData.stats.mean)}</b> · σ = {fmt(distData.stats.std)}
+              {distData.perView && Object.entries(distData.perView).map(([v, s]) => (
+                <span key={v}> · <span style={{ color: VIEW_C[v] }}>{v}</span>: μ {fmt(s.mean)}</span>
+              ))}
+            </div>
+          </div>
+          <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: "20px 12px 12px" }}>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={hist} margin={{ top: 10, right: 16, bottom: 6, left: 0 }}>
+                <CartesianGrid stroke="rgba(255,255,255,0.05)" vertical={false} />
+                <XAxis dataKey="x" tick={{ fill: "#888", fontSize: 10.5 }} tickFormatter={(v) => metric === "priceM2" ? v : fmtK(v)} />
+                <YAxis allowDecimals={false} tick={{ fill: "#888", fontSize: 11 }} width={30} />
+                <Tooltip cursor={{ fill: "rgba(255,255,255,0.04)" }} contentStyle={{ background: "#1a1a2e", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 10 }} labelStyle={{ color: "#fff", fontWeight: 700 }} itemStyle={{ color: "#ccc" }}
+                  formatter={(v) => [`${v} кв.`, "Кількість"]}
+                  labelFormatter={(l, p) => { const d = p && p[0] && p[0].payload; return d ? `${fmt(d.lo)} – ${fmt(d.hi)}` : l; }} />
+                <Bar dataKey="count" radius={[3, 3, 0, 0]}>
+                  {hist.map((h, i) => <Cell key={i} fill={heatColor(i, 0, hist.length - 1)} fillOpacity={0.85} />)}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+            <div style={{ fontSize: 12.5, color: "#999", padding: "4px 12px 8px" }}>Гістограма розподілу, {metricLabel}</div>
+          </div>
+        </div>
+
+        {/* 03 Box-plots */}
+        <SectionTitle num="03" title="Порівняння цінових діапазонів" sub="Box-plot: вусики min–max, прямокутник Q1–Q3, лінія — медіана, кружок — середня. Наведіть для деталей." />
+        <RangeChart title="За кімнатністю" groups={groupsRooms} metric={metric} />
+        <RangeChart title="За видом з вікна" groups={groupsView} metric={metric} />
+        <RangeChart title="За типом планування" groups={groupsLayout} metric={metric} preserveOrder />
+        <RangeChart title="За поверхом" groups={groupsFloor} metric={metric} preserveOrder />
+
+        {/* 04 Competitors */}
+        <SectionTitle num="04" title="Порівняння з конкурентами" sub="15 проєктів у радіусі до 3 км (джерело: звіт P/ARC PRO+). Секція фіксована в $/м² і не залежить від фільтрів — OZON рахується з повного лоту." />
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 16 }}>
+          <StatCard label="Конкурентів у вибірці" value={COMPETITORS.length} sub="радіус до 3 км" />
+          <StatCard label="Середня ринку" value={fmtM2(MARKET_AVG) + "/м²"} sub="по 15 проєктах" />
+          <StatCard label="OZON зважена" value={fmtM2(ozonWeighted) + "/м²"} sub="повний лот пресейлу" accent={GOLD} />
+          <StatCard label="Позиція до ринку" value={((ozonWeighted / MARKET_AVG - 1) * 100).toFixed(1) + "%"} sub="дисконт до середньої конкурентів" accent={ozonWeighted < MARKET_AVG ? "#34d399" : "#f87171"} />
+          <StatCard label="Найближчий конкурент" value="0.6 км" sub="Новопечерські Липки · $3 017/м²" />
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: "20px 16px 10px" }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: "#aaa", textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 12, paddingLeft: 8 }}>Середня ціна проєктів, $/м²</div>
+            <ResponsiveContainer width="100%" height={470}>
+              <BarChart data={compBarData} layout="vertical" margin={{ top: 4, right: 56, bottom: 4, left: 8 }}>
+                <CartesianGrid stroke="rgba(255,255,255,0.05)" horizontal={false} />
+                <XAxis type="number" domain={[0, 4600]} tick={{ fill: "#888", fontSize: 11 }} />
+                <YAxis type="category" dataKey="name" width={158} tick={{ fill: "#aaa", fontSize: 11 }} interval={0} />
+                <ReferenceLine x={MARKET_AVG} stroke="#fff" strokeDasharray="4 4" strokeOpacity={0.5} label={{ value: "сер. ринку", fill: "#999", fontSize: 10, position: "insideTopRight" }} />
+                <Tooltip cursor={{ fill: "rgba(255,255,255,0.04)" }} contentStyle={{ background: "#1a1a2e", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 10 }} labelStyle={{ color: "#fff", fontWeight: 700 }} itemStyle={{ color: "#ccc" }} formatter={(v) => [fmtM2(v) + "/м²", "Середня ціна"]} />
+                <Bar dataKey="price" radius={[0, 4, 4, 0]} maxBarSize={18} label={{ position: "right", fill: "#999", fontSize: 10.5, formatter: (v) => Math.round(v).toLocaleString("uk-UA") }}>
+                  {compBarData.map((d, i) => <Cell key={i} fill={d.ozon ? GOLD : "#60a5fa"} fillOpacity={d.ozon ? 1 : 0.55} />)}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: "20px 20px 12px" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 10 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#aaa", textTransform: "uppercase", letterSpacing: 1.5 }}>Діапазони цін за кімнатністю</div>
+              <div style={{ display: "flex", gap: 4, background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: 4 }}>
+                {[1, 2, 3].map(r => <button key={r} style={tbtn(compRooms === r)} onClick={() => setCompRooms(r)}>{r}к</button>)}
+              </div>
+            </div>
+            <CompRangeRows rows={compRangeRows} />
+            <div style={{ fontSize: 11.5, color: "#666", marginTop: 12, lineHeight: 1.6 }}>
+              Суцільна золота смуга — поточний прайс лоту OZON; пунктирна — цільовий коридор зі стратегії P/ARC; крапка — одна ціна на ринку.
+              {compRooms === 3 && " У лоті пресейлу 3-кімнатних немає — показано лише стратегічний коридор."}
+            </div>
+          </div>
+        </div>
+        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, overflow: "hidden", marginTop: 16 }}>
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, fontVariantNumeric: "tabular-nums", minWidth: 640 }}>
+              <thead>
+                <tr style={{ background: "#16162a" }}>
+                  {["Проєкт", "Відстань, км", "Ціна, $/м²", "Відн. цінність", "Заг. цінність", "Надійність"].map(h => (
+                    <th key={h} style={{ padding: "12px 14px", textAlign: h === "Проєкт" ? "left" : "right", color: "#999", fontSize: 11, textTransform: "uppercase", letterSpacing: 1, fontWeight: 700, borderBottom: "1px solid rgba(255,255,255,0.08)" }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.04)", background: "rgba(251,191,36,0.06)" }}>
+                  <td style={{ padding: "10px 14px", color: GOLD, fontWeight: 800 }}>OZON Concept House</td>
+                  <td style={{ padding: "10px 14px", textAlign: "right", color: "#888" }}>—</td>
+                  <td style={{ padding: "10px 14px", textAlign: "right", color: GOLD, fontWeight: 700 }}>{Math.round(ozonWeighted).toLocaleString("uk-UA")}</td>
+                  <td colSpan={3} style={{ padding: "10px 14px", textAlign: "right", color: "#777", fontSize: 12 }}>зважена середня повного лоту пресейлу</td>
+                </tr>
+                {COMPETITORS.map(c => (
+                  <tr key={c.name} style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                    <td style={{ padding: "10px 14px", color: "#ccc", fontWeight: 600 }}>{c.name}</td>
+                    <td style={{ padding: "10px 14px", textAlign: "right", color: "#aaa" }}>{c.dist.toFixed(1)}</td>
+                    <td style={{ padding: "10px 14px", textAlign: "right", color: c.price > MARKET_AVG ? "#f87171" : "#34d399", fontWeight: 600 }}>{c.price.toLocaleString("uk-UA")}</td>
+                    <td style={{ padding: "10px 14px", textAlign: "right", color: c.relValue >= 1 ? "#34d399" : "#aaa", fontWeight: c.relValue >= 1 ? 700 : 400 }}>{c.relValue.toFixed(2)}</td>
+                    <td style={{ padding: "10px 14px", textAlign: "right", color: "#aaa" }}>{c.totValue}%</td>
+                    <td style={{ padding: "10px 14px", textAlign: "right", color: "#aaa" }}>{c.reliability}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div style={{ padding: "10px 14px", fontSize: 11.5, color: "#666", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+            Ціна конкурента: зелена — нижча за середню ринку ($2 679), червона — вища. Відн. цінність ≥ 1.00 — проєкт дає більше цінності за свою ціну (виділено зеленим). Сортування — за відносною цінністю, як у звіті P/ARC.
+          </div>
+        </div>
+
+        {/* 05 Table */}
+        <SectionTitle num="05" title="Таблиця даних" sub={`${filtered.length} квартир у поточній вибірці`} />
+        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, overflow: "hidden" }}>
+          <div style={{ maxHeight: 460, overflowY: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, fontVariantNumeric: "tabular-nums" }}>
+              <thead>
+                <tr style={{ position: "sticky", top: 0, background: "#16162a", zIndex: 2 }}>
+                  {["№", "Поверх", "Юніт", "Кімн.", "Планування", "Вид", "Площа, м²", "$/м²", "Вартість, $"].map(h => (
+                    <th key={h} style={{ padding: "12px 14px", textAlign: h === "№" || h === "Планування" || h === "Вид" ? "left" : "right", color: (h === "$/м²" && metric === "priceM2") || (h === "Вартість, $" && metric === "totalPrice") ? GOLD : "#999", fontSize: 11, textTransform: "uppercase", letterSpacing: 1, fontWeight: 700, borderBottom: "1px solid rgba(255,255,255,0.08)" }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[...filtered].sort((a, b) => a.floor - b.floor || a.unit - b.unit).map(d => (
+                  <tr key={d.number} style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                    <td style={{ padding: "9px 14px", color: "#ccc", fontWeight: 600 }}>№{d.number}</td>
+                    <td style={{ padding: "9px 14px", textAlign: "right", color: "#aaa" }}>{d.floor}</td>
+                    <td style={{ padding: "9px 14px", textAlign: "right", color: "#888" }}>{d.unit}</td>
+                    <td style={{ padding: "9px 14px", textAlign: "right" }}>
+                      <span style={{ background: `${ROOM_C[d.rooms]}22`, color: ROOM_C[d.rooms], borderRadius: 6, padding: "2px 8px", fontSize: 12, fontWeight: 700 }}>{d.rooms}к</span>
+                    </td>
+                    <td style={{ padding: "9px 14px", color: "#aaa" }}>{d.layout}</td>
+                    <td style={{ padding: "9px 14px" }}>
+                      <span style={{ background: VIEW_BG[d.view], color: VIEW_C[d.view], borderRadius: 6, padding: "2px 8px", fontSize: 12, fontWeight: 600 }}>{d.view}</span>
+                    </td>
+                    <td style={{ padding: "9px 14px", textAlign: "right", color: "#aaa" }}>{d.area.toFixed(2)}</td>
+                    <td style={{ padding: "9px 14px", textAlign: "right", color: metric === "priceM2" ? GOLD : "#ccc", fontWeight: metric === "priceM2" ? 700 : 400 }}>{Math.round(d.priceM2).toLocaleString("uk-UA")}</td>
+                    <td style={{ padding: "9px 14px", textAlign: "right", color: metric === "totalPrice" ? GOLD : "#ccc", fontWeight: metric === "totalPrice" ? 700 : 400 }}>{Math.round(d.totalPrice).toLocaleString("uk-UA")}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* 06 Chessboard */}
+        <SectionTitle num="06" title="Шахматка цін" sub={`Heatmap по метриці «${metricLabel}»: синій — найнижча, жовтий — середня, червоний — найвища. Поверхи знизу вгору, колонки — юніт на поверсі.`} />
+        <ChessBoard data={filtered} metric={metric} />
+
+        <div style={{ marginTop: 48, textAlign: "center", fontSize: 12, color: "#555" }}>Maxify · Цінова аналітика пресейлу · Озон</div>
+      </div>
+    </div>
+  );
+}
+
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<Dashboard />);
+
+</script>
+
+<script>
+(function () {
+  var AUTH_HASH = 1866392349;
+
+  function djb2(s) {
+    var h = 5381;
+    for (var i = 0; i < s.length; i++) { h = ((h << 5) + h + s.charCodeAt(i)) | 0; }
+    return h;
+  }
+
+  var btn = document.getElementById('lg-btn');
+  var userEl = document.getElementById('lg-user');
+  var passEl = document.getElementById('lg-pass');
+  var errEl = document.getElementById('lg-err');
+  var unlocked = false;
+
+  function unlock() {
+    if (unlocked) return;
+    unlocked = true;
+    errEl.className = 'login-loading';
+    errEl.textContent = 'Завантаження дашборду…';
+    setTimeout(function () {
+      try {
+        var src = document.getElementById('app-source').textContent;
+        var compiled = Babel.transform(src, { presets: [['react', { runtime: 'classic' }]] }).code;
+        document.getElementById('login-screen').style.display = 'none';
+        new Function(compiled)();
+      } catch (e) {
+        errEl.className = 'login-error';
+        errEl.textContent = 'Помилка завантаження. Оновіть сторінку.';
+        console.error(e);
+        unlocked = false;
+      }
+    }, 30);
+  }
+
+  function tryLogin() {
+    var login = (userEl.value || '').trim().toLowerCase();
+    var pass = passEl.value || '';
+    if (djb2(login + ':' + pass) === AUTH_HASH) {
+      unlock();
+    } else {
+      errEl.className = 'login-error';
+      errEl.textContent = 'Невірний логін або пароль';
+      passEl.value = '';
+      passEl.focus();
+    }
+  }
+
+  btn.addEventListener('click', tryLogin);
+  passEl.addEventListener('keydown', function (e) { if (e.key === 'Enter') tryLogin(); });
+  userEl.addEventListener('keydown', function (e) { if (e.key === 'Enter') passEl.focus(); });
+})();
+</script>
+</body>
+</html>
