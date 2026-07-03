@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Комерційна пропозиція — M4U</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --black: #000000;
+    --white: #FFFFFF;
+    --olive: #C3BD9F;
+    --mint: #B5C7B6;
+    --steel: #B1C4D4;
+    --text: #2d2d3a;
+    --muted: #6b7280;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --border: #e5e7eb;
+    --gradient-hero: linear-gradient(135deg, #000000 0%, #1a1a2e 100%);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ===== PASSWORD ===== */
+  .pw-overlay {
+    position: fixed; inset: 0; background: var(--black);
+    z-index: 9999; display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.4s, visibility 0.4s;
+  }
+  .pw-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  .pw-box { text-align: center; color: white; max-width: 360px; padding: 20px; }
+  .pw-box .logo-sm { margin: 0 auto 24px; }
+  .pw-box p { font-size: 14px; opacity: 0.5; margin-bottom: 28px; }
+  .pw-input-wrap { display: flex; gap: 8px; }
+  .pw-input-wrap input {
+    flex: 1; padding: 12px 16px; border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06);
+    color: white; font-size: 15px; font-family: inherit; outline: none;
+  }
+  .pw-input-wrap input:focus { border-color: var(--olive); }
+  .pw-input-wrap input::placeholder { color: rgba(255,255,255,0.3); }
+  .pw-input-wrap button {
+    padding: 12px 24px; border-radius: 10px; border: none;
+    background: var(--olive); color: var(--black);
+    font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit;
+  }
+  .pw-input-wrap button:hover { background: #d4cdb0; }
+  .pw-error { color: #e88; font-size: 13px; margin-top: 12px; min-height: 20px; }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: var(--gradient-hero); color: white;
+    padding: 56px 40px 48px; position: relative; overflow: hidden;
+  }
+  .hero::after {
+    content: ''; position: absolute; top: -40%; right: -15%;
+    width: 500px; height: 500px; background: rgba(195, 189, 159, 0.06);
+    border-radius: 50%;
+  }
+  .hero-content { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+  .hero .logo-mark { margin-bottom: 32px; }
+  .hero h1 {
+    font-family: 'Oswald', sans-serif; font-size: 38px;
+    font-weight: 700; line-height: 1.15; margin-bottom: 14px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .hero h1 span { color: var(--olive); }
+  .hero-sub { font-size: 17px; opacity: 0.7; font-weight: 300; max-width: 620px; }
+
+  /* ===== LAYOUT ===== */
+  .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .section { margin-bottom: 48px; }
+  .section-label {
+    font-family: 'Oswald', sans-serif; font-size: 11px;
+    letter-spacing: 3px; text-transform: uppercase;
+    color: var(--olive); font-weight: 600; margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Oswald', sans-serif; font-size: 26px;
+    font-weight: 600; margin-bottom: 24px; color: var(--black);
+    text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .intro-text { font-size: 15px; color: var(--muted); line-height: 1.8; margin-bottom: 24px; }
+
+  /* ===== TIER CARDS ===== */
+  .tiers { display: flex; flex-direction: column; gap: 20px; }
+  .tier-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 28px; transition: box-shadow 0.3s;
+  }
+  .tier-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.06); }
+  .tier-badge {
+    display: inline-block; font-family: 'Oswald', sans-serif;
+    font-size: 11px; font-weight: 600; letter-spacing: 2px;
+    text-transform: uppercase; padding: 4px 12px; border-radius: 6px; margin-bottom: 14px;
+  }
+  .tier-badge.v1 { background: #f0f4ec; color: #5a6e4a; }
+  .tier-badge.v2 { background: #f5f3ed; color: #8a7e64; }
+  .tier-name { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; }
+  .tier-desc { color: var(--muted); font-size: 14px; margin-bottom: 20px; line-height: 1.7; }
+  .tier-meta { display: flex; gap: 24px; flex-wrap: wrap; }
+  .meta-item { display: flex; flex-direction: column; }
+  .meta-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 2px; }
+  .meta-value { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; color: var(--black); }
+  .meta-value.price { color: #5a6e4a; }
+  .deliverables { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
+  .deliverables h4 {
+    font-family: 'Oswald', sans-serif; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 10px;
+  }
+  .del-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .del-tag { background: #f3f4f6; padding: 5px 13px; border-radius: 6px; font-size: 13px; color: var(--text); }
+
+  /* ===== PROPERLY CAPABILITIES ===== */
+  .cap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 28px; }
+  @media (max-width: 600px) { .cap-grid { grid-template-columns: 1fr; } }
+  .cap-item {
+    padding: 16px 18px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--card);
+  }
+  .cap-item h4 {
+    font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; color: var(--black);
+  }
+  .cap-item p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* ===== CONFIG CARDS (дві незалежні конфігурації) ===== */
+  .config-note {
+    font-size: 13px; color: var(--muted); background: #f5f3ed;
+    border: 1px solid #e0ddd0; border-radius: 10px; padding: 12px 16px; margin-bottom: 18px;
+  }
+  .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .config-grid { grid-template-columns: 1fr; } }
+  .config-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 26px; display: flex; flex-direction: column;
+  }
+  .config-card .tier-desc { margin-bottom: 16px; }
+  .price-group { margin-top: 4px; padding-top: 14px; border-top: 1px solid var(--border); }
+  .price-group h4 {
+    font-family: 'Oswald', sans-serif; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 8px;
+  }
+  .price-line { display: flex; justify-content: space-between; gap: 12px; font-size: 13.5px; padding: 3px 0; }
+  .price-line .pl-label { color: var(--text); }
+  .price-line .pl-value { font-weight: 600; color: var(--black); white-space: nowrap; }
+  .price-line.total { border-top: 1px dashed var(--border); margin-top: 6px; padding-top: 8px; }
+  .price-line.total .pl-value { font-family: 'Oswald', sans-serif; font-size: 18px; color: #5a6e4a; }
+  .config-footnote { font-size: 11.5px; color: var(--muted); line-height: 1.5; margin-top: auto; padding-top: 14px; }
+
+  /* ===== IMPLEMENTATION STEPS ===== */
+  .impl-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 22px; }
+  @media (max-width: 640px) { .impl-steps { grid-template-columns: 1fr 1fr; } }
+  .impl-step { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .impl-step .step-week {
+    font-family: 'Oswald', sans-serif; font-size: 10px; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase; color: #8a7e64; margin-bottom: 6px;
+  }
+  .impl-step h4 {
+    font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600;
+    text-transform: uppercase; margin-bottom: 4px; color: var(--black);
+  }
+  .impl-step p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* ===== SERVICES GRID ===== */
+  .services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 600px) { .services-grid { grid-template-columns: 1fr; } }
+  .service-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 22px;
+  }
+  .service-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; margin-bottom: 12px;
+  }
+  .service-card h3 { font-family: 'Oswald', sans-serif; font-size: 15px; font-weight: 600; margin-bottom: 5px; text-transform: uppercase; }
+  .service-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* ===== SUPPORT BLOCK ===== */
+  .support-block {
+    background: linear-gradient(135deg, #f7f6f2 0%, #f0efe8 100%);
+    border: 1px solid #e0ddd0; border-radius: 14px; padding: 28px;
+  }
+  .support-phases { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 18px; }
+  .support-phase {
+    flex: 1; min-width: 220px; padding: 20px;
+    background: var(--white); border-radius: 10px; border: 1px solid #ddd8c8;
+  }
+  .support-phase h4 {
+    font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600;
+    text-transform: uppercase; color: var(--black); margin-bottom: 6px;
+  }
+  .support-phase p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .support-phase .phase-price {
+    font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600;
+    color: #5a6e4a; margin-top: 10px;
+  }
+  .support-phase .phase-price span { font-size: 13px; font-weight: 400; color: var(--muted); }
+
+  /* ===== MAXIFY BOX ===== */
+  .maxify-box {
+    background: var(--gradient-hero); color: white;
+    border-radius: 14px; padding: 32px;
+  }
+  .maxify-box h3 { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; }
+  .maxify-box .sub { opacity: 0.6; margin-bottom: 22px; font-size: 14px; }
+  .maxify-options { display: flex; gap: 14px; flex-wrap: wrap; }
+  .maxify-opt {
+    flex: 1; min-width: 180px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px; padding: 22px;
+  }
+  .maxify-opt .opt-label {
+    font-family: 'Oswald', sans-serif; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.5; margin-bottom: 8px;
+  }
+  .maxify-opt .opt-rate { font-family: 'Oswald', sans-serif; font-size: 30px; font-weight: 700; margin-bottom: 4px; }
+  .maxify-opt .opt-rate span { font-size: 15px; font-weight: 400; opacity: 0.6; }
+  .maxify-opt .opt-desc { font-size: 13px; opacity: 0.6; line-height: 1.5; }
+  .maxify-note { font-size: 12.5px; opacity: 0.55; margin-top: 18px; line-height: 1.6; }
+
+  /* ===== CROSS-SELL ===== */
+  .cross-sell-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 600px) { .cross-sell-grid { grid-template-columns: 1fr; } }
+  .cross-sell-item {
+    padding: 16px 18px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--card);
+  }
+  .cross-sell-item h4 {
+    font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; color: var(--black);
+  }
+  .cross-sell-item p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* ===== CONTEXT BLOCK ===== */
+  .context-block {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 28px; margin-bottom: 48px;
+    border-left: 3px solid var(--olive);
+  }
+  .context-block .context-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+  }
+  .context-block .context-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: #f5f3ed; display: flex; align-items: center;
+    justify-content: center; font-size: 16px;
+  }
+  .context-block .context-title {
+    font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1px; color: var(--black);
+  }
+  .context-list { display: flex; flex-direction: column; gap: 8px; }
+  .context-list .ctx-item {
+    display: flex; gap: 10px; font-size: 14px; color: var(--text); line-height: 1.5;
+  }
+  .context-list .ctx-label {
+    flex-shrink: 0; font-weight: 600; color: var(--muted);
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+    min-width: 100px; padding-top: 2px;
+  }
+
+  /* ===== EDUCATION BLOCK ===== */
+  .edu-block {
+    margin-top: 28px; padding: 28px; border-radius: 14px;
+    background: linear-gradient(135deg, #f7f6f2 0%, #f0efe8 100%);
+    border: 1px solid #e0ddd0;
+  }
+  .edu-block .edu-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
+  }
+  .edu-block .edu-badge {
+    font-family: 'Oswald', sans-serif; font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    background: var(--olive); color: var(--black);
+    padding: 3px 10px; border-radius: 4px;
+  }
+  .edu-block .edu-partner {
+    font-size: 11px; color: var(--muted); letter-spacing: 0.5px;
+  }
+  .edu-block h3 {
+    font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 600;
+    text-transform: uppercase; margin-bottom: 14px; color: var(--black);
+  }
+  .edu-courses { display: flex; gap: 14px; flex-wrap: wrap; }
+  .edu-course {
+    flex: 1; min-width: 220px; padding: 20px;
+    background: var(--white); border-radius: 10px;
+    border: 1px solid #ddd8c8;
+  }
+  .edu-course h4 {
+    font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600;
+    text-transform: uppercase; color: var(--black); margin-bottom: 6px;
+  }
+  .edu-course p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .edu-course .edu-tag {
+    display: inline-block; margin-top: 10px; font-size: 11px;
+    color: #8a7e64; font-weight: 500; letter-spacing: 0.3px;
+  }
+
+  /* ===== CTA ===== */
+  .cta-section {
+    text-align: center; padding: 44px 20px; border-top: 1px solid var(--border); margin-top: 16px;
+  }
+  .cta-section h2 { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; }
+  .cta-section p { color: var(--muted); margin-bottom: 20px; font-size: 14px; }
+  .cta-contacts {
+    display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; font-size: 14px; color: var(--text);
+  }
+
+  /* ===== PDF BUTTON ===== */
+  .save-pdf-section { text-align: center; padding: 28px 20px 44px; }
+  .save-pdf-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 28px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--white); color: var(--text);
+    font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .save-pdf-btn:hover { border-color: var(--olive); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+
+  /* ===== PRINT ===== */
+  @media print {
+    .save-pdf-section, .pw-overlay { display: none !important; }
+    .hero, .maxify-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: white; }
+    .section, .tier-card, .config-card, .support-block, .context-block { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== PASSWORD ===== -->
+<div class="pw-overlay" id="pwOverlay">
+  <div class="pw-box">
+    <svg class="logo-sm" viewBox="0 0 140.14 84.44" xmlns="http://www.w3.org/2000/svg" width="70"><polygon fill="#C3BD9F" points="27.4 44.71 27.16 44.71 11.62 0 0 0 0 84.44 12.09 84.44 12.09 33.09 12.33 33.09 24.19 69.38 30.24 69.38 42.22 33.09 42.46 33.09 42.46 84.44 54.55 84.44 54.55 0 42.81 0 27.4 44.71"/><path fill="#C3BD9F" d="M128,0V64.28q0,4.51-2.13,6.64a7.73,7.73,0,0,1-10.67,0q-2.13-2.13-2.14-6.64V0H101V65.47a18.75,18.75,0,0,0,1.54,7.65A20.62,20.62,0,0,0,113,83.61a18.46,18.46,0,0,0,7.53,1.54,18.92,18.92,0,0,0,7.59-1.54,20.13,20.13,0,0,0,6.28-4.27,19.09,19.09,0,0,0,5.7-13.87V0Z"/><polygon fill="#C3BD9F" points="90.3 28.3 79.47 28.3 79.47 47.02 71.82 47.02 85.92 0 74.48 0 60.78 47.53 60.75 57.29 79.47 57.29 79.47 67.06 90.3 67.06 90.3 57.29 94.81 57.29 94.81 47.02 90.3 47.02 90.3 28.3"/><rect fill="#C3BD9F" x="60.75" y="74.31" width="34.06" height="10.14"/></svg>
+    <p>Для перегляду пропозиції введіть пароль</p>
+    <div class="pw-input-wrap">
+      <input type="password" id="pwInput" placeholder="Пароль" autofocus>
+      <button onclick="checkPw()">→</button>
+    </div>
+    <div class="pw-error" id="pwError"></div>
+  </div>
+</div>
+
+<script>
+  var PASSWORD = 'kyiv2026';
+  function checkPw() {
+    var input = document.getElementById('pwInput');
+    var error = document.getElementById('pwError');
+    if (input.value === PASSWORD) {
+      document.getElementById('pwOverlay').classList.add('hidden');
+    } else {
+      error.textContent = '\u041D\u0435\u0432\u0456\u0440\u043D\u0438\u0439 \u043F\u0430\u0440\u043E\u043B\u044C';
+      input.value = '';
+      input.focus();
+    }
+  }
+  document.getElementById('pwInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkPw();
+  });
+</script>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="hero-content">
+    <svg class="logo-mark" viewBox="0 0 140.14 84.44" xmlns="http://www.w3.org/2000/svg" width="80"><polygon fill="#fff" points="27.4 44.71 27.16 44.71 11.62 0 0 0 0 84.44 12.09 84.44 12.09 33.09 12.33 33.09 24.19 69.38 30.24 69.38 42.22 33.09 42.46 33.09 42.46 84.44 54.55 84.44 54.55 0 42.81 0 27.4 44.71"/><path fill="#fff" d="M128,0V64.28q0,4.51-2.13,6.64a7.73,7.73,0,0,1-10.67,0q-2.13-2.13-2.14-6.64V0H101V65.47a18.75,18.75,0,0,0,1.54,7.65A20.62,20.62,0,0,0,113,83.61a18.46,18.46,0,0,0,7.53,1.54,18.92,18.92,0,0,0,7.59-1.54,20.13,20.13,0,0,0,6.28-4.27,19.09,19.09,0,0,0,5.7-13.87V0Z"/><polygon fill="#fff" points="90.3 28.3 79.47 28.3 79.47 47.02 71.82 47.02 85.92 0 74.48 0 60.78 47.53 60.75 57.29 79.47 57.29 79.47 67.06 90.3 67.06 90.3 57.29 94.81 57.29 94.81 47.02 90.3 47.02 90.3 28.3"/><rect fill="#fff" x="60.75" y="74.31" width="34.06" height="10.14"/></svg>
+    <h1>Комерційна пропозиція<br><span>для реалізації амбітних проєктів у Київській області</span></h1>
+    <p class="hero-sub">Цінова аналітика P/ARC, операційна платформа Properly, CRM, побудова відділу продажів та динамічне ціноутворення Maxify</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ===== INTRO ===== -->
+  <div class="section">
+    <div class="section-label">Про нас</div>
+    <div class="section-title">Що ми пропонуємо</div>
+    <p class="intro-text">
+      M4U — консалтингова компанія у сфері revenue management для житлової нерухомості. Ми допомагаємо девелоперам побудувати системний процес комерціалізації: від регламентів та найму команди до IT-інфраструктури й операційного управління. Наш підхід передбачає повний цикл — розробка, впровадження, супровід та передача системи в управління замовнику.
+    </p>
+  </div>
+
+  <!-- ===== ВИХІДНІ ДАНІ ===== -->
+  <div class="context-block">
+    <div class="context-header">
+      <div class="context-icon">📋</div>
+      <div class="context-title">Вихідні дані</div>
+    </div>
+    <div class="context-list">
+      <p style="font-size: 14px; color: var(--text); line-height: 1.7; margin-bottom: 14px;">
+        Ви звернулись до нас за підсумками онлайн-зустрічі щодо запуску нового девелоперського проєкту в Київській області. На основі обговорення ми підготували пропозицію щодо підготовки інфраструктури комерціалізації: операційна платформа продажів, CRM, побудова відділу продажів та інструменти управління ціною.
+      </p>
+      <div class="ctx-item">
+        <span class="ctx-label">Клієнт</span>
+        <span>Девелоперська компанія з проєктами в Київській області</span>
+      </div>
+      <div class="ctx-item">
+        <span class="ctx-label">Проєкт</span>
+        <span>Котеджне містечко, ділянка ~10 га; стадія — переведення цільового призначення землі та проєктування</span>
+      </div>
+      <div class="ctx-item">
+        <span class="ctx-label">Запит</span>
+        <span>Підготувати інфраструктуру комерціалізації до старту продажів: IT-системи, процеси, команда</span>
+      </div>
+      <div class="ctx-item">
+        <span class="ctx-label">Ситуація</span>
+        <span>Комерційна команда формується з нуля; продажі стартують із шоуруму на перших збудованих будинках</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== МОДУЛЬ 1: ЦІНОВЕ ДОСЛІДЖЕННЯ ТА P/ARC ===== -->
+  <div class="section">
+    <div class="section-label">Модуль 1</div>
+    <div class="section-title">Цінове дослідження та підписка P/ARC</div>
+    <p class="intro-text">
+      Визначення стартової середньої ціни та цінового діапазону на основі матриці стратегічних цінових рішень: конкурентно-орієнтовані ціни (P/ARC) та підхід «собівартість+». Підписка P/ARC додає постійний моніторинг конкурентного середовища для управління ціною впродовж реалізації проєкту. Дослідження та підписка — незалежні послуги: їх можна замовити окремо або разом.
+    </p>
+    <div class="config-note">
+      Модуль застосовний до багатоквартирної забудови: аналітична база P/ARC охоплює багатоквартирні проєкти, даних по котеджному сегменту система наразі не містить.
+    </div>
+    <div class="tiers">
+      <div class="tier-card">
+        <span class="tier-badge v1">Разово</span>
+        <div class="tier-name">Експрес-дослідження</div>
+        <div class="tier-desc">
+          P/ARC — аналітична система M4U для конкурентного аналізу та цінового позиціонування. Агрегує дані з 60+ відкритих джерел, оцінює споживчу цінність за параметрами місцерозташування, якості та надійності. Результати аналізу доповнюються розрахунком floor price забудовника на основі собівартості.
+        </div>
+        <div class="tier-meta">
+          <div class="meta-item">
+            <span class="meta-label">Вартість</span>
+            <span class="meta-value price">€ 1 950</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Термін</span>
+            <span class="meta-value">до 1 тижня</span>
+          </div>
+        </div>
+        <div class="deliverables">
+          <h4>Елементи матриці</h4>
+          <div class="del-list">
+            <span class="del-tag">P/ARC — конкурентно-орієнтовані ціни</span>
+            <span class="del-tag">Собівартість+ — floor price забудовника</span>
+          </div>
+        </div>
+        <div class="deliverables" style="border-top:none; padding-top:8px;">
+          <h4>Результати (формат)</h4>
+          <div class="del-list">
+            <span class="del-tag">Звіт P/ARC (PDF)</span>
+            <span class="del-tag">Аналітична записка — презентація 3–4 стор. (PDF)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tier-card">
+        <span class="tier-badge v2">Підписка</span>
+        <div class="tier-name">P/ARC — постійний доступ</div>
+        <div class="tier-desc">
+          Щомісячний доступ до аналітики конкурентного середовища обраного регіону: ціни, пропозиція, позиціонування проєктів. Дані оновлюються щомісяця; кількість користувачів у межах домену компанії не обмежується.
+        </div>
+        <div class="price-group" style="border-top:none; padding-top:0;">
+          <h4>Вартість підписки</h4>
+          <div class="price-line">
+            <span class="pl-label">Щомісячна оплата</span>
+            <span class="pl-value">€ 490 / міс</span>
+          </div>
+          <div class="price-line">
+            <span class="pl-label">Оплата за 6 місяців авансом</span>
+            <span class="pl-value">€ 390 / міс</span>
+          </div>
+          <div class="price-line">
+            <span class="pl-label">Оплата за 12 місяців авансом</span>
+            <span class="pl-value">€ 290 / міс</span>
+          </div>
+        </div>
+        <div class="config-footnote">
+          * Для роботи зі звітами потрібен обліковий запис Microsoft Power BI Pro (близько $10 / міс, оплачується окремо).
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== МОДУЛЬ 2: ЦИФРОВІЗАЦІЯ / PROPERLY ===== -->
+  <div class="section">
+    <div class="section-label">Модуль 2</div>
+    <div class="section-title">Цифровізація продажів: платформа Properly</div>
+    <p class="intro-text">
+      Properly — операційна ERP-платформа, що веде весь цикл продажу нерухомості в одній системі: від шахматки та калькулятора розтермінування до договору, контролю дебіторки й план-факту. Платформа виросла з ERP, яка працює в продакшені в діючого девелопера, та адаптується під ваш проєкт пресетами — типи об'єктів, статуси, валюти й маршрути погоджень налаштовуються на етапі впровадження. Постачається як ізольована інсталяція: окрема база даних і середовище лише для вас.
+    </p>
+
+    <div class="cap-grid">
+      <div class="cap-item">
+        <h4>Шахматка та база об'єктів</h4>
+        <p>Будинки, лоти, паркінг і комерція в єдиній сітці — характеристики, актуальні ціни та статуси</p>
+      </div>
+      <div class="cap-item">
+        <h4>Калькулятор розтермінування</h4>
+        <p>Розрахунок умов для клієнта за хвилину; єдині формули та округлення для всіх менеджерів</p>
+      </div>
+      <div class="cap-item">
+        <h4>Договори та графіки оплат</h4>
+        <p>Договір створюється з калькуляції; кожен платіж — окремий запис зі статусом і курсом на дату</p>
+      </div>
+      <div class="cap-item">
+        <h4>Оплати та контроль дебіторки</h4>
+        <p>Імпорт банківської виписки з автозіставленням; прострочення та пеня рахуються автоматично</p>
+      </div>
+      <div class="cap-item">
+        <h4>Погодження знижок і резервів</h4>
+        <p>Ліміти за ролями та маршрути погодження — знижки понад ліміт не потрапляють у договір самовільно</p>
+      </div>
+      <div class="cap-item">
+        <h4>Планування та план-факт</h4>
+        <p>План по місяцях у розрізі лотів, виручки й надходжень; факт підтягується з договорів</p>
+      </div>
+      <div class="cap-item">
+        <h4>Журнал змін</h4>
+        <p>Кожна зміна ціни, статусу чи платежу фіксується з автором, часом і попереднім значенням</p>
+      </div>
+      <div class="cap-item">
+        <h4>Інтеграції та API</h4>
+        <p>Двосторонній обмін з CRM, приймання переоцінок Maxify, імпорт виписок, відкритий API</p>
+      </div>
+    </div>
+
+    <div class="config-note">
+      Платформа пропонується в одній із двох конфігурацій. Це самостійні рішення з окремою вартістю — ви обираєте ту, що відповідає вашій архітектурі роботи з клієнтами.
+    </div>
+
+    <div class="config-grid">
+      <div class="config-card">
+        <span class="tier-badge v1">Конфігурація А</span>
+        <div class="tier-name">Properly + зовнішня CRM</div>
+        <div class="tier-desc">
+          Воронка продажів і комунікація з клієнтами ведуться в окремій CRM-системі, операційний цикл — у Properly. Клієнти й угоди приходять із CRM автоматично, назад повертаються статуси договорів і графіки — двосторонній обмін без дублювання даних.
+        </div>
+        <div class="price-group">
+          <h4>Впровадження (разово)</h4>
+          <div class="price-line">
+            <span class="pl-label">Properly — розгортання та налаштування</span>
+            <span class="pl-value">€ 4 500</span>
+          </div>
+          <div class="price-line">
+            <span class="pl-label">CRM (NetHunt) — налаштування та інтеграція</span>
+            <span class="pl-value">€ 4 900</span>
+          </div>
+          <div class="price-line total">
+            <span class="pl-label">Разом</span>
+            <span class="pl-value">€ 9 400</span>
+          </div>
+        </div>
+        <div class="price-group">
+          <h4>Щомісячна підписка</h4>
+          <div class="price-line">
+            <span class="pl-label">Properly — без обмеження кількості користувачів</span>
+            <span class="pl-value">€ 190 / міс</span>
+          </div>
+          <div class="price-line">
+            <span class="pl-label">Ліцензії CRM — окремо (NetHunt — €20 / користувач / міс)</span>
+            <span class="pl-value"></span>
+          </div>
+        </div>
+        <div class="price-group">
+          <h4>Термін впровадження</h4>
+          <div class="price-line">
+            <span class="pl-label">Повний цикл — скоуп, розгортання, дані, запуск</span>
+            <span class="pl-value">8–12 тижнів</span>
+          </div>
+        </div>
+        <div class="config-footnote">
+          * Вартість впровадження є орієнтовною — фінальна сума визначається після фіксації фінансово-юридичної схеми реалізації. Вартість налаштування та інтеграції наведена для CRM NetHunt, яку ми рекомендуємо клієнтам як оптимальне співвідношення функціональності, зручності використання та ціни серед універсальних CRM-систем.
+        </div>
+      </div>
+
+      <div class="config-card">
+        <span class="tier-badge v2">Конфігурація Б</span>
+        <div class="tier-name">Properly з вбудованим CRM-контуром</div>
+        <div class="tier-desc">
+          Воронка, клієнти, калькуляції, договори та оплати — в одному контурі Properly. Єдина система для всього комерційного блоку без інтеграцій між окремими сервісами та без додаткових ліцензій за користувачів.
+        </div>
+        <div class="price-group">
+          <h4>Впровадження (разово)</h4>
+          <div class="price-line">
+            <span class="pl-label">Properly з CRM-контуром — розгортання та налаштування</span>
+            <span class="pl-value">€ 7 900</span>
+          </div>
+        </div>
+        <div class="price-group">
+          <h4>Щомісячна підписка</h4>
+          <div class="price-line">
+            <span class="pl-label">Properly, включно з CRM-контуром — без обмеження кількості користувачів</span>
+            <span class="pl-value">€ 490 / міс</span>
+          </div>
+        </div>
+        <div class="price-group">
+          <h4>Термін впровадження</h4>
+          <div class="price-line">
+            <span class="pl-label">Повний цикл — скоуп, розгортання, дані, запуск</span>
+            <span class="pl-value">8–12 тижнів</span>
+          </div>
+        </div>
+        <div class="config-footnote">
+          * Вартість впровадження є орієнтовною — фінальна сума визначається після фіксації фінансово-юридичної схеми реалізації та регламенту роботи в CRM.
+        </div>
+      </div>
+    </div>
+
+    <div class="impl-steps">
+      <div class="impl-step">
+        <div class="step-week">Тижні 1–2</div>
+        <h4>Скоуп і демо</h4>
+        <p>Проходимо ваш процес продажу, фіксуємо склад модулів, інтеграцій і пресетів</p>
+      </div>
+      <div class="impl-step">
+        <div class="step-week">Тижні 3–5</div>
+        <h4>Розгортання</h4>
+        <p>Піднімаємо ізольовану інсталяцію, налаштовуємо типи об'єктів, статуси й маршрути</p>
+      </div>
+      <div class="impl-step">
+        <div class="step-week">Тижні 5–9</div>
+        <h4>Дані та інтеграції</h4>
+        <p>Імпортуємо шахматку, підключаємо CRM та сервіси, звіряємо дані з бухгалтерією</p>
+      </div>
+      <div class="impl-step">
+        <div class="step-week">Тижні 9–12</div>
+        <h4>Запуск</h4>
+        <p>Навчаємо команду за ролями, супроводжуємо перші тижні роботи в системі</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== МОДУЛЬ 2: РЕГЛАМЕНТИ ===== -->
+  <div class="section">
+    <div class="section-label">Модуль 3</div>
+    <div class="section-title">Регламенти та система управління продажами</div>
+    <p class="intro-text">
+      Розробка повного комплекту документів та практик, які стандартизують роботу відділу продажів: від першого контакту з клієнтом до закриття угоди. Система управління досягненнями менеджерів забезпечує прозорий контроль ефективності.
+    </p>
+    <div class="tiers">
+      <div class="tier-card">
+        <span class="tier-badge v1">Модуль 3</span>
+        <div class="tier-name">Система управління продажами</div>
+        <div class="tier-desc">
+          Розробка регламентів продажу та формування «Книги продажів» — єдиного довідника для менеджерів. Впровадження KPI, точок контролю, практик розбору угод, аналізу заперечень, прогріву на ранніх стадіях воронки та рекомендацій по фіналізації клієнтів.
+        </div>
+        <div class="tier-meta">
+          <div class="meta-item">
+            <span class="meta-label">Вартість</span>
+            <span class="meta-value price">€ 9 000</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Термін</span>
+            <span class="meta-value">до 8 тижнів</span>
+          </div>
+        </div>
+        <div class="deliverables">
+          <h4>Що входить</h4>
+          <div class="del-list">
+            <span class="del-tag">Регламент продажів (Книга продажів)</span>
+            <span class="del-tag">KPI та точки контролю</span>
+            <span class="del-tag">Практика розбору угод</span>
+            <span class="del-tag">База аргументацій (заперечення)</span>
+            <span class="del-tag">Сценарії прогріву на ранніх стадіях</span>
+            <span class="del-tag">Рекомендації по фіналізації</span>
+            <span class="del-tag">Процедура підготовки та підписання угоди</span>
+          </div>
+        </div>
+        <div class="deliverables" style="border-top:none; padding-top:8px;">
+          <h4>Результати (формат)</h4>
+          <div class="del-list">
+            <span class="del-tag">Книга продажів (PDF)</span>
+            <span class="del-tag">Система KPI та мотивації</span>
+            <span class="del-tag">Чек-листи та скрипти</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== МОДУЛЬ 3: КОМАНДА ===== -->
+  <div class="section">
+    <div class="section-label">Модуль 4</div>
+    <div class="section-title">Формування команди відділу продажів</div>
+    <p class="intro-text">
+      Повний цикл рекрутингу та підготовки менеджерів з продажів: від розробки системи мотивації та підготовки вакансій до трьох етапів співбесід, тестових завдань та інтенсивного навчання з фінальним відбором.
+    </p>
+    <div class="tiers">
+      <div class="tier-card">
+        <span class="tier-badge v2">Модуль 4</span>
+        <div class="tier-name">Рекрутинг та навчання</div>
+        <div class="tier-desc">
+          Розробка системи мотивації, підготовка вакансій, формування бази знань, персональний рекрутинг (пошук кандидатів силами M4U), проведення 3 етапів співбесід, підготовка та перевірка тестових завдань, навчання (орієнтовно 5 днів по 4 години) та фінальний відбір.
+        </div>
+        <div class="tier-meta">
+          <div class="meta-item">
+            <span class="meta-label">Вартість</span>
+            <span class="meta-value price">€ 15 000</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Термін</span>
+            <span class="meta-value">до 12 тижнів</span>
+          </div>
+        </div>
+        <div class="deliverables">
+          <h4>Що входить</h4>
+          <div class="del-list">
+            <span class="del-tag">Система мотивації</span>
+            <span class="del-tag">Підготовка вакансій</span>
+            <span class="del-tag">Програма навчання та тестування</span>
+            <span class="del-tag">Формування бази знань</span>
+            <span class="del-tag">Персональний рекрутинг</span>
+            <span class="del-tag">3 етапи співбесід</span>
+            <span class="del-tag">Тестові завдання</span>
+            <span class="del-tag">Навчання (5 днів × 4 години)</span>
+            <span class="del-tag">Фінальний відбір</span>
+          </div>
+        </div>
+        <div class="deliverables" style="border-top:none; padding-top:8px;">
+          <h4>Результат</h4>
+          <div class="del-list">
+            <span class="del-tag">Сформований та навчений відділ продажів</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== МОДУЛЬ 4: MAXIFY ===== -->
+  <div class="section">
+    <div class="section-label">Модуль 5</div>
+    <div class="section-title">Динамічне ціноутворення Maxify</div>
+    <p class="intro-text">
+      Автоматизоване управління ціновою стратегією на основі темпів продажів, залишків та ринкової динаміки. Maxify аналізує поточний статус проєкту і формує рекомендації щодо коригування цін для максимізації доходу. Переоцінки застосовуються безпосередньо на шахматці Properly через інтеграцію.
+    </p>
+    <div class="maxify-box">
+      <h3>Maxify — моделі співпраці</h3>
+      <p class="sub">Три моделі співпраці на вибір: дві — відсоток від фактичних продажів (self-service або full management), третя — фіксована щомісячна підписка. Інтеграція, налаштування правил переоцінок та навчання користувачів. Запуск — до 4 тижнів, за готовності цінової моделі проєкту</p>
+      <div class="maxify-options">
+        <div class="maxify-opt">
+          <div class="opt-label">Self-service</div>
+          <div class="opt-rate">0.1% <span>від суми</span></div>
+          <div class="opt-desc">Від суми фактичних продажів. Ви керуєте переоцінками самостійно</div>
+        </div>
+        <div class="maxify-opt">
+          <div class="opt-label">Full management</div>
+          <div class="opt-rate">0.15% <span>від суми</span></div>
+          <div class="opt-desc">Від суми фактичних продажів. M4U управляє цінами</div>
+        </div>
+        <div class="maxify-opt">
+          <div class="opt-label">Підписка</div>
+          <div class="opt-rate">€990 <span>/ міс</span></div>
+          <div class="opt-desc">Фіксована щомісячна оплата незалежно від обсягу продажів</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== МОДУЛЬ 5: СУПРОВІД ===== -->
+  <div class="section">
+    <div class="section-label">Модуль 6</div>
+    <div class="section-title">Супровід та передача в управління</div>
+    <p class="intro-text">
+      Операційна підтримка роботи відділу продажів та комерційного управління протягом 6 місяців з поступовою передачею системи в управління вашій команді. Перші 3 місяці — інтенсивний супровід з фіксованою оплатою, наступні 3 місяці — перехід на результат-орієнтовану модель.
+    </p>
+    <div class="support-block">
+      <div style="font-family: 'Oswald', sans-serif; font-size: 15px; font-weight: 600; text-transform: uppercase; color: var(--black);">Комбінована модель оплати</div>
+      <p style="font-size: 13.5px; color: var(--muted); margin-top: 6px; line-height: 1.7;">
+        Перші 3 місяці — фіксована ставка, що покриває інтенсивний період впровадження та стабілізації процесів. Далі — перехід на відсоток від продажів, що забезпечує спільну зацікавленість у результаті.
+      </p>
+      <div class="support-phases">
+        <div class="support-phase">
+          <h4>Фаза 1 — Впровадження</h4>
+          <p>Перші 3 місяці: щоденна операційна підтримка, коучинг менеджерів, контроль процесів, доопрацювання систем</p>
+          <div class="phase-price">€ 6 000 <span>/ міс (фікс)</span></div>
+        </div>
+        <div class="support-phase">
+          <h4>Фаза 2 — Стабілізація та передача</h4>
+          <p>Наступні 3 місяці: супровід комерційного управління, аналітика, тактичні рекомендації, поступова передача системи в управління</p>
+          <div class="phase-price">1% <span>від суми продажів / міс</span></div>
+        </div>
+      </div>
+      <div class="deliverables" style="border-top: 1px solid #ddd8c8; margin-top: 20px;">
+        <h4>Що входить у супровід</h4>
+        <div class="del-list">
+          <span class="del-tag">Управління продажами та коучинг</span>
+          <span class="del-tag">Комерційне управління (план-факт, тактика)</span>
+          <span class="del-tag">Підтримка Properly та CRM</span>
+          <span class="del-tag">Підтримка звітності</span>
+          <span class="del-tag">Управління ціноутворенням</span>
+          <span class="del-tag">Передача системи в управління</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== УМОВИ ===== -->
+  <div class="section">
+    <div class="section-label">Умови</div>
+    <div class="section-title">Організаційні деталі</div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon" style="background:#f0f4ec;">📅</div>
+        <h3>Старт робіт</h3>
+        <p>За умови підписання договору та отримання передплати. Терміни по кожному модулю рахуються в тижнях від старту робіт</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:#f0f1f5;">💳</div>
+        <h3>Оплата</h3>
+        <p>Передплата 50% на ФОП або ТОВ по кожному модулю. Решта 50% — після передачі результатів</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== РОАДМАП ===== -->
+  <div class="section">
+    <div class="section-label">Таймлайн</div>
+    <div class="section-title">Орієнтовний роадмеп впровадження</div>
+    <p class="intro-text">
+      Повний цикл розрахований орієнтовно на 36 тижнів. Перші 12 тижнів — розгортання Properly і CRM, розробка регламентів та формування команди (виконуються паралельно). Далі — 6 місяців супроводу з поступовою передачею системи в управління. Онбординг Maxify виконується ближче до старту продажів, за готовності цінової моделі проєкту.
+    </p>
+
+    <svg width="100%" viewBox="0 0 680 300" style="margin-top: 8px;">
+      <!-- Week grid lines (кожні 4 тижні) -->
+      <line x1="206.7" y1="20" x2="206.7" y2="280" stroke="#e5e7eb" stroke-width="0.5"/>
+      <line x1="263.3" y1="20" x2="263.3" y2="280" stroke="#e5e7eb" stroke-width="0.5"/>
+      <line x1="320" y1="20" x2="320" y2="280" stroke="#e5e7eb" stroke-width="0.5"/>
+      <line x1="376.7" y1="20" x2="376.7" y2="280" stroke="#e5e7eb" stroke-width="0.5"/>
+      <line x1="433.3" y1="20" x2="433.3" y2="280" stroke="#e5e7eb" stroke-width="0.5"/>
+      <line x1="490" y1="20" x2="490" y2="280" stroke="#e5e7eb" stroke-width="0.5"/>
+      <line x1="546.7" y1="20" x2="546.7" y2="280" stroke="#e5e7eb" stroke-width="0.5"/>
+      <line x1="603.3" y1="20" x2="603.3" y2="280" stroke="#e5e7eb" stroke-width="0.5"/>
+      <line x1="660" y1="20" x2="660" y2="280" stroke="#e5e7eb" stroke-width="0.5"/>
+
+      <!-- Week headers -->
+      <text x="40" y="16" font-family="Oswald, sans-serif" font-size="11" font-weight="600" letter-spacing="1" fill="#6b7280">ТИЖНІ</text>
+      <text x="206.7" y="16" text-anchor="middle" font-family="Oswald, sans-serif" font-size="11" font-weight="600" fill="#6b7280">4</text>
+      <text x="263.3" y="16" text-anchor="middle" font-family="Oswald, sans-serif" font-size="11" font-weight="600" fill="#6b7280">8</text>
+      <text x="320" y="16" text-anchor="middle" font-family="Oswald, sans-serif" font-size="11" font-weight="600" fill="#6b7280">12</text>
+      <text x="376.7" y="16" text-anchor="middle" font-family="Oswald, sans-serif" font-size="11" font-weight="600" fill="#6b7280">16</text>
+      <text x="433.3" y="16" text-anchor="middle" font-family="Oswald, sans-serif" font-size="11" font-weight="600" fill="#6b7280">20</text>
+      <text x="490" y="16" text-anchor="middle" font-family="Oswald, sans-serif" font-size="11" font-weight="600" fill="#6b7280">24</text>
+      <text x="546.7" y="16" text-anchor="middle" font-family="Oswald, sans-serif" font-size="11" font-weight="600" fill="#6b7280">28</text>
+      <text x="603.3" y="16" text-anchor="middle" font-family="Oswald, sans-serif" font-size="11" font-weight="600" fill="#6b7280">32</text>
+      <text x="660" y="16" text-anchor="middle" font-family="Oswald, sans-serif" font-size="11" font-weight="600" fill="#6b7280">36</text>
+
+      <line x1="40" y1="28" x2="660" y2="28" stroke="#e5e7eb" stroke-width="0.5"/>
+
+      <!-- Group labels -->
+      <text x="40" y="94" font-family="Inter, sans-serif" font-size="11" fill="#6b7280" letter-spacing="0.5">Системи і команда</text>
+      <text x="40" y="174" font-family="Inter, sans-serif" font-size="11" fill="#6b7280" letter-spacing="0.5">Ціноутворення</text>
+      <text x="40" y="244" font-family="Inter, sans-serif" font-size="11" fill="#6b7280" letter-spacing="0.5">Супровід</text>
+
+      <!-- Properly + CRM (Т1–12) -->
+      <rect x="150" y="42" width="170" height="28" rx="6" fill="#B1C4D4" opacity="0.3"/>
+      <rect x="150" y="42" width="170" height="28" rx="6" fill="none" stroke="#B1C4D4" stroke-width="0.5"/>
+      <text x="235" y="56" text-anchor="middle" dominant-baseline="central" font-family="Inter, sans-serif" font-size="12" font-weight="500" fill="#3f5e73">Properly + CRM</text>
+
+      <!-- Регламенти (Т1–8) -->
+      <rect x="150" y="80" width="113.3" height="28" rx="6" fill="#B5C7B6" opacity="0.35"/>
+      <rect x="150" y="80" width="113.3" height="28" rx="6" fill="none" stroke="#B5C7B6" stroke-width="0.5"/>
+      <text x="206.7" y="94" text-anchor="middle" dominant-baseline="central" font-family="Inter, sans-serif" font-size="12" font-weight="500" fill="#3d5a3e">Регламенти</text>
+
+      <!-- Формування команди (Т1–12) -->
+      <rect x="150" y="118" width="170" height="28" rx="6" fill="#C3BD9F" opacity="0.3"/>
+      <rect x="150" y="118" width="170" height="28" rx="6" fill="none" stroke="#C3BD9F" stroke-width="0.5"/>
+      <text x="235" y="132" text-anchor="middle" dominant-baseline="central" font-family="Inter, sans-serif" font-size="12" font-weight="500" fill="#6b5d3f">Формування команди</text>
+
+      <!-- Phase separator -->
+      <line x1="150" y1="152" x2="660" y2="152" stroke="#e5e7eb" stroke-width="0.5" stroke-dasharray="4 4"/>
+
+      <!-- Maxify онбординг (Т9–12) -->
+      <rect x="263.3" y="160" width="56.7" height="28" rx="6" fill="#C4B5D4" opacity="0.3"/>
+      <rect x="263.3" y="160" width="56.7" height="28" rx="6" fill="none" stroke="#C4B5D4" stroke-width="0.5"/>
+      <text x="291.6" y="174" text-anchor="middle" dominant-baseline="central" font-family="Inter, sans-serif" font-size="12" font-weight="500" fill="#5a3f73">Maxify</text>
+      <text x="328" y="174" dominant-baseline="central" font-family="Inter, sans-serif" font-size="11" fill="#8a7e64">онбординг — за готовності цінової моделі</text>
+
+      <!-- Phase separator -->
+      <line x1="150" y1="196" x2="660" y2="196" stroke="#e5e7eb" stroke-width="0.5" stroke-dasharray="4 4"/>
+
+      <!-- Супровід фікс (Т13–24) -->
+      <rect x="320" y="212" width="170" height="28" rx="6" fill="#D4B5B1" opacity="0.3"/>
+      <rect x="320" y="212" width="170" height="28" rx="6" fill="none" stroke="#D4B5B1" stroke-width="0.5"/>
+      <text x="405" y="226" text-anchor="middle" dominant-baseline="central" font-family="Inter, sans-serif" font-size="12" font-weight="500" fill="#73453f">Супровід (фікс)</text>
+
+      <!-- Супровід % (Т25–36) -->
+      <rect x="490" y="250" width="170" height="28" rx="6" fill="#D4B5C4" opacity="0.25"/>
+      <rect x="490" y="250" width="170" height="28" rx="6" fill="none" stroke="#D4B5C4" stroke-width="0.5"/>
+      <text x="575" y="264" text-anchor="middle" dominant-baseline="central" font-family="Inter, sans-serif" font-size="12" font-weight="500" fill="#733f5a">Супровід (% продажів)</text>
+    </svg>
+  </div>
+
+  <!-- ===== КРОС-ПРОДАЖІ ===== -->
+  <div class="section">
+    <div class="section-label">Також</div>
+    <div class="section-title">Інші напрямки співпраці</div>
+    <p class="intro-text">
+      Окрім послуг, описаних вище, M4U може допомогти з такими напрямками:
+    </p>
+    <div class="cross-sell-grid">
+      <div class="cross-sell-item">
+        <h4>Розрахунок стартових цін</h4>
+        <p>Цінова матриця з урахуванням усіх параметрів об'єкта — поверховість, площа, вид, орієнтація</p>
+      </div>
+      <div class="cross-sell-item">
+        <h4>Аудит процесу продажів</h4>
+        <p>AS-IS діагностика воронки, CRM-процесів та ефективності роботи менеджерів</p>
+      </div>
+      <div class="cross-sell-item">
+        <h4>Брокерська програма</h4>
+        <p>Розробка партнерського регламенту та системи мотивації брокерської спільноти</p>
+      </div>
+      <div class="cross-sell-item">
+        <h4>AI-інтеграція в продажі</h4>
+        <p>Автоматизація обробки лідів, аналітика дзвінків, поведінковий скорінг</p>
+      </div>
+    </div>
+
+    <!-- Education -->
+    <div class="edu-block">
+      <div class="edu-header">
+        <span class="edu-badge">Навчання</span>
+        <span class="edu-partner">спільно з Київською Школою Девелопменту</span>
+      </div>
+      <h3>Професійні курси для команди</h3>
+      <div class="edu-courses">
+        <div class="edu-course">
+          <h4>Комерційне управління</h4>
+          <p>Побудова системи комерційного управління девелоперським проєктом: від стратегії до операційного контролю продажів, маркетингу та ціноутворення</p>
+          <span class="edu-tag">📚 Для комерційних директорів, керівників відділів продажів, директорів з продажу, власників</span>
+        </div>
+        <div class="edu-course">
+          <h4>Прайс-менеджмент</h4>
+          <p>Управління ціноутворенням у девелопменті: методології визначення цін, динамічне ціноутворення, аналіз конкурентів та моделювання дохідності</p>
+          <span class="edu-tag">📚 Для комерційних директорів, керівників відділів продажів, аналітиків, власників</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CTA ===== -->
+  <div class="cta-section">
+    <h2>Готові обговорити деталі?</h2>
+    <p>Зв'яжіться з нами для уточнення обсягу робіт та старту співпраці</p>
+    <div class="cta-contacts">
+      <span>👤 Юлія Проноза</span>
+      <span>📞 +380 93 036 48 39</span>
+      <span>✈️ <a href="https://t.me/YuliiaPronozaM4U" target="_blank" rel="noopener" style="color: inherit;">@YuliiaPronozaM4U</a></span>
+    </div>
+  </div>
+
+  <!-- ===== PDF ===== -->
+  <div class="save-pdf-section">
+    <button class="save-pdf-btn" onclick="window.print()">📄 Зберегти в PDF</button>
+  </div>
+
+</div>
+
+</body>
+</html>
