@@ -56,15 +56,20 @@ const { useState, useMemo } = React;
 const { ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, ComposedChart, Line, Area, ReferenceLine, Legend } = Recharts;
 
 
-const RAW = [{"number":25,"entrance":1,"unit":1,"floor":-1,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2151.0,"totalPrice":168444.81,"status":"Вільно"},{"number":35,"entrance":1,"unit":1,"floor":1,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2194.0,"totalPrice":171812.14,"status":"Вільно"},{"number":43,"entrance":1,"unit":1,"floor":2,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2215.0,"totalPrice":173456.65,"status":"Вільно"},{"number":49,"entrance":1,"unit":1,"floor":3,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2235.0,"totalPrice":175022.85,"status":"Вільно"},{"number":55,"entrance":1,"unit":1,"floor":4,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2252.0,"totalPrice":176354.12,"status":"Вільно"},{"number":61,"entrance":1,"unit":1,"floor":5,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2268.0,"totalPrice":177607.08,"status":"Вільно"},{"number":67,"entrance":1,"unit":1,"floor":6,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2282.0,"totalPrice":178703.42,"status":"Вільно"},{"number":73,"entrance":1,"unit":1,"floor":7,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2295.0,"totalPrice":179721.45,"status":"Вільно"},{"number":77,"entrance":1,"unit":1,"floor":8,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2306.0,"totalPrice":180582.86,"status":"Вільно"},{"number":81,"entrance":1,"unit":1,"floor":9,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2316.0,"totalPrice":181365.96,"status":"Вільно"},{"number":85,"entrance":1,"unit":1,"floor":10,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2325.0,"totalPrice":182070.75,"status":"Вільно"},{"number":89,"entrance":1,"unit":1,"floor":11,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2334.0,"totalPrice":182775.54,"status":"Вільно"},{"number":93,"entrance":1,"unit":1,"floor":12,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2341.0,"totalPrice":183323.71,"status":"Вільно"},{"number":97,"entrance":1,"unit":1,"floor":13,"rooms":2,"layout":"2К-1","view":"Ботсад","area":78.31,"priceM2":2348.0,"totalPrice":183871.88,"status":"Вільно"},{"number":124,"entrance":1,"unit":2,"floor":-1,"rooms":1,"layout":"1К-1.1","view":"Будинок 2","area":47.64,"priceM2":2064.0,"totalPrice":98328.96,"status":"Вільно"},{"number":125,"entrance":1,"unit":3,"floor":-1,"rooms":1,"layout":"1К-2.1","view":"Будинок 2","area":46.45,"priceM2":2072.0,"totalPrice":96244.4,"status":"Вільно"},{"number":126,"entrance":1,"unit":4,"floor":-1,"rooms":1,"layout":"1К-2.3","view":"Будинок 2","area":45.92,"priceM2":2085.0,"totalPrice":95743.2,"status":"Вільно"},{"number":128,"entrance":1,"unit":5,"floor":-1,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2013.0,"totalPrice":129677.46,"status":"Вільно"},{"number":137,"entrance":1,"unit":2,"floor":1,"rooms":1,"layout":"1К-1.1","view":"Будинок 2","area":47.64,"priceM2":2105.0,"totalPrice":100282.2,"status":"Вільно"},{"number":138,"entrance":1,"unit":3,"floor":1,"rooms":1,"layout":"1К-2.1","view":"Будинок 2","area":46.45,"priceM2":2113.0,"totalPrice":98148.85,"status":"Вільно"},{"number":139,"entrance":1,"unit":4,"floor":1,"rooms":1,"layout":"1К-2.3","view":"Будинок 2","area":45.92,"priceM2":2127.0,"totalPrice":97671.84,"status":"Вільно"},{"number":141,"entrance":1,"unit":5,"floor":1,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2053.0,"totalPrice":132254.26,"status":"Вільно"},{"number":150,"entrance":1,"unit":2,"floor":2,"rooms":1,"layout":"1К-1.1","view":"Будинок 2","area":47.64,"priceM2":2126.0,"totalPrice":101282.64,"status":"Вільно"},{"number":151,"entrance":1,"unit":3,"floor":2,"rooms":1,"layout":"1К-2.1","view":"Будинок 2","area":46.45,"priceM2":2134.0,"totalPrice":99124.3,"status":"Вільно"},{"number":152,"entrance":1,"unit":4,"floor":2,"rooms":1,"layout":"1К-2.3","view":"Будинок 2","area":45.92,"priceM2":2148.0,"totalPrice":98636.16,"status":"Вільно"},{"number":154,"entrance":1,"unit":5,"floor":2,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2073.0,"totalPrice":133542.66,"status":"Вільно"},{"number":163,"entrance":1,"unit":2,"floor":3,"rooms":1,"layout":"1К-1.1","view":"Будинок 2","area":47.64,"priceM2":2144.0,"totalPrice":102140.16,"status":"Вільно"},{"number":164,"entrance":1,"unit":3,"floor":3,"rooms":1,"layout":"1К-2.1","view":"Будинок 2","area":46.45,"priceM2":2152.0,"totalPrice":99960.4,"status":"Вільно"},{"number":165,"entrance":1,"unit":4,"floor":3,"rooms":1,"layout":"1К-2.3","view":"Будинок 2","area":45.92,"priceM2":2167.0,"totalPrice":99508.64,"status":"Вільно"},{"number":167,"entrance":1,"unit":5,"floor":3,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2092.0,"totalPrice":134766.64,"status":"Вільно"},{"number":175,"entrance":1,"unit":2,"floor":4,"rooms":1,"layout":"1К-1.1","view":"Будинок 2","area":47.64,"priceM2":2161.0,"totalPrice":102950.04,"status":"Вільно"},{"number":176,"entrance":1,"unit":3,"floor":4,"rooms":1,"layout":"1К-2.1","view":"Будинок 2","area":46.45,"priceM2":2169.0,"totalPrice":100750.05,"status":"Вільно"},{"number":177,"entrance":1,"unit":4,"floor":4,"rooms":1,"layout":"1К-2.3","view":"Будинок 2","area":45.92,"priceM2":2183.0,"totalPrice":100243.36,"status":"Вільно"},{"number":179,"entrance":1,"unit":5,"floor":4,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2108.0,"totalPrice":135797.36,"status":"Вільно"},{"number":187,"entrance":1,"unit":2,"floor":5,"rooms":1,"layout":"1К-1.1","view":"Будинок 2","area":47.64,"priceM2":2176.0,"totalPrice":103664.64,"status":"Вільно"},{"number":188,"entrance":1,"unit":3,"floor":5,"rooms":1,"layout":"1К-2.1","view":"Будинок 2","area":46.45,"priceM2":2184.0,"totalPrice":101446.8,"status":"Вільно"},{"number":189,"entrance":1,"unit":4,"floor":5,"rooms":1,"layout":"1К-2.3","view":"Будинок 2","area":45.92,"priceM2":2199.0,"totalPrice":100978.08,"status":"Вільно"},{"number":191,"entrance":1,"unit":5,"floor":5,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2123.0,"totalPrice":136763.66,"status":"Вільно"},{"number":199,"entrance":1,"unit":2,"floor":6,"rooms":1,"layout":"1К-1.1","view":"Будинок 2","area":47.64,"priceM2":2190.0,"totalPrice":104331.6,"status":"Вільно"},{"number":200,"entrance":1,"unit":3,"floor":6,"rooms":1,"layout":"1К-2.1","view":"Будинок 2","area":46.45,"priceM2":2198.0,"totalPrice":102097.1,"status":"Вільно"},{"number":201,"entrance":1,"unit":4,"floor":6,"rooms":1,"layout":"1К-2.3","view":"Будинок 2","area":45.92,"priceM2":2212.0,"totalPrice":101575.04,"status":"Вільно"},{"number":203,"entrance":1,"unit":5,"floor":6,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2136.0,"totalPrice":137601.12,"status":"Вільно"},{"number":208,"entrance":1,"unit":2,"floor":7,"rooms":1,"layout":"1К-1.1","view":"Будинок 2","area":47.64,"priceM2":2202.0,"totalPrice":104903.28,"status":"Вільно"},{"number":209,"entrance":1,"unit":3,"floor":7,"rooms":1,"layout":"1К-2.1","view":"Будинок 2","area":46.45,"priceM2":2210.0,"totalPrice":102654.5,"status":"Вільно"},{"number":210,"entrance":1,"unit":4,"floor":7,"rooms":1,"layout":"1К-2.3","view":"Будинок 2","area":45.92,"priceM2":2225.0,"totalPrice":102172.0,"status":"Вільно"},{"number":212,"entrance":1,"unit":5,"floor":7,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2148.0,"totalPrice":138374.16,"status":"Вільно"},{"number":217,"entrance":1,"unit":2,"floor":8,"rooms":1,"layout":"1К-1.1","view":"Будинок 2","area":47.64,"priceM2":2213.0,"totalPrice":105427.32,"status":"Вільно"},{"number":218,"entrance":1,"unit":3,"floor":8,"rooms":1,"layout":"1К-2.1","view":"Будинок 2","area":46.45,"priceM2":2221.0,"totalPrice":103165.45,"status":"Вільно"},{"number":219,"entrance":1,"unit":4,"floor":8,"rooms":1,"layout":"1К-2.3","view":"Будинок 2","area":45.92,"priceM2":2236.0,"totalPrice":102677.12,"status":"Вільно"},{"number":221,"entrance":1,"unit":5,"floor":8,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2158.0,"totalPrice":139018.36,"status":"Вільно"},{"number":226,"entrance":1,"unit":2,"floor":9,"rooms":1,"layout":"1К-1.2","view":"Будинок 2","area":47.01,"priceM2":2205.0,"totalPrice":103657.05,"status":"Вільно"},{"number":227,"entrance":1,"unit":3,"floor":9,"rooms":1,"layout":"1К-2.2","view":"Будинок 2","area":45.83,"priceM2":2214.0,"totalPrice":101467.62,"status":"Вільно"},{"number":228,"entrance":1,"unit":4,"floor":9,"rooms":1,"layout":"1К-2.4","view":"Будинок 2","area":45.32,"priceM2":2239.0,"totalPrice":101471.48,"status":"Вільно"},{"number":230,"entrance":1,"unit":5,"floor":9,"rooms":2,"layout":"2К-2.2","view":"Бойчука+Двір","area":63.88,"priceM2":2151.0,"totalPrice":137405.88,"status":"Вільно"},{"number":233,"entrance":1,"unit":2,"floor":10,"rooms":1,"layout":"1К-2.2","view":"Будинок 2","area":45.83,"priceM2":2222.0,"totalPrice":101834.26,"status":"Вільно"},{"number":234,"entrance":1,"unit":3,"floor":10,"rooms":1,"layout":"1К-2.4","view":"Будинок 2","area":45.32,"priceM2":2248.0,"totalPrice":101879.36,"status":"Вільно"},{"number":236,"entrance":1,"unit":4,"floor":10,"rooms":2,"layout":"2К-2.2","view":"Бойчука+Двір","area":63.88,"priceM2":2159.0,"totalPrice":137916.92,"status":"Вільно"},{"number":238,"entrance":1,"unit":2,"floor":11,"rooms":1,"layout":"1К-2.2","view":"Будинок 2","area":45.83,"priceM2":2230.0,"totalPrice":102200.9,"status":"Вільно"},{"number":239,"entrance":1,"unit":3,"floor":11,"rooms":1,"layout":"1К-2.4","view":"Будинок 2","area":45.32,"priceM2":2256.0,"totalPrice":102241.92,"status":"Вільно"},{"number":241,"entrance":1,"unit":4,"floor":11,"rooms":2,"layout":"2К-2.2","view":"Бойчука+Двір","area":63.88,"priceM2":2167.0,"totalPrice":138427.96,"status":"Вільно"},{"number":244,"entrance":1,"unit":2,"floor":12,"rooms":1,"layout":"1К-2.2","view":"Будинок 2","area":45.83,"priceM2":2238.0,"totalPrice":102567.54,"status":"Вільно"},{"number":245,"entrance":1,"unit":3,"floor":12,"rooms":1,"layout":"1К-2.4","view":"Будинок 2","area":45.32,"priceM2":2263.0,"totalPrice":102559.16,"status":"Вільно"},{"number":247,"entrance":1,"unit":4,"floor":12,"rooms":2,"layout":"2К-2.2","view":"Бойчука+Двір","area":63.88,"priceM2":2174.0,"totalPrice":138875.12,"status":"Вільно"},{"number":250,"entrance":1,"unit":2,"floor":13,"rooms":1,"layout":"1К-2.2","view":"Будинок 2","area":45.83,"priceM2":2244.0,"totalPrice":102842.52,"status":"Вільно"},{"number":251,"entrance":1,"unit":3,"floor":13,"rooms":1,"layout":"1К-2.4","view":"Будинок 2","area":45.32,"priceM2":2270.0,"totalPrice":102876.4,"status":"Вільно"},{"number":253,"entrance":1,"unit":4,"floor":13,"rooms":2,"layout":"2К-2.2","view":"Бойчука+Двір","area":63.88,"priceM2":2180.0,"totalPrice":139258.4,"status":"Вільно"},{"number":255,"entrance":1,"unit":1,"floor":14,"rooms":1,"layout":"1К-2.2","view":"Будинок 2","area":45.83,"priceM2":2250.0,"totalPrice":103117.5,"status":"Вільно"},{"number":256,"entrance":1,"unit":2,"floor":14,"rooms":1,"layout":"1К-2.4","view":"Будинок 2","area":45.32,"priceM2":2276.0,"totalPrice":103148.32,"status":"Вільно"},{"number":260,"entrance":1,"unit":3,"floor":15,"rooms":1,"layout":"1К-2.2","view":"Будинок 2","area":45.83,"priceM2":2255.0,"totalPrice":103346.65,"status":"Вільно"},{"number":261,"entrance":1,"unit":4,"floor":15,"rooms":1,"layout":"1К-2.4","view":"Будинок 2","area":45.32,"priceM2":2281.0,"totalPrice":103374.92,"status":"Вільно"}];
+const RAW = [{"number":1,"entrance":1,"unit":1,"floor":-6,"rooms":3,"layout":"нд","view":"Двір","area":84.36,"priceM2":2123.0,"totalPrice":179096.28,"status":"Вільно"},{"number":2,"entrance":1,"unit":2,"floor":-6,"rooms":1,"layout":"нд","view":"Сусідній будинок","area":46.17,"priceM2":2230.0,"totalPrice":102959.1,"status":"Вільно"},{"number":3,"entrance":1,"unit":3,"floor":-6,"rooms":1,"layout":"нд","view":"Сусідній будинок","area":51.8,"priceM2":2202.0,"totalPrice":114063.6,"status":"Вільно"},{"number":4,"entrance":1,"unit":1,"floor":-5,"rooms":1,"layout":"нд","view":"Двір","area":50.0,"priceM2":2346.0,"totalPrice":117300.0,"status":"Вільно"},{"number":5,"entrance":1,"unit":2,"floor":-5,"rooms":2,"layout":"нд","view":"Сусідній будинок","area":53.05,"priceM2":2240.0,"totalPrice":118832.0,"status":"Вільно"},{"number":6,"entrance":1,"unit":3,"floor":-5,"rooms":1,"layout":"нд","view":"Сусідній будинок","area":51.8,"priceM2":2246.0,"totalPrice":116342.8,"status":"Вільно"},{"number":7,"entrance":1,"unit":1,"floor":-4,"rooms":3,"layout":"нд","view":"Двір","area":87.53,"priceM2":2165.0,"totalPrice":189502.45,"status":"Вільно"},{"number":8,"entrance":1,"unit":2,"floor":-4,"rooms":2,"layout":"нд","view":"Сусідній будинок","area":52.92,"priceM2":2258.0,"totalPrice":119493.36,"status":"Вільно"},{"number":9,"entrance":1,"unit":3,"floor":-4,"rooms":3,"layout":"нд","view":"Сусідній будинок","area":76.73,"priceM2":2137.0,"totalPrice":163972.01,"status":"Вільно"},{"number":10,"entrance":1,"unit":1,"floor":-3,"rooms":1,"layout":"нд","view":"Двір","area":35.37,"priceM2":2458.0,"totalPrice":86939.46,"status":"Вільно"},{"number":11,"entrance":1,"unit":2,"floor":-3,"rooms":1,"layout":"нд","view":"Двір","area":43.69,"priceM2":2414.0,"totalPrice":105467.66,"status":"Вільно"},{"number":12,"entrance":1,"unit":3,"floor":-3,"rooms":2,"layout":"нд","view":"Сусідній будинок","area":52.92,"priceM2":2274.0,"totalPrice":120340.08,"status":"Вільно"},{"number":13,"entrance":1,"unit":4,"floor":-3,"rooms":3,"layout":"нд","view":"Сусідній будинок","area":76.73,"priceM2":2152.0,"totalPrice":165122.96,"status":"Вільно"},{"number":14,"entrance":1,"unit":1,"floor":-2,"rooms":1,"layout":"нд","view":"Двір","area":35.37,"priceM2":2474.0,"totalPrice":87505.38,"status":"Вільно"},{"number":15,"entrance":1,"unit":2,"floor":-2,"rooms":1,"layout":"нд","view":"Двір","area":43.69,"priceM2":2429.0,"totalPrice":106123.01,"status":"Вільно"},{"number":16,"entrance":1,"unit":3,"floor":-2,"rooms":2,"layout":"нд","view":"Сусідній будинок","area":52.92,"priceM2":2288.0,"totalPrice":121080.96,"status":"Вільно"},{"number":17,"entrance":1,"unit":4,"floor":-2,"rooms":3,"layout":"нд","view":"Сусідній будинок","area":76.73,"priceM2":2166.0,"totalPrice":166197.18,"status":"Вільно"},{"number":18,"entrance":1,"unit":1,"floor":-1,"rooms":1,"layout":"нд","view":"Двір","area":49.59,"priceM2":2411.0,"totalPrice":119561.49,"status":"Вільно"},{"number":19,"entrance":1,"unit":2,"floor":-1,"rooms":1,"layout":"нд","view":"Двір","area":40.73,"priceM2":2459.0,"totalPrice":100155.07,"status":"Вільно"},{"number":20,"entrance":1,"unit":3,"floor":-1,"rooms":4,"layout":"нд","view":"Сусідній будинок","area":96.75,"priceM2":2074.0,"totalPrice":200659.5,"status":"Вільно"},{"number":21,"entrance":1,"unit":4,"floor":-1,"rooms":2,"layout":"нд","view":"Сусідній будинок","area":62.62,"priceM2":2251.0,"totalPrice":140957.62,"status":"Вільно"},{"number":22,"entrance":1,"unit":5,"floor":-1,"rooms":1,"layout":"нд","view":"Сусідній будинок","area":43.17,"priceM2":2352.0,"totalPrice":101535.84,"status":"Вільно"},{"number":23,"entrance":1,"unit":6,"floor":-1,"rooms":1,"layout":"нд","view":"Сусідній будинок","area":45.33,"priceM2":2341.0,"totalPrice":106117.53,"status":"Вільно"},{"number":24,"entrance":1,"unit":7,"floor":-1,"rooms":2,"layout":"2К-1","view":"Вільшанська + Торець","area":78.31,"priceM2":2343.0,"totalPrice":183480.33,"status":"Вільно"},{"number":25,"entrance":1,"unit":8,"floor":-1,"rooms":1,"layout":"нд","view":"Вільшанська","area":36.63,"priceM2":2553.0,"totalPrice":93516.39,"status":"Вільно"},{"number":26,"entrance":1,"unit":9,"floor":-1,"rooms":1,"layout":"нд","view":"Вільшанська","area":43.47,"priceM2":2515.0,"totalPrice":109327.05,"status":"Вільно"},{"number":27,"entrance":1,"unit":10,"floor":-1,"rooms":3,"layout":"нд","view":"Двір","area":83.82,"priceM2":2227.0,"totalPrice":186667.14,"status":"Вільно"},{"number":34,"entrance":1,"unit":1,"floor":1,"rooms":2,"layout":"2К-1","view":"Вільшанська + Торець","area":78.31,"priceM2":2355.0,"totalPrice":184420.05,"status":"Вільно"},{"number":42,"entrance":1,"unit":1,"floor":2,"rooms":2,"layout":"2К-1","view":"Вільшанська + Торець","area":78.31,"priceM2":2366.0,"totalPrice":185281.46,"status":"Вільно"},{"number":48,"entrance":1,"unit":1,"floor":3,"rooms":2,"layout":"2К-1","view":"Вільшанська + Торець","area":78.31,"priceM2":2375.0,"totalPrice":185986.25,"status":"Вільно"},{"number":54,"entrance":1,"unit":1,"floor":4,"rooms":2,"layout":"2К-1","view":"Вільшанська + Торець","area":78.31,"priceM2":2384.0,"totalPrice":186691.04,"status":"Вільно"},{"number":60,"entrance":1,"unit":1,"floor":5,"rooms":2,"layout":"2К-1","view":"Вільшанська + Торець","area":78.31,"priceM2":2392.0,"totalPrice":187317.52,"status":"Вільно"},{"number":66,"entrance":1,"unit":1,"floor":6,"rooms":2,"layout":"2К-1","view":"Ботсад + Торець","area":78.31,"priceM2":2444.0,"totalPrice":191389.64,"status":"Вільно"},{"number":72,"entrance":1,"unit":1,"floor":7,"rooms":2,"layout":"2К-1","view":"Ботсад + Торець","area":78.31,"priceM2":2506.0,"totalPrice":196244.86,"status":"Вільно"},{"number":76,"entrance":1,"unit":1,"floor":8,"rooms":2,"layout":"2К-1","view":"Ботсад + Торець","area":78.31,"priceM2":2512.0,"totalPrice":196714.72,"status":"Вільно"},{"number":80,"entrance":1,"unit":1,"floor":9,"rooms":2,"layout":"2К-1","view":"Ботсад + Торець","area":78.31,"priceM2":2517.0,"totalPrice":197106.27,"status":"Вільно"},{"number":84,"entrance":1,"unit":1,"floor":10,"rooms":2,"layout":"2К-1","view":"Ботсад + Торець","area":78.31,"priceM2":2522.0,"totalPrice":197497.82,"status":"Вільно"},{"number":88,"entrance":1,"unit":1,"floor":11,"rooms":2,"layout":"2К-1","view":"Ботсад + Торець","area":78.31,"priceM2":2526.0,"totalPrice":197811.06,"status":"Вільно"},{"number":92,"entrance":1,"unit":1,"floor":12,"rooms":2,"layout":"2К-1","view":"Ботсад + Торець","area":78.31,"priceM2":2530.0,"totalPrice":198124.3,"status":"Вільно"},{"number":96,"entrance":1,"unit":1,"floor":13,"rooms":2,"layout":"2К-1","view":"Ботсад + Торець","area":78.31,"priceM2":2534.0,"totalPrice":198437.54,"status":"Вільно"},{"number":102,"entrance":2,"unit":1,"floor":-6,"rooms":1,"layout":"нд","view":"Сусідній будинок","area":54.4,"priceM2":2189.0,"totalPrice":119081.6,"status":"Вільно"},{"number":103,"entrance":2,"unit":2,"floor":-6,"rooms":1,"layout":"нд","view":"Сусідній будинок","area":51.5,"priceM2":2204.0,"totalPrice":113506.0,"status":"Вільно"},{"number":104,"entrance":2,"unit":3,"floor":-6,"rooms":2,"layout":"нд","view":"Двір","area":65.8,"priceM2":2218.0,"totalPrice":145944.4,"status":"Вільно"},{"number":105,"entrance":2,"unit":1,"floor":-5,"rooms":1,"layout":"нд","view":"Двір","area":52.2,"priceM2":2334.0,"totalPrice":121834.8,"status":"Вільно"},{"number":106,"entrance":2,"unit":2,"floor":-5,"rooms":1,"layout":"нд","view":"Сусідній будинок","area":47.9,"priceM2":2266.0,"totalPrice":108541.4,"status":"Вільно"},{"number":107,"entrance":2,"unit":3,"floor":-5,"rooms":1,"layout":"нд","view":"Сусідній будинок","area":46.1,"priceM2":2275.0,"totalPrice":104877.5,"status":"Вільно"},{"number":108,"entrance":2,"unit":4,"floor":-5,"rooms":1,"layout":"нд","view":"Двір","area":52.0,"priceM2":2335.0,"totalPrice":121420.0,"status":"Вільно"},{"number":109,"entrance":2,"unit":1,"floor":-4,"rooms":1,"layout":"нд","view":"Двір","area":51.1,"priceM2":2358.0,"totalPrice":120493.8,"status":"Вільно"},{"number":110,"entrance":2,"unit":2,"floor":-4,"rooms":1,"layout":"нд","view":"Двір","area":44.8,"priceM2":2391.0,"totalPrice":107116.8,"status":"Вільно"},{"number":111,"entrance":2,"unit":3,"floor":-4,"rooms":1,"layout":"нд","view":"Сусідній будинок","area":47.9,"priceM2":2284.0,"totalPrice":109403.6,"status":"Вільно"},{"number":112,"entrance":2,"unit":4,"floor":-4,"rooms":1,"layout":"нд","view":"Сусідній будинок","area":46.1,"priceM2":2293.0,"totalPrice":105707.3,"status":"Вільно"},{"number":113,"entrance":2,"unit":5,"floor":-4,"rooms":1,"layout":"нд","view":"Двір","area":44.4,"priceM2":2394.0,"totalPrice":106293.6,"status":"Вільно"},{"number":114,"entrance":2,"unit":1,"floor":-3,"rooms":1,"layout":"нд","view":"Двір","area":43.6,"priceM2":2415.0,"totalPrice":105294.0,"status":"Вільно"},{"number":115,"entrance":2,"unit":2,"floor":-3,"rooms":1,"layout":"нд","view":"Двір","area":44.8,"priceM2":2408.0,"totalPrice":107878.4,"status":"Вільно"},{"number":116,"entrance":2,"unit":3,"floor":-3,"rooms":1,"layout":"нд","view":"Сусідній будинок","area":47.9,"priceM2":2300.0,"totalPrice":110170.0,"status":"Вільно"},{"number":117,"entrance":2,"unit":4,"floor":-3,"rooms":1,"layout":"нд","view":"Сусідній будинок","area":46.1,"priceM2":2309.0,"totalPrice":106444.9,"status":"Вільно"},{"number":118,"entrance":2,"unit":5,"floor":-3,"rooms":1,"layout":"нд","view":"Двір","area":44.4,"priceM2":2410.0,"totalPrice":107004.0,"status":"Вільно"},{"number":119,"entrance":2,"unit":1,"floor":-2,"rooms":1,"layout":"нд","view":"Двір","area":43.6,"priceM2":2430.0,"totalPrice":105948.0,"status":"Вільно"},{"number":120,"entrance":2,"unit":2,"floor":-2,"rooms":1,"layout":"нд","view":"Двір","area":44.8,"priceM2":2423.0,"totalPrice":108550.4,"status":"Вільно"},{"number":121,"entrance":2,"unit":3,"floor":-2,"rooms":1,"layout":"нд","view":"Сусідній будинок","area":47.9,"priceM2":2314.0,"totalPrice":110840.6,"status":"Вільно"},{"number":122,"entrance":2,"unit":4,"floor":-2,"rooms":1,"layout":"нд","view":"Сусідній будинок","area":46.1,"priceM2":2323.0,"totalPrice":107090.3,"status":"Вільно"},{"number":123,"entrance":2,"unit":5,"floor":-2,"rooms":1,"layout":"нд","view":"Двір","area":44.4,"priceM2":2426.0,"totalPrice":107714.4,"status":"Вільно"},{"number":124,"entrance":2,"unit":1,"floor":-1,"rooms":1,"layout":"нд","view":"Двір","area":41.1,"priceM2":2457.0,"totalPrice":100982.7,"status":"Вільно"},{"number":125,"entrance":2,"unit":2,"floor":-1,"rooms":2,"layout":"нд","view":"Двір + Прямий вид","area":68.2,"priceM2":2333.0,"totalPrice":159110.6,"status":"Вільно"},{"number":126,"entrance":2,"unit":3,"floor":-1,"rooms":1,"layout":"1К-1.1","view":"Двір","area":47.64,"priceM2":2422.0,"totalPrice":115384.08,"status":"Вільно"},{"number":127,"entrance":2,"unit":4,"floor":-1,"rooms":1,"layout":"1К-2.1","view":"Двір","area":46.45,"priceM2":2428.0,"totalPrice":112780.6,"status":"Вільно"},{"number":128,"entrance":2,"unit":5,"floor":-1,"rooms":1,"layout":"1К-2.3","view":"Двір","area":45.92,"priceM2":2431.0,"totalPrice":111631.52,"status":"Вільно"},{"number":129,"entrance":2,"unit":6,"floor":-1,"rooms":3,"layout":"нд","view":"Сусідній будинок","area":77.6,"priceM2":2173.0,"totalPrice":168624.8,"status":"Вільно"},{"number":130,"entrance":2,"unit":7,"floor":-1,"rooms":2,"layout":"2К-2.1","view":"Сусідній будинок + Двір","area":64.42,"priceM2":2286.0,"totalPrice":147264.12,"status":"Вільно"},{"number":131,"entrance":2,"unit":8,"floor":-1,"rooms":1,"layout":"нд","view":"Двір","area":45.6,"priceM2":2433.0,"totalPrice":110944.8,"status":"Вільно"},{"number":139,"entrance":2,"unit":1,"floor":1,"rooms":1,"layout":"1К-1.1","view":"Двір","area":47.64,"priceM2":2434.0,"totalPrice":115955.76,"status":"Вільно"},{"number":140,"entrance":2,"unit":2,"floor":1,"rooms":1,"layout":"1К-2.1","view":"Двір","area":46.45,"priceM2":2440.0,"totalPrice":113338.0,"status":"Вільно"},{"number":141,"entrance":2,"unit":3,"floor":1,"rooms":1,"layout":"1К-2.3","view":"Двір","area":45.92,"priceM2":2443.0,"totalPrice":112182.56,"status":"Вільно"},{"number":143,"entrance":2,"unit":4,"floor":1,"rooms":2,"layout":"2К-2.1","view":"Сусідній будинок + Двір","area":64.42,"priceM2":2298.0,"totalPrice":148037.16,"status":"Вільно"},{"number":152,"entrance":2,"unit":1,"floor":2,"rooms":1,"layout":"1К-1.1","view":"Двір","area":47.64,"priceM2":2445.0,"totalPrice":116479.8,"status":"Вільно"},{"number":153,"entrance":2,"unit":2,"floor":2,"rooms":1,"layout":"1К-2.1","view":"Двір","area":46.45,"priceM2":2452.0,"totalPrice":113895.4,"status":"Вільно"},{"number":154,"entrance":2,"unit":3,"floor":2,"rooms":1,"layout":"1К-2.3","view":"Двір","area":45.92,"priceM2":2454.0,"totalPrice":112687.68,"status":"Вільно"},{"number":156,"entrance":2,"unit":4,"floor":2,"rooms":2,"layout":"2К-2.1","view":"Сусідній будинок + Двір","area":64.42,"priceM2":2308.0,"totalPrice":148681.36,"status":"Вільно"},{"number":165,"entrance":2,"unit":1,"floor":3,"rooms":1,"layout":"1К-1.1","view":"Двір","area":47.64,"priceM2":2455.0,"totalPrice":116956.2,"status":"Вільно"},{"number":166,"entrance":2,"unit":2,"floor":3,"rooms":1,"layout":"1К-2.1","view":"Двір","area":46.45,"priceM2":2462.0,"totalPrice":114359.9,"status":"Вільно"},{"number":167,"entrance":2,"unit":3,"floor":3,"rooms":1,"layout":"1К-2.3","view":"Двір","area":45.92,"priceM2":2464.0,"totalPrice":113146.88,"status":"Вільно"},{"number":169,"entrance":2,"unit":4,"floor":3,"rooms":2,"layout":"2К-2.1","view":"Сусідній будинок + Двір","area":64.42,"priceM2":2318.0,"totalPrice":149325.56,"status":"Вільно"},{"number":177,"entrance":2,"unit":1,"floor":4,"rooms":1,"layout":"1К-1.1","view":"Двір","area":47.64,"priceM2":2464.0,"totalPrice":117384.96,"status":"Вільно"},{"number":178,"entrance":2,"unit":2,"floor":4,"rooms":1,"layout":"1К-2.1","view":"Двір","area":46.45,"priceM2":2471.0,"totalPrice":114777.95,"status":"Вільно"},{"number":179,"entrance":2,"unit":3,"floor":4,"rooms":1,"layout":"1К-2.3","view":"Двір","area":45.92,"priceM2":2474.0,"totalPrice":113606.08,"status":"Вільно"},{"number":181,"entrance":2,"unit":4,"floor":4,"rooms":2,"layout":"2К-2.1","view":"Сусідній будинок + Двір","area":64.42,"priceM2":2326.0,"totalPrice":149840.92,"status":"Вільно"},{"number":189,"entrance":2,"unit":1,"floor":5,"rooms":1,"layout":"1К-1.1","view":"Двір","area":47.64,"priceM2":2472.0,"totalPrice":117766.08,"status":"Вільно"},{"number":190,"entrance":2,"unit":2,"floor":5,"rooms":1,"layout":"1К-2.1","view":"Двір","area":46.45,"priceM2":2479.0,"totalPrice":115149.55,"status":"Вільно"},{"number":191,"entrance":2,"unit":3,"floor":5,"rooms":1,"layout":"1К-2.3","view":"Двір","area":45.92,"priceM2":2482.0,"totalPrice":113973.44,"status":"Вільно"},{"number":193,"entrance":2,"unit":4,"floor":5,"rooms":2,"layout":"2К-2.1","view":"Сусідній будинок + Двір","area":64.42,"priceM2":2334.0,"totalPrice":150356.28,"status":"Вільно"},{"number":201,"entrance":2,"unit":1,"floor":6,"rooms":1,"layout":"1К-1.1","view":"Двір","area":47.64,"priceM2":2480.0,"totalPrice":118147.2,"status":"Вільно"},{"number":202,"entrance":2,"unit":2,"floor":6,"rooms":1,"layout":"1К-2.1","view":"Двір","area":46.45,"priceM2":2486.0,"totalPrice":115474.7,"status":"Вільно"},{"number":203,"entrance":2,"unit":3,"floor":6,"rooms":1,"layout":"1К-2.3","view":"Двір","area":45.92,"priceM2":2489.0,"totalPrice":114294.88,"status":"Вільно"},{"number":205,"entrance":2,"unit":4,"floor":6,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2433.0,"totalPrice":156733.86,"status":"Вільно"},{"number":210,"entrance":2,"unit":1,"floor":7,"rooms":1,"layout":"1К-1.1","view":"Двір","area":47.64,"priceM2":2543.0,"totalPrice":121148.52,"status":"Вільно"},{"number":211,"entrance":2,"unit":2,"floor":7,"rooms":1,"layout":"1К-2.1","view":"Двір","area":46.45,"priceM2":2550.0,"totalPrice":118447.5,"status":"Вільно"},{"number":212,"entrance":2,"unit":3,"floor":7,"rooms":1,"layout":"1К-2.3","view":"Двір","area":45.92,"priceM2":2553.0,"totalPrice":117233.76,"status":"Вільно"},{"number":214,"entrance":2,"unit":4,"floor":7,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2495.0,"totalPrice":160727.9,"status":"Вільно"},{"number":219,"entrance":2,"unit":1,"floor":8,"rooms":1,"layout":"1К-1.1","view":"Двір","area":47.64,"priceM2":2549.0,"totalPrice":121434.36,"status":"Вільно"},{"number":220,"entrance":2,"unit":2,"floor":8,"rooms":1,"layout":"1К-2.1","view":"Двір","area":46.45,"priceM2":2556.0,"totalPrice":118726.2,"status":"Вільно"},{"number":221,"entrance":2,"unit":3,"floor":8,"rooms":1,"layout":"1К-2.3","view":"Двір","area":45.92,"priceM2":2559.0,"totalPrice":117509.28,"status":"Вільно"},{"number":223,"entrance":2,"unit":4,"floor":8,"rooms":2,"layout":"2К-2.1","view":"Бойчука+Двір","area":64.42,"priceM2":2501.0,"totalPrice":161114.42,"status":"Вільно"},{"number":228,"entrance":2,"unit":1,"floor":9,"rooms":1,"layout":"1К-1.2","view":"Двір","area":47.01,"priceM2":2558.0,"totalPrice":120251.58,"status":"Вільно"},{"number":229,"entrance":2,"unit":2,"floor":9,"rooms":1,"layout":"1К-2.2","view":"Двір","area":45.83,"priceM2":2565.0,"totalPrice":117553.95,"status":"Вільно"},{"number":230,"entrance":2,"unit":3,"floor":9,"rooms":1,"layout":"1К-2.4","view":"Двір","area":45.32,"priceM2":2567.0,"totalPrice":116336.44,"status":"Вільно"},{"number":232,"entrance":2,"unit":4,"floor":9,"rooms":2,"layout":"2К-2.2","view":"Бойчука+Двір","area":63.88,"priceM2":2509.0,"totalPrice":160274.92,"status":"Вільно"},{"number":235,"entrance":2,"unit":1,"floor":10,"rooms":1,"layout":"1К-2.2","view":"Двір","area":45.83,"priceM2":2569.0,"totalPrice":117737.27,"status":"Вільно"},{"number":236,"entrance":2,"unit":2,"floor":10,"rooms":1,"layout":"1К-2.4","view":"Двір","area":45.32,"priceM2":2572.0,"totalPrice":116563.04,"status":"Вільно"},{"number":238,"entrance":2,"unit":3,"floor":10,"rooms":2,"layout":"2К-2.2","view":"Бойчука+Двір","area":63.88,"priceM2":2514.0,"totalPrice":160594.32,"status":"Вільно"},{"number":240,"entrance":2,"unit":1,"floor":11,"rooms":1,"layout":"1К-2.2","view":"Двір","area":45.83,"priceM2":2574.0,"totalPrice":117966.42,"status":"Вільно"},{"number":241,"entrance":2,"unit":2,"floor":11,"rooms":1,"layout":"1К-2.4","view":"Двір","area":45.32,"priceM2":2577.0,"totalPrice":116789.64,"status":"Вільно"},{"number":243,"entrance":2,"unit":3,"floor":11,"rooms":2,"layout":"2К-2.2","view":"Бойчука+Двір","area":63.88,"priceM2":2518.0,"totalPrice":160849.84,"status":"Вільно"},{"number":246,"entrance":2,"unit":1,"floor":12,"rooms":1,"layout":"1К-2.2","view":"Двір","area":45.83,"priceM2":2578.0,"totalPrice":118149.74,"status":"Вільно"},{"number":247,"entrance":2,"unit":2,"floor":12,"rooms":1,"layout":"1К-2.4","view":"Двір","area":45.32,"priceM2":2581.0,"totalPrice":116970.92,"status":"Вільно"},{"number":249,"entrance":2,"unit":3,"floor":12,"rooms":2,"layout":"2К-2.2","view":"Бойчука+Двір","area":63.88,"priceM2":2522.0,"totalPrice":161105.36,"status":"Вільно"},{"number":252,"entrance":2,"unit":1,"floor":13,"rooms":1,"layout":"1К-2.2","view":"Двір","area":45.83,"priceM2":2581.0,"totalPrice":118287.23,"status":"Вільно"},{"number":253,"entrance":2,"unit":2,"floor":13,"rooms":1,"layout":"1К-2.4","view":"Двір","area":45.32,"priceM2":2584.0,"totalPrice":117106.88,"status":"Вільно"},{"number":255,"entrance":2,"unit":3,"floor":13,"rooms":2,"layout":"2К-2.2","view":"Бойчука+Двір","area":63.88,"priceM2":2526.0,"totalPrice":161360.88,"status":"Вільно"},{"number":257,"entrance":2,"unit":1,"floor":14,"rooms":1,"layout":"1К-2.2","view":"Двір","area":45.83,"priceM2":2584.0,"totalPrice":118424.72,"status":"Вільно"},{"number":258,"entrance":2,"unit":2,"floor":14,"rooms":1,"layout":"1К-2.4","view":"Двір","area":45.32,"priceM2":2587.0,"totalPrice":117242.84,"status":"Вільно"},{"number":262,"entrance":2,"unit":1,"floor":15,"rooms":1,"layout":"1К-2.2","view":"Двір","area":45.83,"priceM2":2588.0,"totalPrice":118608.04,"status":"Вільно"},{"number":263,"entrance":2,"unit":2,"floor":15,"rooms":1,"layout":"1К-2.4","view":"Двір","area":45.32,"priceM2":2590.0,"totalPrice":117378.8,"status":"Вільно"}];
 
 // ---- Config ----
-const VIEWS = ["Ботсад", "Будинок 2", "Бойчука+Двір"];
-const VIEW_C = { "Ботсад": "#34d399", "Будинок 2": "#60a5fa", "Бойчука+Двір": "#f472b6" };
-const VIEW_BG = { "Ботсад": "rgba(52,211,153,0.08)", "Будинок 2": "rgba(96,165,250,0.08)", "Бойчука+Двір": "rgba(244,114,182,0.08)" };
-const ROOM_C = { 1: "#60a5fa", 2: "#34d399" };
-const LAYOUT_ORDER = ["1К-1.1","1К-1.2","1К-2.1","1К-2.2","1К-2.3","1К-2.4","2К-1","2К-2.1","2К-2.2"];
-const FLOORS = [-1,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
+const VIEWS = ["Двір", "Сусідній будинок", "Ботсад + Торець", "Бойчука+Двір", "Вільшанська + Торець", "Сусідній будинок + Двір", "Вільшанська", "Двір + Прямий вид"];
+const VIEW_C = {
+  "Двір": "#34d399", "Сусідній будинок": "#60a5fa", "Ботсад + Торець": "#a78bfa", "Бойчука+Двір": "#f472b6",
+  "Вільшанська + Торець": "#fb923c", "Сусідній будинок + Двір": "#818cf8", "Вільшанська": "#f87171", "Двір + Прямий вид": "#2dd4bf"
+};
+const VIEW_BG = Object.fromEntries(Object.entries(VIEW_C).map(([k, c]) => [k, c + "14"]));
+const ROOMS = [1, 2, 3, 4];
+const ROOM_C = { 1: "#60a5fa", 2: "#34d399", 3: "#a78bfa", 4: "#fb923c" };
+const ENTRANCES = [1, 2];
+const ENTR_C = { 1: "#818cf8", 2: "#f472b6" };
+const FLOORS = [-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
 const GOLD = "#fbbf24";
 
 // ---- Конкуренти (джерело: P/ARC PRO+ звіт, 15 проєктів у радіусі до 3 км) ----
@@ -277,19 +282,22 @@ const CompRangeRows = ({ rows }) => {
 };
 
 // ---- Chessboard ----
-const ChessBoard = ({ data, metric }) => {
+const ChessBoard = ({ title, data, metric }) => {
   const vals = data.map(d => d[metric]).filter(v => v != null && !Number.isNaN(v));
-  if (!vals.length) return <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: 24, color: "#888", fontSize: 13 }}>Немає квартир у поточній вибірці — змініть фільтри.</div>;
+  if (!vals.length) return null;
   const vMin = Math.min(...vals), vMax = Math.max(...vals), vMid = (vMin + vMax) / 2;
-  const positions = [1, 2, 3, 4, 5];
+  const floorsAsc = [...new Set(data.map(d => d.floor))].sort((a, b) => a - b);
+  const maxPos = Math.max(...data.map(d => d.unit));
+  const positions = Array.from({ length: maxPos }, (_, i) => i + 1);
   const byKey = {};
   data.forEach(d => { byKey[`${d.floor}_${d.unit}`] = d; });
-  const floorsDesc = [...FLOORS].reverse();
+  const floorsDesc = [...floorsAsc].reverse();
   const fmt = metric === "priceM2" ? fmtM2 : fmtK;
   return (
-    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: "22px 24px" }}>
+    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: "22px 24px", marginBottom: 16 }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: "#aaa", textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 16 }}>{title} <span style={{ color: "#666", fontWeight: 400 }}>({data.length} кв.)</span></div>
       <div style={{ overflowX: "auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: `44px repeat(${positions.length}, minmax(92px, 1fr))`, gap: 5, minWidth: 560 }}>
+        <div style={{ display: "grid", gridTemplateColumns: `44px repeat(${positions.length}, minmax(84px, 1fr))`, gap: 5, minWidth: 44 + positions.length * 90 }}>
           {floorsDesc.map(fl => (
             [<div key={`f${fl}`} style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: "#777", fontWeight: 700 }}>{fl}</div>,
             ...positions.map(pos => {
@@ -321,7 +329,8 @@ const ChessBoard = ({ data, metric }) => {
 // ---- Main ----
 function Dashboard() {
   const [metric, setMetric] = useState("priceM2");
-  const [activeRooms, setActiveRooms] = useState(new Set([1, 2]));
+  const [activeEntrances, setActiveEntrances] = useState(new Set(ENTRANCES));
+  const [activeRooms, setActiveRooms] = useState(new Set(ROOMS));
   const [activeViews, setActiveViews] = useState(new Set(VIEWS));
   const [floorMode, setFloorMode] = useState("scatter");
   const [compRooms, setCompRooms] = useState(1);
@@ -360,8 +369,8 @@ function Dashboard() {
   };
 
   const filtered = useMemo(() =>
-    RAW.filter(d => activeRooms.has(d.rooms) && activeViews.has(d.view) && d[metric] != null && !Number.isNaN(d[metric])),
-    [activeRooms, activeViews, metric]);
+    RAW.filter(d => activeEntrances.has(d.entrance) && activeRooms.has(d.rooms) && activeViews.has(d.view) && d[metric] != null && !Number.isNaN(d[metric])),
+    [activeEntrances, activeRooms, activeViews, metric]);
 
   const metricLabel = metric === "priceM2" ? "$/м²" : "Вартість, $";
   const fmt = metric === "priceM2" ? fmtM2 : fmtK;
@@ -375,13 +384,13 @@ function Dashboard() {
   // 01 — floor data (розріз по кімнатності)
   const scatterByRooms = useMemo(() => {
     const m = {};
-    [1, 2].forEach(r => { m[r] = filtered.filter(d => d.rooms === r).map(d => ({ ...d, y: d[metric] })); });
+    ROOMS.forEach(r => { m[r] = filtered.filter(d => d.rooms === r).map(d => ({ ...d, y: d[metric] })); });
     return m;
   }, [filtered, metric]);
 
   const barData = useMemo(() => FLOORS.map(fl => {
     const row = { floor: fl };
-    [1, 2].forEach(r => {
+    ROOMS.forEach(r => {
       const items = filtered.filter(d => d.floor === fl && d.rooms === r);
       if (items.length) {
         const a = items.reduce((s, d) => s + d.area, 0);
@@ -404,10 +413,10 @@ function Dashboard() {
     const vals = filtered.map(d => d[metric]);
     if (vals.length < 5) return { curve: [], stats: {} };
     const g = calcStats(vals);
-    const perView = {};
-    VIEWS.forEach(v => {
-      const vv = filtered.filter(d => d.view === v).map(d => d[metric]);
-      if (vv.length >= 5) perView[v] = calcStats(vv);
+    const perRooms = {};
+    ROOMS.forEach(r => {
+      const vv = filtered.filter(d => d.rooms === r).map(d => d[metric]);
+      if (vv.length >= 5) perRooms[`${r}-кімн.`] = { ...calcStats(vv), rooms: r };
     });
     const pad = metric === "priceM2" ? 60 : (g.max - g.min) * 0.15;
     const lo = g.min - pad, hi = g.max + pad, N = 80;
@@ -415,18 +424,18 @@ function Dashboard() {
     const curve = Array.from({ length: N }, (_, i) => {
       const x = lo + (hi - lo) * i / (N - 1);
       const row = { x: Math.round(x), total: pdf(x, g.mean, g.std) };
-      Object.entries(perView).forEach(([v, s]) => { row[v] = pdf(x, s.mean, s.std); });
+      Object.entries(perRooms).forEach(([k, s]) => { row[k] = pdf(x, s.mean, s.std); });
       return row;
     });
-    return { curve, stats: g, perView };
+    return { curve, stats: g, perRooms };
   }, [filtered, metric]);
 
   const hist = useMemo(() => buildHistogram(filtered.map(d => d[metric]), 10), [filtered, metric]);
 
   // 03 — box-plot groups
-  const groupsRooms = [1, 2].map(r => ({ label: `${r}-кімн.`, color: ROOM_C[r], values: filtered.filter(d => d.rooms === r).map(d => d[metric]) }));
+  const groupsEntrance = ENTRANCES.map(e => ({ label: `Під'їзд ${e}`, color: ENTR_C[e], values: filtered.filter(d => d.entrance === e).map(d => d[metric]) }));
+  const groupsRooms = ROOMS.map(r => ({ label: `${r}-кімн.`, color: ROOM_C[r], values: filtered.filter(d => d.rooms === r).map(d => d[metric]) }));
   const groupsView = VIEWS.map(v => ({ label: v, color: VIEW_C[v], values: filtered.filter(d => d.view === v).map(d => d[metric]) }));
-  const groupsLayout = [...LAYOUT_ORDER].reverse().map(l => ({ label: l, color: GOLD, values: filtered.filter(d => d.layout === l).map(d => d[metric]) }));
   const groupsFloor = [...FLOORS].reverse().map(fl => ({ label: `Поверх ${fl}`, color: GOLD, values: filtered.filter(d => d.floor === fl).map(d => d[metric]) }));
 
   const tbtn = (on) => ({
@@ -443,15 +452,25 @@ function Dashboard() {
         <div style={{ marginBottom: 28 }}>
           <div style={{ fontSize: 11, color: GOLD, fontWeight: 700, letterSpacing: 3, textTransform: "uppercase", marginBottom: 8 }}>Maxify · Цінова аналітика · Пресейл</div>
           <h1 style={{ fontSize: 28, fontWeight: 700, margin: 0 }}>Озон — лот квартир для пресейлу</h1>
-          <div style={{ fontSize: 13.5, color: "#888", marginTop: 8 }}>Під'їзд 1 · поверхи −1…15 · {RAW.length} квартир · усі вільні · ціни в USD</div>
+          <div style={{ fontSize: 13.5, color: "#888", marginTop: 8 }}>2 під'їзди · поверхи −6…15 · {RAW.length} квартири · усі вільні · ціни в USD</div>
         </div>
 
         {/* Filters */}
         <div style={{ display: "flex", flexWrap: "wrap", gap: 20, alignItems: "flex-end", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: "18px 20px" }}>
           <div>
+            <div style={{ fontSize: 11, color: "#777", textTransform: "uppercase", letterSpacing: 1.5, fontWeight: 600, marginBottom: 10 }}>Під'їзд</div>
+            <div style={{ display: "flex", gap: 8 }}>
+              {ENTRANCES.map(e => (
+                <FilterBtn key={e} active={activeEntrances.has(e)} color={ENTR_C[e]} label={`Під'їзд ${e}`}
+                  count={RAW.filter(d => d.entrance === e).length}
+                  onClick={() => toggle(activeEntrances, setActiveEntrances, e)} />
+              ))}
+            </div>
+          </div>
+          <div>
             <div style={{ fontSize: 11, color: "#777", textTransform: "uppercase", letterSpacing: 1.5, fontWeight: 600, marginBottom: 10 }}>Кімнатність</div>
             <div style={{ display: "flex", gap: 8 }}>
-              {[1, 2].map(r => (
+              {ROOMS.map(r => (
                 <FilterBtn key={r} active={activeRooms.has(r)} color={ROOM_C[r]} label={`${r}-кімн.`}
                   count={RAW.filter(d => d.rooms === r).length}
                   onClick={() => toggle(activeRooms, setActiveRooms, r)} />
@@ -498,11 +517,11 @@ function Dashboard() {
             {floorMode === "scatter" ? (
               <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 10 }}>
                 <CartesianGrid stroke="rgba(255,255,255,0.05)" />
-                <XAxis type="number" dataKey="floor" domain={[-2, 16]} ticks={FLOORS} tick={{ fill: "#888", fontSize: 11 }} label={{ value: "Поверх", position: "insideBottom", offset: -6, fill: "#666", fontSize: 12 }} />
+                <XAxis type="number" dataKey="floor" domain={[-7, 16]} ticks={FLOORS} tick={{ fill: "#888", fontSize: 10 }} label={{ value: "Поверх", position: "insideBottom", offset: -6, fill: "#666", fontSize: 12 }} />
                 <YAxis type="number" dataKey="y" domain={yDomain} tick={{ fill: "#888", fontSize: 11 }} tickFormatter={(v) => metric === "priceM2" ? v : fmtK(v)} width={62} />
                 <ZAxis range={[70, 70]} />
                 <Tooltip content={<ChartTooltip metric={metric} />} />
-                {[1, 2].map(r => (
+                {ROOMS.map(r => (
                   <Scatter key={r} name={`${r}-кімн.`} data={scatterByRooms[r]} fill={ROOM_C[r]} fillOpacity={0.85} />
                 ))}
               </ScatterChart>
@@ -512,12 +531,12 @@ function Dashboard() {
                 <XAxis dataKey="floor" tick={{ fill: "#888", fontSize: 11 }} label={{ value: "Поверх", position: "insideBottom", offset: -6, fill: "#666", fontSize: 12 }} />
                 <YAxis domain={yDomain} tick={{ fill: "#888", fontSize: 11 }} tickFormatter={(v) => metric === "priceM2" ? v : fmtK(v)} width={62} />
                 <Tooltip cursor={{ fill: "rgba(255,255,255,0.04)" }} contentStyle={{ background: "#1a1a2e", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 10 }} labelStyle={{ color: "#fff", fontWeight: 700 }} itemStyle={{ color: "#ccc" }} formatter={(v) => fmt(v)} labelFormatter={(l) => `Поверх ${l}`} />
-                {[1, 2].map(r => <Bar key={r} dataKey={`${r}-кімн.`} fill={ROOM_C[r]} maxBarSize={32} radius={[3, 3, 0, 0]} />)}
+                {ROOMS.map(r => <Bar key={r} dataKey={`${r}-кімн.`} fill={ROOM_C[r]} maxBarSize={20} radius={[3, 3, 0, 0]} />)}
               </BarChart>
             )}
           </ResponsiveContainer>
           <div style={{ display: "flex", gap: 18, justifyContent: "center", padding: "6px 0 12px", flexWrap: "wrap" }}>
-            {[1, 2].map(r => (
+            {ROOMS.map(r => (
               <span key={r} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12.5, color: "#999" }}>
                 <span style={{ width: 10, height: 10, borderRadius: "50%", background: ROOM_C[r] }} />{r}-кімнатні
               </span>
@@ -526,7 +545,7 @@ function Dashboard() {
         </div>
 
         {/* 02 Distribution */}
-        <SectionTitle num="02" title="Нормальний розподіл цін" sub="Крива Гауса по всій вибірці та окремо по вікновидах; гістограма — 10 рівних цінових інтервалів." />
+        <SectionTitle num="02" title="Нормальний розподіл цін" sub="Крива Гауса по всій вибірці та окремо по кімнатності (від 5 квартир у групі); гістограма — 10 рівних цінових інтервалів." />
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
           <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: "20px 12px 12px" }}>
             <ResponsiveContainer width="100%" height={300}>
@@ -536,16 +555,16 @@ function Dashboard() {
                 <YAxis hide />
                 <ReferenceLine x={Math.round(distData.stats.mean)} stroke={GOLD} strokeDasharray="4 4" />
                 <Area type="monotone" dataKey="total" stroke={GOLD} strokeWidth={2} fill={GOLD} fillOpacity={0.06} name="Всі" />
-                {VIEWS.filter(v => distData.perView && distData.perView[v]).map(v => (
-                  <Line key={v} type="monotone" dataKey={v} stroke={VIEW_C[v]} strokeWidth={1.6} strokeDasharray="5 4" dot={false} name={v} />
+                {distData.perRooms && Object.entries(distData.perRooms).map(([k, s]) => (
+                  <Line key={k} type="monotone" dataKey={k} stroke={ROOM_C[s.rooms]} strokeWidth={1.6} strokeDasharray="5 4" dot={false} name={k} />
                 ))}
                 <Tooltip contentStyle={{ background: "#1a1a2e", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 10 }} labelStyle={{ color: "#fff", fontWeight: 700 }} itemStyle={{ color: "#ccc" }} formatter={(v) => v.toExponential(2)} labelFormatter={(l) => (metric === "priceM2" ? fmtM2(l) : fmtK(l))} />
               </ComposedChart>
             </ResponsiveContainer>
             <div style={{ fontSize: 12.5, color: "#999", padding: "4px 12px 8px", lineHeight: 1.8 }}>
               μ = <b style={{ color: GOLD }}>{fmt(distData.stats.mean)}</b> · σ = {fmt(distData.stats.std)}
-              {distData.perView && Object.entries(distData.perView).map(([v, s]) => (
-                <span key={v}> · <span style={{ color: VIEW_C[v] }}>{v}</span>: μ {fmt(s.mean)}</span>
+              {distData.perRooms && Object.entries(distData.perRooms).map(([k, s]) => (
+                <span key={k}> · <span style={{ color: ROOM_C[s.rooms] }}>{k}</span>: μ {fmt(s.mean)}</span>
               ))}
             </div>
           </div>
@@ -569,9 +588,9 @@ function Dashboard() {
 
         {/* 03 Box-plots */}
         <SectionTitle num="03" title="Порівняння цінових діапазонів" sub="Box-plot: вусики min–max, прямокутник Q1–Q3, лінія — медіана, кружок — середня. Наведіть для деталей." />
+        <RangeChart title="За під'їздом" groups={groupsEntrance} metric={metric} />
         <RangeChart title="За кімнатністю" groups={groupsRooms} metric={metric} />
         <RangeChart title="За видом з вікна" groups={groupsView} metric={metric} />
-        <RangeChart title="За типом планування" groups={groupsLayout} metric={metric} preserveOrder />
         <RangeChart title="За поверхом" groups={groupsFloor} metric={metric} preserveOrder />
 
         {/* 04 Competitors */}
@@ -609,7 +628,6 @@ function Dashboard() {
             <CompRangeRows rows={compRangeRows} />
             <div style={{ fontSize: 11.5, color: "#666", marginTop: 12, lineHeight: 1.6 }}>
               Суцільна золота смуга — поточний прайс лоту OZON; пунктирна — цільовий коридор зі стратегії P/ARC; крапка — одна ціна на ринку.
-              {compRooms === 3 && " У лоті пресейлу 3-кімнатних немає — показано лише стратегічний коридор."}
             </div>
           </div>
         </div>
@@ -655,15 +673,18 @@ function Dashboard() {
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, fontVariantNumeric: "tabular-nums" }}>
               <thead>
                 <tr style={{ position: "sticky", top: 0, background: "#16162a", zIndex: 2 }}>
-                  {["№", "Поверх", "Юніт", "Кімн.", "Планування", "Вид", "Площа, м²", "$/м²", "Вартість, $"].map(h => (
+                  {["№", "Під'їзд", "Поверх", "Юніт", "Кімн.", "Планування", "Вид", "Площа, м²", "$/м²", "Вартість, $"].map(h => (
                     <th key={h} style={{ padding: "12px 14px", textAlign: h === "№" || h === "Планування" || h === "Вид" ? "left" : "right", color: (h === "$/м²" && metric === "priceM2") || (h === "Вартість, $" && metric === "totalPrice") ? GOLD : "#999", fontSize: 11, textTransform: "uppercase", letterSpacing: 1, fontWeight: 700, borderBottom: "1px solid rgba(255,255,255,0.08)" }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {[...filtered].sort((a, b) => a.floor - b.floor || a.unit - b.unit).map(d => (
+                {[...filtered].sort((a, b) => a.entrance - b.entrance || a.floor - b.floor || a.unit - b.unit).map(d => (
                   <tr key={d.number} style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
                     <td style={{ padding: "9px 14px", color: "#ccc", fontWeight: 600 }}>№{d.number}</td>
+                    <td style={{ padding: "9px 14px", textAlign: "right" }}>
+                      <span style={{ background: `${ENTR_C[d.entrance]}22`, color: ENTR_C[d.entrance], borderRadius: 6, padding: "2px 8px", fontSize: 12, fontWeight: 700 }}>{d.entrance}</span>
+                    </td>
                     <td style={{ padding: "9px 14px", textAlign: "right", color: "#aaa" }}>{d.floor}</td>
                     <td style={{ padding: "9px 14px", textAlign: "right", color: "#888" }}>{d.unit}</td>
                     <td style={{ padding: "9px 14px", textAlign: "right" }}>
@@ -684,8 +705,11 @@ function Dashboard() {
         </div>
 
         {/* 06 Chessboard */}
-        <SectionTitle num="06" title="Шахматка цін" sub={`Heatmap по метриці «${metricLabel}»: синій — найнижча, жовтий — середня, червоний — найвища. Поверхи знизу вгору, колонки — юніт на поверсі.`} />
-        <ChessBoard data={filtered} metric={metric} />
+        <SectionTitle num="06" title="Шахматка цін" sub={`Heatmap по метриці «${metricLabel}»: синій — найнижча, жовтий — середня, червоний — найвища. Окрема шахматка для кожного під'їзду; поверхи знизу вгору, позиція — порядок квартири на поверсі (колонка «Юніт» у файлі містить дублікати, тому не використовується).`} />
+        {ENTRANCES.filter(e => activeEntrances.has(e)).map(e => (
+          <ChessBoard key={e} title={`Під'їзд ${e}`} data={filtered.filter(d => d.entrance === e)} metric={metric} />
+        ))}
+        {filtered.length === 0 && <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: 24, color: "#888", fontSize: 13 }}>Немає квартир у поточній вибірці — змініть фільтри.</div>}
 
         <div style={{ marginTop: 48, textAlign: "center", fontSize: 12, color: "#555" }}>Maxify · Цінова аналітика пресейлу · Озон</div>
       </div>
