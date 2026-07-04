@@ -1,0 +1,1360 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Properly × GORO Mountain Resort — операційна платформа</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+/* ============================================================
+   PROPERLY × GORO — design tokens
+   Direction: "mountain data observatory" — twilight Carpathian
+   pine-graphite ground, brass/copper premium accent, pine + glacier
+   signals, warm stone for light sections. Signature: topographic
+   contour lines. Type: Space Grotesk (display) + Inter (body) +
+   monospace tabular numerals for finance (true to an ERP).
+   ============================================================ */
+:root{
+  --ink:#0E1A1C; --ink-2:#13262A; --ink-3:#1B343A;
+  --paper:#F4F1EA; --paper-2:#FBFAF6;
+  --line-d:#27474E; --line-l:#E4DFD3;
+  --bronze:#CC8E4F; --bronze-2:#B0773C; --bronze-soft:#E8C79A;
+  --pine:#3E8C79; --pine-d:#2F6B5E;
+  --ice:#8FB8C9; --ice-d:#5E8FA3;
+  --brick:#C0563F;                 /* overdue / alert — mountain brick, not neon */
+  --amber:#D8A24A;                 /* reserve */
+  --text-d:#ECF1F0; --muted-d:#90A6A8;
+  --text-l:#16282B; --muted-l:#5C6B6A;
+  --font-display:'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-body:'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono:ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace;
+  --r:14px; --r-s:9px;
+  --shadow:0 24px 60px -22px rgba(0,0,0,.55), 0 6px 18px -10px rgba(0,0,0,.4);
+  --maxw:1180px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  font-family:var(--font-body);
+  background:var(--ink);
+  color:var(--text-d);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.deck{position:fixed;inset:0}
+
+/* ---------- slide mechanics ---------- */
+.slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(28px,5vw,72px) clamp(24px,6vw,96px);
+  opacity:0;visibility:hidden;
+  transform:translateY(14px) scale(.994);
+  transition:opacity .5s ease, transform .55s cubic-bezier(.2,.7,.2,1), visibility .55s;
+  overflow-y:auto;overflow-x:hidden;
+}
+.slide.is-active{opacity:1;visibility:visible;transform:none;z-index:2}
+.slide.is-prev{transform:translateY(-10px) scale(.994)}
+.slide__inner{width:100%;max-width:var(--maxw);margin:0 auto;position:relative;z-index:1}
+
+.slide--dark{background:radial-gradient(120% 120% at 80% -10%, #16302F 0%, var(--ink) 55%)}
+.slide--ink{background:var(--ink)}
+.slide--paper{background:var(--paper);color:var(--text-l)}
+.slide--paper .muted{color:var(--muted-l)}
+
+/* ---------- signature: topographic contour field ---------- */
+.topo{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.5}
+.topo svg{width:100%;height:100%}
+.slide--paper .topo{opacity:.7}
+
+/* ---------- typography ---------- */
+.eyebrow{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--bronze);
+  display:inline-flex;align-items:center;gap:10px;margin:0 0 18px;
+}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--bronze)}
+h1,h2,h3{font-family:var(--font-display);font-weight:600;line-height:1.04;margin:0;letter-spacing:-.02em}
+h1{font-size:clamp(34px,5.6vw,68px);font-weight:700;letter-spacing:-.03em}
+h2{font-size:clamp(26px,3.8vw,44px)}
+h3{font-size:clamp(18px,2vw,23px)}
+.lead{font-size:clamp(16px,1.5vw,19px);line-height:1.55;color:var(--muted-d);max-width:60ch}
+.slide--paper .lead{color:var(--muted-l)}
+.muted{color:var(--muted-d)}
+.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+strong,b{font-weight:600;color:inherit}
+.accent{color:var(--bronze)}
+.pine{color:var(--pine)}
+
+/* ---------- nav controls ---------- */
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--bronze);z-index:50;transition:width .45s cubic-bezier(.2,.7,.2,1);box-shadow:0 0 14px rgba(204,142,79,.6)}
+.nav{position:fixed;bottom:22px;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:center;gap:18px;pointer-events:none}
+.nav__btn{
+  pointer-events:auto;width:44px;height:44px;border-radius:50%;
+  border:1px solid var(--line-d);background:rgba(13,26,28,.72);backdrop-filter:blur(8px);
+  color:var(--text-d);cursor:pointer;display:grid;place-items:center;
+  transition:.2s;font-size:0;
+}
+.nav__btn:hover{border-color:var(--bronze);color:var(--bronze);transform:translateY(-2px)}
+.nav__btn:focus-visible{outline:2px solid var(--bronze);outline-offset:3px}
+.nav__btn svg{width:20px;height:20px}
+.dots{pointer-events:auto;display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:60vw}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--line-d);border:0;padding:0;cursor:pointer;transition:.25s}
+.dot:hover{background:var(--muted-d)}
+.dot.is-active{background:var(--bronze);width:22px;border-radius:4px}
+.dot:focus-visible{outline:2px solid var(--bronze);outline-offset:3px}
+.counter{position:fixed;bottom:30px;right:26px;z-index:40;font-family:var(--font-mono);font-size:12px;color:var(--muted-d);letter-spacing:.1em}
+.counter b{color:var(--bronze);font-weight:600}
+.brandmark{position:fixed;top:22px;left:26px;z-index:40;display:flex;align-items:center;gap:9px;font-family:var(--font-display);font-weight:600;font-size:15px;letter-spacing:-.01em;color:#fff}
+.brandmark .x{color:var(--muted-d);font-weight:400}
+.brandmark .lg{display:block}
+.brandmark .lg svg{height:26px;width:auto;display:block}
+body.on-paper .brandmark{color:var(--text-l)}
+body.on-paper .counter{color:var(--muted-l)}
+body.on-paper .counter b{color:var(--bronze-2)}
+.slide--paper .eyebrow{color:var(--bronze-2)}
+.slide--paper .eyebrow::before{background:var(--bronze-2)}
+.slide--paper .card__ic{color:var(--bronze-2);border-color:rgba(176,119,60,.42);background:rgba(176,119,60,.12)}
+.slide--paper .tag--bronze{color:var(--bronze-2);border-color:rgba(176,119,60,.45);background:rgba(176,119,60,.09)}
+
+/* ---------- generic layout helpers ---------- */
+.grid{display:grid;gap:clamp(14px,1.6vw,22px)}
+.cols-2{grid-template-columns:1fr 1fr}
+.cols-3{grid-template-columns:repeat(3,1fr)}
+.cols-4{grid-template-columns:repeat(4,1fr)}
+.split{display:grid;grid-template-columns:1.02fr 1.1fr;gap:clamp(24px,3.5vw,56px);align-items:center}
+.stack>*+*{margin-top:14px}
+
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,0));
+  border:1px solid var(--line-d);border-radius:var(--r);padding:clamp(16px,1.6vw,22px);
+}
+.slide--paper .card{background:var(--paper-2);border-color:var(--line-l)}
+.card h3{margin-bottom:8px}
+.card p{margin:0;font-size:14.5px;line-height:1.5;color:var(--muted-d)}
+.slide--paper .card p{color:var(--muted-l)}
+.card__ic{width:38px;height:38px;border-radius:10px;background:rgba(204,142,79,.12);border:1px solid rgba(204,142,79,.28);display:grid;place-items:center;color:var(--bronze);margin-bottom:14px}
+.card__ic svg{width:20px;height:20px}
+
+.tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;letter-spacing:.05em;padding:4px 9px;border-radius:999px;border:1px solid var(--line-d);color:var(--muted-d)}
+.tag--bronze{color:var(--bronze);border-color:rgba(204,142,79,.4);background:rgba(204,142,79,.08)}
+.tag--pine{color:var(--pine);border-color:rgba(62,140,121,.4);background:rgba(62,140,121,.1)}
+
+.kpi{display:flex;flex-direction:column;gap:4px}
+.kpi__v{font-family:var(--font-display);font-weight:700;font-size:clamp(26px,3.2vw,40px);letter-spacing:-.02em;line-height:1}
+.kpi__l{font-size:13px;color:var(--muted-d)}
+.kpi--bronze .kpi__v{color:var(--bronze)}
+.kpi--pine .kpi__v{color:var(--pine)}
+.kpi--ice .kpi__v{color:var(--ice)}
+
+/* ---------- product window (mockups) ---------- */
+.app{
+  border:1px solid var(--line-d);border-radius:var(--r);overflow:hidden;
+  background:#0C181A;box-shadow:var(--shadow);
+}
+.app__bar{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#0A1416;border-bottom:1px solid var(--line-d)}
+.dotrow{display:flex;gap:6px}
+.dotrow i{width:10px;height:10px;border-radius:50%;display:block}
+.dotrow i:nth-child(1){background:#E0644F}.dotrow i:nth-child(2){background:#E0A94F}.dotrow i:nth-child(3){background:#5FA77E}
+.app__crumb{font-family:var(--font-mono);font-size:11.5px;color:var(--muted-d);letter-spacing:.04em}
+.app__crumb b{color:var(--text-d);font-weight:500}
+.app__search{margin-left:auto;display:flex;align-items:center;gap:8px;background:#0E1A1C;border:1px solid var(--line-d);border-radius:8px;padding:6px 10px;color:var(--muted-d);font-size:12px;min-width:150px}
+.app__search svg{width:14px;height:14px}
+.app__av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--pine),var(--ice-d));display:grid;place-items:center;font-size:11px;font-weight:600;color:#0A1416}
+.app__body{display:flex;min-height:340px}
+.app__nav{width:188px;flex:0 0 188px;background:#0A1416;border-right:1px solid var(--line-d);padding:12px 10px;display:flex;flex-direction:column;gap:2px}
+.navi{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;color:var(--muted-d);font-size:13px;cursor:default}
+.navi svg{width:17px;height:17px;flex:0 0 17px}
+.navi.is-active{background:rgba(204,142,79,.14);color:var(--bronze);font-weight:500}
+.navi.is-active svg{color:var(--bronze)}
+.navsec{font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#5b7174;padding:12px 11px 5px}
+.app__main{flex:1;padding:18px 20px;min-width:0;background:radial-gradient(140% 120% at 100% 0%, #0F1D1F, #0C181A)}
+.scr-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:16px}
+.scr-head h3{font-size:19px}
+.scr-head .sub{font-size:12.5px;color:var(--muted-d);margin-top:4px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font-family:var(--font-body);font-size:12.5px;font-weight:500;border-radius:8px;padding:8px 13px;border:1px solid var(--line-d);background:#0E1A1C;color:var(--text-d);display:inline-flex;align-items:center;gap:7px;cursor:default}
+.btn svg{width:14px;height:14px}
+.btn--primary{background:linear-gradient(135deg,var(--bronze),var(--bronze-2));border-color:transparent;color:#1a1206;font-weight:600}
+.chip{font-family:var(--font-mono);font-size:11px;padding:5px 10px;border-radius:7px;border:1px solid var(--line-d);color:var(--muted-d)}
+.chip.on{color:var(--bronze);border-color:rgba(204,142,79,.4);background:rgba(204,142,79,.08)}
+
+/* tables */
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.tbl th{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#6f878a;text-align:left;padding:8px 10px;border-bottom:1px solid var(--line-d);font-weight:500}
+.tbl td{padding:9px 10px;border-bottom:1px solid rgba(39,71,78,.5);color:var(--text-d)}
+.tbl td.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums;text-align:right}
+.tbl tr:last-child td{border-bottom:0}
+.st{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:500}
+.st::before{content:"";width:7px;height:7px;border-radius:50%}
+.st--ok::before{background:var(--pine)} .st--ok{color:var(--pine)}
+.st--res::before{background:var(--amber)} .st--res{color:var(--amber)}
+.st--sold::before{background:var(--ice-d)} .st--sold{color:var(--ice)}
+.st--over::before{background:var(--brick)} .st--over{color:var(--brick)}
+.st--pend::before{background:var(--bronze)} .st--pend{color:var(--bronze)}
+
+/* chessboard grid */
+.chess{display:grid;grid-template-columns:repeat(8,1fr);gap:7px}
+.cell{border-radius:8px;border:1px solid var(--line-d);padding:8px 7px;min-height:58px;display:flex;flex-direction:column;justify-content:space-between;background:#0E1A1C;transition:.15s}
+.cell:hover{transform:translateY(-2px);border-color:var(--bronze)}
+.cell .id{font-family:var(--font-mono);font-size:11px;color:var(--text-d)}
+.cell .pr{font-family:var(--font-mono);font-size:10px;color:var(--muted-d)}
+.cell--ok{border-left:3px solid var(--pine)}
+.cell--res{border-left:3px solid var(--amber);background:rgba(216,162,74,.07)}
+.cell--sold{border-left:3px solid var(--ice-d);opacity:.62}
+.cell--up{border-left:3px solid var(--bronze);background:rgba(204,142,79,.1)}
+
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--muted-d);font-family:var(--font-mono)}
+.legend i{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:6px;vertical-align:middle}
+
+/* progress / meter bars */
+.meter{height:7px;border-radius:4px;background:rgba(39,71,78,.55);overflow:hidden}
+.meter>span{display:block;height:100%;border-radius:4px}
+
+/* timeline / flow */
+.flow{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;position:relative}
+.flow .step{position:relative;padding-top:30px}
+.flow .step .n{position:absolute;top:0;left:0;width:24px;height:24px;border-radius:50%;background:var(--ink-2);border:1px solid var(--bronze);color:var(--bronze);font-family:var(--font-mono);font-size:11px;display:grid;place-items:center;font-weight:600}
+.flow .step::before{content:"";position:absolute;top:11px;left:24px;right:-10px;height:1px;background:var(--line-d)}
+.flow .step:last-child::before{display:none}
+.flow .step h4{font-family:var(--font-display);font-size:14px;margin:0 0 5px}
+.flow .step p{font-size:11.5px;line-height:1.45;color:var(--muted-d);margin:0}
+
+/* numbered steps (vertical, for revaluation scenario) */
+.steps{display:grid;gap:14px}
+.steps .row{display:grid;grid-template-columns:38px 1fr;gap:16px;align-items:start}
+.steps .num{width:38px;height:38px;border-radius:11px;background:rgba(204,142,79,.12);border:1px solid rgba(204,142,79,.35);color:var(--bronze);font-family:var(--font-mono);font-weight:600;display:grid;place-items:center}
+.steps h4{font-family:var(--font-display);font-size:16px;margin:0 0 3px}
+.steps p{margin:0;font-size:13.5px;color:var(--muted-d);line-height:1.5}
+
+/* price table */
+.ptable{width:100%;border-collapse:collapse}
+.ptable th{text-align:left;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-l);padding:0 0 14px;font-weight:500}
+.ptable th.r,.ptable td.r{text-align:right}
+.ptable td{padding:16px 0;border-top:1px solid var(--line-l);vertical-align:top}
+.ptable .name{font-family:var(--font-display);font-weight:600;font-size:16px;color:var(--text-l)}
+.ptable .desc{font-size:13px;color:var(--muted-l);margin-top:4px;max-width:48ch}
+.ptable .price{font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:18px;font-weight:600;color:var(--text-l);white-space:nowrap}
+.ptable tr.total td{border-top:2px solid var(--text-l);padding-top:18px}
+.ptable tr.total .name{font-size:18px}
+.ptable tr.total .price{font-size:24px;color:var(--bronze-2)}
+
+ul.ticks{list-style:none;padding:0;margin:0}
+ul.ticks li{position:relative;padding-left:26px;margin-bottom:11px;font-size:14.5px;line-height:1.5;color:var(--text-d)}
+.slide--paper ul.ticks li{color:var(--text-l)}
+ul.ticks li::before{content:"";position:absolute;left:0;top:7px;width:10px;height:10px;border-radius:50%;border:2px solid var(--bronze)}
+ul.ticks li b{color:inherit}
+
+.note{font-size:12.5px;color:var(--muted-d);border-left:2px solid var(--bronze);padding:6px 0 6px 14px;line-height:1.5}
+.slide--paper .note{color:var(--muted-l)}
+
+/* ---------- dynamic reveal ---------- */
+.rise{opacity:0;transform:translateY(16px);transition:opacity .6s ease, transform .6s cubic-bezier(.2,.7,.2,1)}
+.rise.in{opacity:1;transform:none}
+.meter>span{width:0;transition:width .9s cubic-bezier(.2,.7,.2,1)}
+
+/* segmented delivery-terms bar */
+.seg{display:flex;height:36px;border-radius:9px;overflow:hidden;border:1px solid var(--line-l);font-family:var(--font-mono);font-size:11px}
+.seg div{display:flex;align-items:center;justify-content:center;white-space:nowrap;padding:0 8px}
+.seg .s1{background:linear-gradient(135deg,var(--bronze),var(--bronze-2));color:#1a1206;font-weight:600;flex:60}
+.seg .s2{background:#E4DFD3;color:var(--muted-l);flex:30}
+.seg .s3{background:rgba(204,142,79,.16);color:var(--bronze-2);flex:30;font-weight:600;border-left:1px dashed rgba(176,119,60,.55)}
+.seg .s4{background:rgba(62,140,121,.16);color:var(--pine-d);flex:30;font-weight:600;border-left:1px dashed rgba(62,140,121,.5)}
+.tline{margin-top:12px;display:grid;gap:7px;font-size:12px}
+.tline>div{display:flex;align-items:center;gap:8px;color:var(--muted-l)}
+.tline i{width:9px;height:9px;border-radius:2px;flex:0 0 9px}
+.tline span{flex:1;line-height:1.35}
+.tline b{color:var(--text-l);font-weight:600;font-family:var(--font-mono)}
+
+/* ---------- access gate ---------- */
+.gate{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 120% at 80% -10%, #16302F 0%, var(--ink) 55%);transition:opacity .5s ease, visibility .5s}
+.gate.is-open{opacity:0;visibility:hidden;pointer-events:none}
+.gate__box{width:min(430px,90vw);text-align:center;position:relative;z-index:1;padding:0 20px}
+.gate__logo{color:#fff;display:flex;justify-content:center;margin-bottom:24px}
+.gate__logo svg{height:42px;width:auto}
+.gate__box h2{font-size:23px;margin-bottom:8px}
+.gate__box .sub{color:var(--muted-d);font-size:13.5px;margin:0 0 26px;line-height:1.5}
+.gate__row{display:flex;gap:10px}
+.gate__row input{flex:1;min-width:0;background:#0C181A;border:1px solid var(--line-d);border-radius:10px;color:var(--text-d);font-family:var(--font-mono);font-size:14px;padding:12px 14px;letter-spacing:.08em;outline:none;transition:border-color .2s}
+.gate__row input:focus{border-color:var(--bronze)}
+.gate__row button{border:0;border-radius:10px;padding:12px 20px;background:linear-gradient(135deg,var(--bronze),var(--bronze-2));color:#1a1206;font-family:var(--font-body);font-weight:600;font-size:13.5px;cursor:pointer}
+.gate__row button:focus-visible{outline:2px solid var(--bronze);outline-offset:3px}
+.gate__err{color:var(--brick);font-size:12.5px;min-height:18px;margin-top:12px;font-family:var(--font-mono)}
+.gate.shake .gate__box{animation:gshake .38s}
+@keyframes gshake{0%,100%{transform:none}25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
+body.is-locked .nav,body.is-locked .counter,body.is-locked .brandmark,body.is-locked .progress{display:none}
+body.is-locked .deck{visibility:hidden}
+@media (prefers-reduced-motion:reduce){.gate{transition:opacity .15s linear}.gate.shake .gate__box{animation:none}}
+
+/* heatmap chessboard (slide 15) */
+.hm{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.hm .cell{min-height:54px;opacity:0;transform:scale(.92);transition:opacity .4s ease, transform .4s ease}
+.hm.in .cell{opacity:1;transform:none}
+.hm .cell .dl{font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--text-d)}
+.hmscale{display:flex;align-items:center;gap:9px;font-family:var(--font-mono);font-size:11px;color:var(--muted-d);margin-top:12px}
+.hmscale .bar{flex:1;height:8px;border-radius:4px;background:linear-gradient(90deg,#173034,#2F6B5E,#3E8C79,#CC8E4F,#B0773C)}
+
+/* subscription card */
+.subcard{border:1px solid rgba(204,142,79,.42);background:linear-gradient(180deg,rgba(204,142,79,.08),var(--paper-2));border-radius:var(--r);padding:18px}
+.subcard .price-big{font-family:var(--font-display);font-weight:700;font-size:32px;color:var(--bronze-2);letter-spacing:-.02em;line-height:1}
+.terms{display:flex;flex-direction:column;gap:9px;font-size:13.5px}
+.terms .li{display:flex;gap:9px;align-items:flex-start;color:var(--text-l)}
+.terms .li svg{width:16px;height:16px;flex:0 0 16px;margin-top:2px;color:var(--pine)}
+.terms .li.no svg{color:var(--muted-l)}
+.terms .li.no span{color:var(--muted-l)}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion:reduce){
+  .slide{transition:opacity .2s linear}
+  .slide,.progress,.dot,.cell,.nav__btn,.rise,.meter>span,.hm .cell{transition-duration:.001ms !important}
+  .rise,.hm .cell{opacity:1;transform:none}
+}
+
+/* ---------- responsive ---------- */
+@media (max-width:880px){
+  body{overflow:auto}
+  .deck{position:static}
+  .slide{position:static;opacity:1;visibility:visible;transform:none;min-height:100vh;padding:64px 20px 90px}
+  .split,.cols-2,.cols-3,.cols-4{grid-template-columns:1fr}
+  .app__nav{display:none}
+  .chess{grid-template-columns:repeat(4,1fr)}
+  .flow{grid-template-columns:1fr 1fr}
+  .flow .step::before{display:none}
+  .counter,.brandmark{position:static}
+  .nav{position:fixed}
+  .rise{opacity:1;transform:none}
+  .hm .cell{opacity:1;transform:none}
+}
+</style>
+</head>
+<body class="is-locked">
+<div class="deck" id="deck">
+
+<!-- ================= SLIDE 1 — COVER ================= -->
+<section class="slide slide--dark is-active" data-title="Обкладинка">
+  <div class="topo">
+    <svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke="currentColor">
+      <g stroke="#27474E" stroke-width="1">
+        <path d="M-50 620 C 220 560, 360 600, 560 540 S 940 470, 1180 520 1500 460"/>
+        <path d="M-50 560 C 240 500, 380 540, 600 470 S 980 410, 1200 460 1500 400"/>
+        <path d="M-50 500 C 260 440, 420 480, 640 410 S 1010 350, 1230 400 1500 345"/>
+        <path d="M-50 440 C 300 380, 460 420, 690 350 S 1050 295, 1270 345 1500 295"/>
+        <path d="M-50 690 C 200 650, 340 680, 540 630 S 920 560, 1160 610 1500 560"/>
+      </g>
+      <g stroke="#CC8E4F" stroke-width="1.2" opacity="0.5">
+        <path d="M-50 380 C 330 320, 500 360, 740 290 S 1090 240, 1310 290 1500 245"/>
+      </g>
+    </svg>
+  </div>
+  <div class="slide__inner">
+    <div class="eyebrow">Комерційна пропозиція · 2026</div>
+    <h1 style="max-width:18ch">Операційне ядро для моделі <span class="accent">resort&nbsp;rooms&nbsp;as&nbsp;investment</span></h1>
+    <p class="lead" style="margin-top:24px;font-size:clamp(17px,1.7vw,21px)">Properly — платформа, що веде весь цикл продажу інвестиційних номерів GORO Mountain Resort: від калькуляції дохідності та договору до контролю дебіторки й динамічної переоцінки шахматки.</p>
+    <div style="margin-top:46px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <span class="tag tag--bronze">Properly ERP</span>
+      <span class="muted" style="font-size:13px">для</span>
+      <span class="tag">GORO Mountain Resort · GORO Development</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 2 — CONTEXT (mirror) ================= -->
+<section class="slide slide--paper" data-title="Контекст GORO">
+  <div class="topo">
+    <svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" fill="none">
+      <g stroke="#E4DFD3" stroke-width="1.2">
+        <path d="M-50 640 C 240 580, 380 620, 600 560 S 980 500, 1200 550 1500 500"/>
+        <path d="M-50 580 C 260 520, 420 560, 640 500 S 1010 440, 1230 490 1500 440"/>
+        <path d="M-50 520 C 300 460, 460 500, 690 440 S 1050 385, 1270 435 1500 385"/>
+      </g>
+    </svg>
+  </div>
+  <div class="slide__inner">
+    <div class="eyebrow">Що ми зрозуміли про ваш бізнес</div>
+    <div class="split">
+      <div>
+        <h2 style="max-width:16ch">Курорт продає актив, а не квадратні метри</h2>
+        <p class="lead" style="margin-top:18px">Модель GORO — інвестор купує готельний номер під професійним управлінням і заробляє на капіталізації та операційному доході. Це змінює все: ключове на столі переговорів — не ціна за м², а <b>прогноз дохідності</b>. А продаж у розтермінування означає, що після угоди починається довга робота з <b>графіком оплат і дебіторкою</b>.</p>
+        <ul class="ticks" style="margin-top:24px">
+          <li>Розтермінування → потрібен <b>жорсткий контроль платежів і прострочень</b></li>
+          <li>Динамічне ціноутворення → ціни треба <b>оперативно переоцінювати</b> на всій шахматці</li>
+          <li>Інвестори рівня $100–500K → <b>нетипові умови</b> вимагають погодження керівником</li>
+          <li>Звітність щоквартально → <b>єдине джерело правди</b>, а не Excel + CRM нарізно</li>
+        </ul>
+      </div>
+      <div class="stack">
+        <div class="card">
+          <div class="tag tag--bronze" style="margin-bottom:10px">Виклик</div>
+          <h3 style="color:var(--text-l)">Один цикл — багато інструментів</h3>
+          <p>Калькулятор дохідності, калькулятор розтермінування, договори, оплати, погодження, плани, переоцінка, CRM, Maxify — сьогодні це розрізнені кроки. Властнику бракує одного контуру, де все зшито.</p>
+        </div>
+        <div class="grid cols-2">
+          <div class="card"><div class="kpi kpi--pine"><div class="kpi__v">+57%</div><div class="kpi__l">очікувана дохідність за період реалізації</div></div></div>
+          <div class="card"><div class="kpi"><div class="kpi__v mono" style="color:var(--text-l)">3</div><div class="kpi__l">контури контролю: договір · клієнт · дашборд</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 3 — JTBD of CCO ================= -->
+<section class="slide slide--dark" data-title="JTBD комерційного директора">
+  <div class="topo"><svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#27474E" stroke-width="1"><path d="M-50 540 C 240 480,420 520,640 460 S 1010 400,1230 450 1500 400"/><path d="M-50 480 C 300 420,460 460,690 400 S 1050 345,1270 395 1500 345"/></svg></div>
+  <div class="slide__inner">
+    <div class="eyebrow">Оптика комерційного директора</div>
+    <h2 style="max-width:20ch;margin-bottom:8px">Шість завдань, за які відповідає комерційний директор</h2>
+    <p class="lead" style="margin-bottom:34px">Кожен модуль Properly існує, щоб закрити конкретне з них.</p>
+    <div class="grid cols-3">
+      <div class="card"><div class="card__ic">{{ic:trending}}</div><h3>Максимум з кожного лота</h3><p>Динамічна переоцінка (Maxify) + калькулятор дохідності як інструмент продажу інвесторові.</p></div>
+      <div class="card"><div class="card__ic">{{ic:shield}}</div><h3>Маржа під контролем</h3><p>Знижки, резерви та нетипові умови проходять погодження — жодних самовільних поступок.</p></div>
+      <div class="card"><div class="card__ic">{{ic:card}}</div><h3>Дебіторка без втрат</h3><p>Прострочення, пеня та єдиний екран заборгованості по кожному інвесторові й договору.</p></div>
+      <div class="card"><div class="card__ic">{{ic:bolt}}</div><h3>Швидкий цикл угоди</h3><p>Калькулятор → договір → графік у кілька кліків; клієнти й угоди тягнуться з CRM.</p></div>
+      <div class="card"><div class="card__ic">{{ic:chart}}</div><h3>Прогноз і план</h3><p>План продажів, план-факт по місяцях і прогноз грошових надходжень для cash-flow.</p></div>
+      <div class="card"><div class="card__ic">{{ic:layers}}</div><h3>Єдине джерело правди</h3><p>Усе в одній системі з повним аудитом змін. Свій ізольований інстанс — дані під контролем.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 4 — Properly in 30s ================= -->
+<section class="slide slide--paper" data-title="Properly за 30 секунд">
+  <div class="topo"><svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#E4DFD3" stroke-width="1.2"><path d="M-50 600 C 260 540,420 580,640 520 S 1010 460,1230 510 1500 460"/><path d="M-50 540 C 300 480,460 520,690 460 S 1050 405,1270 455 1500 405"/></svg></div>
+  <div class="slide__inner">
+    <div class="eyebrow">Що таке Properly</div>
+    <div class="split">
+      <div>
+        <h2 style="max-width:15ch">Перевірене операційне ядро, а не обіцянка</h2>
+        <p class="lead" style="margin-top:18px">Properly виросла з ERP, що працює в продакшені у девелопера. Це доведений цикл, який ми адаптуємо під GORO — з пресетами під готельно-інвестиційну модель, а не конструктор з нуля.</p>
+        <div class="note" style="margin-top:22px">Фінансове ядро — калькулятор, договори, платежі — переноситься з перевіреними формулами та округленнями. Логіку грошей не «винаходимо» наново.</div>
+        <p class="muted" style="margin-top:22px;font-size:13.5px">Зверху — AI-помічники (скан документів, заповнення договорів, розбір дзвінків). Концептуально закладені, додаються поступово після ядра.</p>
+      </div>
+      <div class="card" style="padding:26px">
+        <div class="tag tag--pine" style="margin-bottom:18px">Операційний цикл</div>
+        <div class="flow" style="grid-template-columns:1fr">
+          <div style="display:grid;gap:0">
+            {{cycle}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 5 — Value map ================= -->
+<section class="slide slide--ink" data-title="Карта цінності">
+  <div class="topo"><svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#27474E" stroke-width="1"><path d="M-50 500 C 300 440,460 480,690 420 S 1050 365,1270 415 1500 365"/></svg></div>
+  <div class="slide__inner">
+    <div class="eyebrow">Від завдання — до інструмента</div>
+    <h2 style="margin-bottom:28px">Карта цінності: що закриває кожен модуль</h2>
+    <div class="card" style="padding:6px 22px">
+      <table class="tbl" style="font-size:13.5px">
+        <thead><tr><th style="width:34%">Завдання комерційного директора</th><th>Модуль Properly</th><th style="width:24%">Результат</th></tr></thead>
+        <tbody>
+          <tr><td>Максимізувати виручку з лота</td><td><b>Калькулятор дохідності + Переоцінка (Maxify)</b></td><td class="pine">вищий чек</td></tr>
+          <tr><td>Тримати маржу</td><td><b>Погодження</b> знижок/резервів/умов</td><td class="pine">контроль поступок</td></tr>
+          <tr><td>Не втратити на дебіторці</td><td><b>Оплати</b> · прострочення · пеня</td><td class="pine">менше касових розривів</td></tr>
+          <tr><td>Прискорити угоду</td><td><b>Калькулятор розтермінування → Договір</b> + CRM</td><td class="pine">коротший цикл</td></tr>
+          <tr><td>Оформити пакет документів</td><td><b>Генерація документів</b> за шаблонами + віза юриста</td><td class="pine">швидше підписання</td></tr>
+          <tr><td>Прогнозувати продажі</td><td><b>Планування</b> + план-факт</td><td class="pine">керований cash-flow</td></tr>
+          <tr><td>Готові звіти для керівництва</td><td><b>Звітність</b> — продажі й маркетинг з Properly та зовнішніх систем</td><td class="pine">без ручної збірки</td></tr>
+          <tr><td>Єдине джерело правди</td><td><b>Шахматка + БД об'єктів + Аудит</b></td><td class="pine">прозорість</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:20px;max-width:80ch">Далі — як кожен із цих екранів виглядає в інтерфейсі Properly. Це <b>цільовий дизайн під впровадження</b>: мокапи побудовані на реальній моделі даних платформи.</p>
+  </div>
+</section>
+
+<!-- ================= SLIDE 6 — CHESSBOARD + OBJECT DB ================= -->
+<section class="slide slide--ink" data-title="Шахматка">
+  <div class="slide__inner">
+    <div class="eyebrow">Модуль · Шахматка — джерело правди про об'єкти</div>
+    <div style="display:grid;grid-template-columns:1fr;gap:18px">
+      <div class="app">
+        <div class="app__bar"><div class="dotrow"><i></i><i></i><i></i></div>
+          <div class="app__crumb">GORO Mountain Resort / <b>ONDE Hotel</b> / Шахматка</div>
+          <div class="app__search">{{s:search}} Пошук лота, клієнта…</div>
+          <div class="app__av">КД</div>
+        </div>
+        <div class="app__body">
+          <div class="app__nav" data-nav="chess"></div>
+          <div class="app__main">
+            <div class="scr-head">
+              <div><h3>Шахматка — ONDE Hotel</h3><div class="sub">197 номерів · 309 паркомісць · комерція — єдина сітка</div></div>
+              <div class="toolbar"><span class="chip on">Номери</span><span class="chip">Паркінг</span><span class="chip">Комерція</span><span class="chip">Квартири</span><span class="btn">{{s:filter}} Фільтри</span></div>
+            </div>
+            <div class="chess">
+              {{chess}}
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:14px">
+              <div class="legend">
+                <span><i style="background:var(--pine)"></i>Вільно</span>
+                <span><i style="background:var(--amber)"></i>Резерв</span>
+                <span><i style="background:var(--ice-d)"></i>Продано</span>
+                <span><i style="background:var(--bronze)"></i>Переоцінено</span>
+              </div>
+              <div style="display:flex;gap:22px">
+                <div class="kpi kpi--pine"><div class="kpi__v" style="font-size:22px">61%</div><div class="kpi__l">вільно</div></div>
+                <div class="kpi"><div class="kpi__v mono" style="font-size:22px;color:var(--amber)">12</div><div class="kpi__l">у резерві</div></div>
+                <div class="kpi kpi--ice"><div class="kpi__v" style="font-size:22px">103</div><div class="kpi__l">продано</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="note" style="max-width:92ch">Шахматка — <b>основне джерело інформації про об'єкти</b>: єдина база номерів, паркомісць, комерції та квартир з характеристиками, статусами й актуальними цінами. Усі інші модулі читають дані звідси: калькулятори беруть ціну лота, договори — сам лот, переоцінка — поточний прайс, зовнішні вітрини — статуси. Одне місце правди — жодних розбіжностей між табличками менеджерів.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 7 — INSTALLMENT CALCULATOR ================= -->
+<section class="slide slide--ink" data-title="Калькулятор розтермінування">
+  <div class="slide__inner">
+    <div class="eyebrow">Модуль · Калькулятор розтермінування</div>
+    <div class="app">
+      <div class="app__bar"><div class="dotrow"><i></i><i></i><i></i></div>
+        <div class="app__crumb">ONDE Hotel / Лот <b>ONDE-0512</b> / Калькулятор</div>
+        <div class="app__av">КД</div>
+      </div>
+      <div class="app__body">
+        <div class="app__nav" data-nav="calc"></div>
+        <div class="app__main">
+          <div class="scr-head">
+            <div><h3>Розтермінування · ONDE-0512</h3><div class="sub">Студіо · 28.4 м² · 5 поверх · краєвид на гори</div></div>
+            <div class="toolbar"><span class="btn">{{s:file}} У договір</span><span class="btn btn--primary">{{s:check}} На погодження</span></div>
+          </div>
+          <div style="display:grid;grid-template-columns:.85fr 1.15fr;gap:18px">
+            <div class="card" style="padding:16px">
+              <div class="navsec" style="padding:0 0 12px">Умови</div>
+              <div class="stack" style="font-size:13px">
+                <div style="display:flex;justify-content:space-between"><span class="muted">Базова ціна</span><span class="mono">$148 200</span></div>
+                <div style="display:flex;justify-content:space-between"><span class="muted">Перший внесок</span><span class="mono accent">30% · $44 460</span></div>
+                <div style="display:flex;justify-content:space-between"><span class="muted">Строк</span><span class="mono">18 міс</span></div>
+                <div style="display:flex;justify-content:space-between"><span class="muted">Метод</span><span class="mono">Класичний</span></div>
+                <div style="display:flex;justify-content:space-between"><span class="muted">Річна ставка</span><span class="mono">9%</span></div>
+                <div style="height:1px;background:var(--line-d);margin:6px 0"></div>
+                <div style="display:flex;justify-content:space-between;font-size:14px"><span>До сплати</span><span class="mono" style="color:var(--pine);font-weight:600">$157 940</span></div>
+                <div style="display:flex;justify-content:space-between"><span class="muted">Переплата</span><span class="mono">$9 740 · 6.6%</span></div>
+              </div>
+            </div>
+            <div class="card" style="padding:6px 16px">
+              <div class="navsec" style="padding:12px 0 4px">Графік платежів (фрагмент)</div>
+              <table class="tbl">
+                <thead><tr><th>#</th><th>Дата</th><th class="num">Тіло</th><th class="num">%</th><th class="num">Платіж</th></tr></thead>
+                <tbody>
+                  <tr><td>ПВ</td><td class="mono">01.07.26</td><td class="num">44 460</td><td class="num">—</td><td class="num">44 460</td></tr>
+                  <tr><td>1</td><td class="mono">01.08.26</td><td class="num">6 152</td><td class="num">778</td><td class="num">6 930</td></tr>
+                  <tr><td>2</td><td class="mono">01.09.26</td><td class="num">6 152</td><td class="num">732</td><td class="num">6 884</td></tr>
+                  <tr><td>3</td><td class="mono">01.10.26</td><td class="num">6 152</td><td class="num">686</td><td class="num">6 838</td></tr>
+                  <tr><td>…</td><td class="mono muted">…</td><td class="num muted">…</td><td class="num muted">…</td><td class="num muted">…</td></tr>
+                  <tr><td>18</td><td class="mono">01.01.28</td><td class="num">6 156</td><td class="num">46</td><td class="num">6 202</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="note" style="margin-top:16px;max-width:92ch">Калькулятор має <b>широкий перелік налаштувань</b> — перший внесок, строк, метод нарахування, річна ставка, правила округлення, валюта та кроки графіка — і при цьому <b>відповідає базовій логіці розрахунку розтермінування, прийнятій у GORO</b>. Формули й округлення — з перевіреного ядра; з калькуляції в один клік народжується договір з готовим графіком, без подвійного введення.</p>
+  </div>
+</section>
+
+<!-- ================= SLIDE 8 — YIELD CALCULATOR (hero, SVG) ================= -->
+<section class="slide slide--dark" data-title="Калькулятор дохідності">
+  <div class="topo"><svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#27474E" stroke-width="1"><path d="M-50 520 C 300 460,460 500,690 440 S 1050 385,1270 435 1500 385"/></svg></div>
+  <div class="slide__inner">
+    <div class="eyebrow">Модуль · Калькулятор дохідності <span style="color:var(--muted-d);text-transform:none;letter-spacing:0;margin-left:4px">— інструмент продажу інвестору</span></div>
+    <div class="split" style="grid-template-columns:1.25fr .9fr">
+      <div class="app">
+        <div class="app__bar"><div class="dotrow"><i></i><i></i><i></i></div>
+          <div class="app__crumb">ONDE-0512 / <b>Інвестиційна модель</b></div>
+          <div class="app__av">КД</div>
+        </div>
+        <div class="app__main" style="padding:20px">
+          <div class="scr-head"><div><h3>Дохідність на 10 років</h3><div class="sub">Ціни й статуси — наживо з шахматки · капіталізація + операційний дохід</div></div></div>
+          {{yieldchart}}
+          <div class="legend" style="margin-top:12px">
+            <span><i style="background:var(--bronze)"></i>Операційний дохід / рік</span>
+            <span><i style="background:var(--ice)"></i>Капіталізація активу</span>
+          </div>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="grid cols-2">
+          <div class="card"><div class="kpi kpi--bronze"><div class="kpi__v">+57%</div><div class="kpi__l">сукупна дохідність за період</div></div></div>
+          <div class="card"><div class="kpi kpi--pine"><div class="kpi__v">~10%</div><div class="kpi__l">річних після запуску</div></div></div>
+        </div>
+        <div class="card">
+          <div class="navsec" style="padding:0 0 10px">Чому в ERP, а не в Excel</div>
+          <ul class="ticks" style="font-size:13.5px">
+            <li style="font-size:13.5px;margin-bottom:9px"><b>Завжди актуальні дані.</b> Калькулятор читає ціни та статуси приміщень прямо з шахматки — наживо.</li>
+            <li style="font-size:13.5px;margin-bottom:9px"><b>Нуль копій Excel.</b> Одна логіка й одна версія для всіх менеджерів — без «своїх» калькуляторів у кожного.</li>
+            <li style="font-size:13.5px;margin-bottom:0"><b>Естетичний інструмент продажу.</b> Презентаційна частина для інвестора: рендери лота, умови, контакти менеджера — готовий матеріал угоди.</li>
+          </ul>
+        </div>
+        <p class="note">Розрахунок і брендована пропозиція народжуються в одному місці. Це новий модуль під інвестиційну модель GORO, а не перенесене ядро.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 9 — CONTRACTS + SCHEDULE ================= -->
+<section class="slide slide--ink" data-title="Договори">
+  <div class="slide__inner">
+    <div class="eyebrow">Модуль · Договори та графік оплат</div>
+    <div class="app">
+      <div class="app__bar"><div class="dotrow"><i></i><i></i><i></i></div>
+        <div class="app__crumb">Договори / <b>№ ONDE-2026-0184</b></div>
+        <div class="app__av">КД</div>
+      </div>
+      <div class="app__body">
+        <div class="app__nav" data-nav="contracts"></div>
+        <div class="app__main">
+          <div class="scr-head">
+            <div><h3>Договір № ONDE-2026-0184</h3><div class="sub">Інвестиційний · ONDE-0512 · підписаний 24.06.2026</div></div>
+            <div class="toolbar"><span class="st st--ok">Активний</span></div>
+          </div>
+          <div class="grid cols-4" style="margin-bottom:16px">
+            <div class="card" style="padding:13px"><div class="kpi"><div class="kpi__v mono" style="font-size:20px">$157 940</div><div class="kpi__l">сума договору</div></div></div>
+            <div class="card" style="padding:13px"><div class="kpi"><div class="kpi__v mono" style="font-size:20px;color:var(--pine)">$58 200</div><div class="kpi__l">сплачено</div></div></div>
+            <div class="card" style="padding:13px"><div class="kpi"><div class="kpi__v mono" style="font-size:20px">$99 740</div><div class="kpi__l">залишок</div></div></div>
+            <div class="card" style="padding:13px"><div class="kpi"><div class="kpi__v mono" style="font-size:20px;color:var(--amber)">37%</div><div class="kpi__l">прогрес</div></div></div>
+          </div>
+          <div class="card" style="padding:6px 16px">
+            <div class="navsec" style="padding:12px 0 4px">Графік оплат у розрізі договору</div>
+            <table class="tbl">
+              <thead><tr><th>#</th><th>Планова дата</th><th class="num">Сума, $</th><th class="num">Курс</th><th class="num">Факт, ₴</th><th>Статус</th></tr></thead>
+              <tbody>
+                <tr><td>ПВ</td><td class="mono">01.07.26</td><td class="num">44 460</td><td class="num">41.8</td><td class="num">1 858 428</td><td><span class="st st--ok">Оплачено</span></td></tr>
+                <tr><td>1</td><td class="mono">01.08.26</td><td class="num">6 930</td><td class="num">41.9</td><td class="num">290 367</td><td><span class="st st--ok">Оплачено</span></td></tr>
+                <tr><td>2</td><td class="mono">01.09.26</td><td class="num">6 884</td><td class="num">—</td><td class="num muted">—</td><td><span class="st st--over">Прострочено · 4 дні</span></td></tr>
+                <tr><td>3</td><td class="mono">01.10.26</td><td class="num">6 838</td><td class="num">—</td><td class="num muted">—</td><td><span class="st st--pend">Очікується</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="note" style="margin-top:16px;max-width:88ch">Запис договору, його умови та графік — в одному місці. Кожен платіж конвертується UAH → USD за курсом на дату й живе у власному статусі.</p>
+  </div>
+</section>
+
+<!-- ================= SLIDE 9b — DOCUMENT GENERATION (hero) ================= -->
+<section class="slide slide--ink" data-title="Генерація документів">
+  <div class="slide__inner">
+    <div class="eyebrow">Модуль · Генерація документів за шаблонами</div>
+    <div class="app">
+      <div class="app__bar"><div class="dotrow"><i></i><i></i><i></i></div>
+        <div class="app__crumb">Договір № ONDE-2026-0184 / <b>Документи</b></div>
+        <div class="app__av">КД</div>
+      </div>
+      <div class="app__body">
+        <div class="app__nav" data-nav="docs"></div>
+        <div class="app__main">
+          <div class="scr-head">
+            <div><h3>Пакет документів · ONDE-2026-0184</h3><div class="sub">Шаблони GORO · дані підтягнуто з CRM та калькулятора</div></div>
+            <div class="toolbar"><span class="btn">{{s:check}} Маршрут погодження</span><span class="btn btn--primary">{{s:copy}} Згенерувати PDF</span></div>
+          </div>
+          <div style="display:grid;grid-template-columns:.9fr 1.1fr;gap:18px">
+            <div class="card" style="padding:16px">
+              <div class="navsec" style="padding:0 0 12px">Джерела даних — без ручного копіювання</div>
+              <div class="stack" style="font-size:13px">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span class="muted">Клієнт</span><span style="text-align:right">Іваненко О. М.<br><span class="tag" style="margin-top:4px;color:var(--ice);border-color:rgba(143,184,201,.4)">з CRM</span></span></div>
+                <div style="height:1px;background:var(--line-d)"></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span class="muted">Сума та графік</span><span style="text-align:right" class="mono">$157 940 · 18 міс<br><span class="tag tag--bronze" style="margin-top:4px;font-family:var(--font-body)">з калькулятора</span></span></div>
+                <div style="height:1px;background:var(--line-d)"></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span class="muted">Лот</span><span style="text-align:right" class="mono">ONDE-0512 · 28.4 м²<br><span class="tag tag--pine" style="margin-top:4px;font-family:var(--font-body)">з шахматки</span></span></div>
+              </div>
+            </div>
+            <div class="card" style="padding:6px 16px">
+              <div class="navsec" style="padding:12px 0 4px">Документи пакета</div>
+              <table class="tbl">
+                <thead><tr><th>Документ</th><th>Шаблон</th><th>Статус</th></tr></thead>
+                <tbody>
+                  <tr><td>Договір купівлі-продажу</td><td class="mono">GORO_dogovir_v3</td><td><span class="st st--pend">У юриста · на візі</span></td></tr>
+                  <tr><td>Додаток 1 · Графік платежів</td><td class="mono">авто з калькулятора</td><td><span class="st st--ok">Згенеровано · PDF</span></td></tr>
+                  <tr><td>Додаток 2 · Характеристики лота</td><td class="mono">GORO_dodatok_v2</td><td><span class="st st--ok">Згенеровано · PDF</span></td></tr>
+                  <tr><td>Акт приймання-передачі</td><td class="mono">GORO_akt_v1</td><td><span class="st st--res">Після введення в експлуатацію</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card" style="padding:14px 16px;margin-top:16px">
+            <div class="navsec" style="padding:0 0 12px">Ланцюжок погодження документа — налаштовується під вашу структуру</div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12.5px">
+              <span style="display:inline-flex;align-items:center;gap:8px"><span style="width:24px;height:24px;border-radius:50%;background:var(--pine);color:#0a1416;display:grid;place-items:center;flex:0 0 24px">{{s:check}}</span><b>Менеджер</b><span class="muted">сформував пакет</span></span>
+              <span style="color:var(--line-d)">→</span>
+              <span style="display:inline-flex;align-items:center;gap:8px"><span style="width:24px;height:24px;border-radius:50%;background:rgba(204,142,79,.18);border:1px solid var(--bronze);color:var(--bronze);display:grid;place-items:center;flex:0 0 24px;font-family:var(--font-mono);font-size:11px">2</span><b>Відповідальний юрист</b><span style="color:var(--bronze)">віза · на розгляді</span></span>
+              <span style="color:var(--line-d)">→</span>
+              <span style="display:inline-flex;align-items:center;gap:8px"><span style="width:24px;height:24px;border-radius:50%;background:var(--ink-2);border:1px solid var(--line-d);color:var(--muted-d);display:grid;place-items:center;flex:0 0 24px;font-family:var(--font-mono);font-size:11px">3</span><b class="muted">Комерційний директор</b></span>
+              <span style="color:var(--line-d)">→</span>
+              <span class="tag tag--pine">Підписання</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="note" style="margin-top:16px;max-width:92ch">Properly створює не лише обліковий запис договору, а й сам документ: плейсхолдери шаблону заповнюються даними клієнта з CRM і розрахунком калькулятора — договори, додатки, акти виходять готовим PDF. Документ не йде на підписання без візи відповідального юриста, якщо так налаштовано маршрут. Увесь флоу — від розрахунку до PDF — в одній системі.</p>
+  </div>
+</section>
+
+<!-- ================= SLIDE 10 — PAYMENTS + RECEIVABLES (hero) ================= -->
+<section class="slide slide--ink" data-title="Оплати та дебіторка">
+  <div class="slide__inner">
+    <div class="eyebrow">Модуль · Оплати та контроль дебіторки</div>
+    <div class="app">
+      <div class="app__bar"><div class="dotrow"><i></i><i></i><i></i></div>
+        <div class="app__crumb">Оплати / <b>Дебіторка</b></div>
+        <div class="app__search">{{s:search}} Інвестор, договір…</div>
+        <div class="app__av">КД</div>
+      </div>
+      <div class="app__body">
+        <div class="app__nav" data-nav="payments"></div>
+        <div class="app__main">
+          <div class="scr-head">
+            <div><h3>Контроль дебіторки</h3><div class="sub">Прострочення, пеня та зведення по інвесторах</div></div>
+            <div class="toolbar"><span class="btn">{{s:plus}} Імпорт виписки</span></div>
+          </div>
+          <div class="grid cols-3" style="margin-bottom:16px">
+            <div class="card" style="padding:14px"><div class="kpi"><div class="kpi__v mono" style="font-size:22px">$486 300</div><div class="kpi__l">очікувані надходження (30 днів)</div></div></div>
+            <div class="card" style="padding:14px"><div class="kpi"><div class="kpi__v mono" style="font-size:22px;color:var(--brick)">$28 740</div><div class="kpi__l">прострочено</div></div></div>
+            <div class="card" style="padding:14px"><div class="kpi"><div class="kpi__v mono" style="font-size:22px;color:var(--amber)">$1 412</div><div class="kpi__l">нарахована пеня</div></div></div>
+          </div>
+          <div class="card" style="padding:6px 16px">
+            <div class="navsec" style="padding:12px 0 4px">Зведений екран інвестора — кілька лотів на одному вікні</div>
+            <table class="tbl">
+              <thead><tr><th>Інвестор</th><th>Договір / лот</th><th class="num">Залишок, $</th><th class="num">Прострочка</th><th class="num">Пеня</th><th>Статус</th></tr></thead>
+              <tbody>
+                <tr><td>Іваненко О. М.</td><td class="mono">0184 · ONDE-0512</td><td class="num">99 740</td><td class="num" style="color:var(--brick)">6 884</td><td class="num">218</td><td><span class="st st--over">Прострочено</span></td></tr>
+                <tr><td>Іваненко О. М.</td><td class="mono">0185 · PARK-114</td><td class="num">12 300</td><td class="num muted">0</td><td class="num muted">0</td><td><span class="st st--ok">У графіку</span></td></tr>
+                <tr><td>ТОВ «Карпати-Інвест»</td><td class="mono">0177 · ONDE-0308</td><td class="num">141 600</td><td class="num muted">0</td><td class="num muted">0</td><td><span class="st st--ok">У графіку</span></td></tr>
+                <tr><td>Сидоренко І. В.</td><td class="mono">0162 · ONDE-0210</td><td class="num">73 050</td><td class="num" style="color:var(--brick)">21 856</td><td class="num">1 194</td><td><span class="st st--over">Прострочено · 19 дн</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="note" style="margin-top:16px;max-width:90ch">Факти оплат — вручну або масовим імпортом банківської виписки з автозіставленням. Якщо інвестор має кілька лотів — уся його заборгованість на одному екрані. Прострочення й пеня рахуються автоматично.</p>
+  </div>
+</section>
+
+<!-- ================= SLIDE 11 — APPROVALS ================= -->
+<section class="slide slide--ink" data-title="Погодження">
+  <div class="slide__inner">
+    <div class="eyebrow">Модуль · Погодження резервів та умов</div>
+    <div class="app">
+      <div class="app__bar"><div class="dotrow"><i></i><i></i><i></i></div>
+        <div class="app__crumb">Погодження / <b>Заявка #A-2041</b></div>
+        <div class="app__av">КД</div>
+      </div>
+      <div class="app__body">
+        <div class="app__nav" data-nav="approvals"></div>
+        <div class="app__main">
+          <div class="scr-head">
+            <div><h3>Нетипова знижка · ONDE-0512</h3><div class="sub">Ініціатор: А. Менеджер · обґрунтування: VIP-інвестор, 2 лоти</div></div>
+            <div class="toolbar"><span class="btn">На доопрацювання</span><span class="btn" style="color:var(--brick);border-color:rgba(192,86,63,.4)">Відхилити</span><span class="btn btn--primary">{{s:check}} Затвердити</span></div>
+          </div>
+          <div style="display:grid;grid-template-columns:.95fr 1.05fr;gap:18px">
+            <div class="card" style="padding:16px">
+              <div class="navsec" style="padding:0 0 12px">Що погоджується</div>
+              <div class="stack" style="font-size:13.5px">
+                <div style="display:flex;justify-content:space-between"><span class="muted">Базова знижка</span><span class="mono">5% (ліміт менеджера)</span></div>
+                <div style="display:flex;justify-content:space-between"><span class="muted">Запит</span><span class="mono accent">9% + графік 24 міс</span></div>
+                <div style="display:flex;justify-content:space-between"><span class="muted">Вплив на ціну</span><span class="mono" style="color:var(--brick)">−$5 928</span></div>
+                <div style="display:flex;justify-content:space-between"><span class="muted">Очік. дата підписання</span><span class="mono">28.06.2026</span></div>
+              </div>
+            </div>
+            <div class="card" style="padding:16px">
+              <div class="navsec" style="padding:0 0 14px">Маршрут погодження</div>
+              <div class="stack">
+                <div style="display:flex;align-items:center;gap:12px"><span style="width:26px;height:26px;border-radius:50%;background:var(--pine);color:#0a1416;display:grid;place-items:center;flex:0 0 26px">{{s:check}}</span><div><b style="font-size:13.5px">Менеджер з продажу</b><div style="font-size:11.5px;color:var(--pine)">Ініційовано · 23.06 14:20</div></div></div>
+                <div style="display:flex;align-items:center;gap:12px"><span style="width:26px;height:26px;border-radius:50%;background:var(--pine);color:#0a1416;display:grid;place-items:center;flex:0 0 26px">{{s:check}}</span><div><b style="font-size:13.5px">Керівник продажів</b><div style="font-size:11.5px;color:var(--pine)">Затверджено · 23.06 16:05</div></div></div>
+                <div style="display:flex;align-items:center;gap:12px"><span style="width:26px;height:26px;border-radius:50%;background:rgba(204,142,79,.18);border:1px solid var(--bronze);color:var(--bronze);display:grid;place-items:center;flex:0 0 26px;font-family:var(--font-mono);font-size:12px">3</span><div><b style="font-size:13.5px">Комерційний директор</b><div style="font-size:11.5px;color:var(--bronze)">Очікує вашого рішення · SLA 24 год</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="note" style="margin-top:16px;max-width:90ch">Маршрут налаштовується під структуру GORO. Знижки понад ліміт, резерви та нетипові графіки не йдуть у договір, поки керівник не затвердив — маржа під контролем.</p>
+  </div>
+</section>
+
+<!-- ================= SLIDE 12 — PLANNING + PLAN/FACT (SVG) ================= -->
+<section class="slide slide--ink" data-title="Планування">
+  <div class="slide__inner">
+    <div class="eyebrow">Модуль · Планування продажів і план-факт</div>
+    <div class="app">
+      <div class="app__bar"><div class="dotrow"><i></i><i></i><i></i></div>
+        <div class="app__crumb">Планування / <b>ONDE Hotel · 2026</b></div>
+        <div class="app__av">КД</div>
+      </div>
+      <div class="app__body">
+        <div class="app__nav" data-nav="planning"></div>
+        <div class="app__main" style="padding:20px">
+          <div class="scr-head">
+            <div><h3>План-факт продажів · 2026</h3><div class="sub">Помісячно, з прогнозом грошових надходжень</div></div>
+            <div class="toolbar"><span class="chip on">Юніти</span><span class="chip">Виручка</span><span class="chip">Cash-flow</span></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1.4fr .9fr;gap:18px;align-items:center">
+            <div>{{planchart}}
+              <div class="legend" style="margin-top:10px"><span><i style="background:var(--ice-d)"></i>План</span><span><i style="background:var(--bronze)"></i>Факт</span></div>
+            </div>
+            <div class="stack">
+              <div class="card"><div class="kpi kpi--pine"><div class="kpi__v">94%</div><div class="kpi__l">виконання плану продажів YTD</div></div></div>
+              <div class="card"><div class="kpi kpi--bronze"><div class="kpi__v mono">$2.4M</div><div class="kpi__l">прогноз надходжень H2 2026</div></div></div>
+              <div class="card"><div class="kpi"><div class="kpi__v mono" style="color:var(--ice)">−6%</div><div class="kpi__l">відставання вересня → сигнал діяти</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="note" style="margin-top:16px;max-width:90ch">План будується по типах об'єктів і місяцях, факт підтягується з договорів. Видно відхилення й прогноз cash-flow — щоб переоцінювати темп і ціни вчасно, а не за підсумками кварталу.</p>
+  </div>
+</section>
+
+<!-- ================= SLIDE 12b — REPORTS (hero) ================= -->
+<section class="slide slide--ink" data-title="Звітність">
+  <div class="slide__inner">
+    <div class="eyebrow">Модуль · Звітність з продажів та маркетингу</div>
+    <div class="app">
+      <div class="app__bar"><div class="dotrow"><i></i><i></i><i></i></div>
+        <div class="app__crumb">Звіти / <b>Продажі та маркетинг</b></div>
+        <div class="app__av">КД</div>
+      </div>
+      <div class="app__body">
+        <div class="app__nav" data-nav="reports"></div>
+        <div class="app__main">
+          <div class="scr-head">
+            <div><h3>Ваші звіти — тепер у Properly</h3><div class="sub">Дані Properly + CRM + маркетингових систем · формуються автоматично</div></div>
+            <div class="toolbar"><span class="chip">Тиждень</span><span class="chip on">Місяць</span><span class="chip">Квартал</span><span class="btn">{{s:report}} Експорт XLSX</span></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1.1fr;gap:18px">
+            <div class="card" style="padding:16px">
+              <div class="navsec" style="padding:0 0 12px">Воронка: маркетинг → продажі · червень</div>
+              <div style="font-size:12px;color:var(--muted-d);display:flex;justify-content:space-between"><span>Ліди (всі канали)</span><span class="mono" style="color:var(--text-d)">1 240</span></div>
+              <div class="meter" style="margin:5px 0 11px"><span data-w="100%" style="background:linear-gradient(90deg,var(--bronze),var(--bronze-2))"></span></div>
+              <div style="font-size:12px;color:var(--muted-d);display:flex;justify-content:space-between"><span>Кваліфіковані</span><span class="mono" style="color:var(--text-d)">486</span></div>
+              <div class="meter" style="margin:5px 0 11px"><span data-w="39%" style="background:linear-gradient(90deg,var(--bronze),var(--bronze-2))"></span></div>
+              <div style="font-size:12px;color:var(--muted-d);display:flex;justify-content:space-between"><span>Зустрічі</span><span class="mono" style="color:var(--text-d)">214</span></div>
+              <div class="meter" style="margin:5px 0 11px"><span data-w="17%" style="background:linear-gradient(90deg,var(--bronze),var(--bronze-2))"></span></div>
+              <div style="font-size:12px;color:var(--muted-d);display:flex;justify-content:space-between"><span>Резерви</span><span class="mono" style="color:var(--text-d)">92</span></div>
+              <div class="meter" style="margin:5px 0 11px"><span data-w="7%" style="background:linear-gradient(90deg,var(--bronze),var(--bronze-2))"></span></div>
+              <div style="font-size:12px;color:var(--muted-d);display:flex;justify-content:space-between"><span>Договори</span><span class="mono" style="color:var(--pine)">61 · конверсія 4.9%</span></div>
+              <div class="meter" style="margin:5px 0 0"><span data-w="5%" style="background:var(--pine)"></span></div>
+            </div>
+            <div class="card" style="padding:6px 16px">
+              <div class="navsec" style="padding:12px 0 4px">Готові звіти</div>
+              <table class="tbl">
+                <thead><tr><th>Звіт</th><th>Період</th><th>Джерела даних</th></tr></thead>
+                <tbody>
+                  <tr><td>Продажі по менеджерах</td><td class="mono">Тиждень</td><td class="muted">Properly</td></tr>
+                  <tr><td>Воронка та конверсії</td><td class="mono">Місяць</td><td class="muted">CRM + Properly</td></tr>
+                  <tr><td>Ефективність каналів</td><td class="mono">Місяць</td><td class="muted">CRM + рекламні кабінети</td></tr>
+                  <tr><td>Ціни та залишки</td><td class="mono">Квартал</td><td class="muted">Шахматка Properly</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="note" style="margin-top:16px;max-width:92ch">Ваші звіти з продажів та маркетингу — у Properly: <b>повторюємо функціонал існуючих звітів</b>, використовуючи наявні дані Properly та інших систем (CRM, маркетинг). Звіти формуються автоматично за розкладом, а не збираються вручну в Excel; експорт — XLSX/PDF.</p>
+  </div>
+</section>
+
+<!-- ================= SLIDE 13 — AUDIT LOG ================= -->
+<section class="slide slide--ink" data-title="Журнал змін">
+  <div class="slide__inner">
+    <div class="eyebrow">Модуль · Логування та історія змін</div>
+    <div class="app">
+      <div class="app__bar"><div class="dotrow"><i></i><i></i><i></i></div>
+        <div class="app__crumb">Журнал змін / <b>ONDE-0512</b></div>
+        <div class="app__av">КД</div>
+      </div>
+      <div class="app__body">
+        <div class="app__nav" data-nav="audit"></div>
+        <div class="app__main">
+          <div class="scr-head"><div><h3>Хто, що і коли змінив</h3><div class="sub">Повний слід по кожному об'єкту, договору й платежу</div></div></div>
+          <div class="card" style="padding:6px 16px">
+            <table class="tbl">
+              <thead><tr><th>Час</th><th>Користувач</th><th>Об'єкт</th><th>Дія</th><th>Було → стало</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">23.06 16:05</td><td>Керівник продажів</td><td>Заявка #A-2041</td><td><span class="st st--ok">Затверджено</span></td><td class="mono">9% знижка</td></tr>
+                <tr><td class="mono">23.06 14:20</td><td>А. Менеджер</td><td>ONDE-0512</td><td><span class="st st--res">Статус</span></td><td class="mono">Вільно → Резерв</td></tr>
+                <tr><td class="mono">22.06 11:42</td><td>Система · Maxify</td><td>ONDE-0512</td><td><span class="st st--pend">Переоцінка</span></td><td class="mono">$142K → $148K</td></tr>
+                <tr><td class="mono">20.06 09:18</td><td>Бухгалтер</td><td>Договір 0184</td><td><span class="st st--ok">Платіж</span></td><td class="mono">+ ₴290 367</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="note" style="margin-top:16px;max-width:90ch">Кожна зміна ціни, статусу, умови чи платежу фіксується автоматично — з автором, часом і попереднім значенням. Для квартальної звітності інвесторам і внутрішнього контролю це готова доказова база.</p>
+  </div>
+</section>
+
+<!-- ================= SLIDE 14 — CRM INTEGRATION ================= -->
+<section class="slide slide--dark" data-title="Інтеграція з CRM">
+  <div class="topo"><svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#27474E" stroke-width="1"><path d="M-50 520 C 300 460,460 500,690 440 S 1050 385,1270 435 1500 385"/></svg></div>
+  <div class="slide__inner">
+    <div class="eyebrow">Інтеграції · CRM (Bitrix24) · шахматка FlatShow</div>
+    <div class="split">
+      <div>
+        <h2 style="max-width:15ch">CRM веде воронку — Properly веде операції</h2>
+        <p class="lead" style="margin-top:18px">Клієнти й угоди створюються в CRM і автоматично приходять у Properly, щоб одразу приєднатися до калькуляторів. Назад у CRM повертаються ключові статуси та події — менеджер не дублює дані вручну.</p>
+        <ul class="ticks" style="margin-top:22px">
+          <li>Нова угода в CRM → <b>картка клієнта й угода</b> в Properly</li>
+          <li>Стадія «Резерв» → <b>чернетка калькулятора</b> з підставленими даними</li>
+          <li>Підписання → статус договору й <b>графік платежів</b> назад в угоду</li>
+        </ul>
+      </div>
+      <div class="stack">
+        <div class="card" style="padding:22px">
+          <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center">
+            <div style="text-align:center"><div style="font-family:var(--font-display);font-weight:600;font-size:17px">CRM</div><div class="muted" style="font-size:12px">Bitrix24</div></div>
+            <div style="display:flex;flex-direction:column;gap:10px;color:var(--bronze)">
+              <span style="font-family:var(--font-mono);font-size:10px;color:var(--muted-d)">клієнти, угоди →</span>
+              {{s:plug}}
+              <span style="font-family:var(--font-mono);font-size:10px;color:var(--muted-d)">← статуси, графік</span>
+            </div>
+            <div style="text-align:center"><div style="font-family:var(--font-display);font-weight:600;font-size:17px;color:var(--bronze)">Properly</div><div class="muted" style="font-size:12px">калькулятори, договори</div></div>
+          </div>
+          <div class="note" style="margin-top:18px">Двосторонній обмін через webhook. Воронку лишаєте там, де команда вже працює.</div>
+        </div>
+        <div class="card" style="padding:18px 22px">
+          <h3 style="font-size:17px">Шахматка FlatShow — завжди актуальна</h3>
+          <p style="margin-top:6px">Продаж, резерв чи переоцінка в Properly → статус і ціна лота автоматично оновлюються в публічній шахматці FlatShow. Сайт ніколи не продає вже продане.</p>
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap"><span class="tag tag--bronze">Properly → FlatShow</span><span class="tag">статуси лотів</span><span class="tag">актуальні ціни</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 15 — MAXIFY INTEGRATION ================= -->
+<section class="slide slide--dark" data-title="Інтеграція з Maxify">
+  <div class="topo"><svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#27474E" stroke-width="1"><path d="M-50 540 C 240 480,420 520,640 460 S 1010 400,1230 450 1500 400"/></svg></div>
+  <div class="slide__inner">
+    <div class="eyebrow">Інтеграція · Maxify (динамічне ціноутворення)</div>
+    <div class="split" style="grid-template-columns:.92fr 1.08fr;align-items:start">
+      <div>
+        <h2 style="max-width:16ch">Maxify рахує ціну — Properly її застосовує</h2>
+        <p class="lead" style="margin-top:18px">Maxify — ваша система динамічних переоцінок. Properly стає операційним контуром навколо неї: ініціює переоцінку, приймає нові ціни через API та застосовує їх до шахматки й лотів — під контролем комерційного директора.</p>
+        <div style="margin-top:20px;display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:12px">
+          <span class="tag tag--bronze">Properly</span><span class="muted">лоти, ціни, темп →</span>
+          <span class="tag" style="color:var(--ice);border-color:rgba(143,184,201,.4)">Maxify</span><span class="muted">→ нові ціни</span>
+          <span class="tag tag--pine">→ хітмеп + звіт</span>
+        </div>
+        <div class="note" style="margin-top:18px"><b>Чесна межа:</b> алгоритм ціни — зона Maxify; ініціація, перегляд, застосування та аудит — зона Properly. Точний контракт API узгоджуємо на інтеграційній фазі.</div>
+      </div>
+      <div class="app">
+        <div class="app__bar"><div class="dotrow"><i></i><i></i><i></i></div><div class="app__crumb">Переоцінка / <b>хітмеп приросту</b> · ONDE Hotel</div></div>
+        <div class="app__main" style="padding:16px">
+          <div class="scr-head" style="margin-bottom:12px"><div><h3 style="font-size:16px">Розподіл приросту цін</h3><div class="sub">Результат переоцінки Maxify по сітці лотів</div></div><span class="chip on">+ %</span></div>
+          <div class="hm">{{heatmap}}</div>
+          <div class="hmscale"><span>0%</span><span class="bar"></span><span>+7%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 16 — REVALUATION SCENARIO (hero) ================= -->
+<section class="slide slide--ink" data-title="Сценарій переоцінки">
+  <div class="slide__inner">
+    <div class="eyebrow">Сценарій · Переоцінка очима комерційного директора</div>
+    <h2 style="margin-bottom:6px;max-width:24ch">Як комерційний директор переоцінює фонд за чотири кроки</h2>
+    <div class="split" style="grid-template-columns:.92fr 1.08fr;margin-top:24px;align-items:start">
+      <div class="steps">
+        <div class="row"><div class="num">1</div><div><h4>Відкрити шахматку</h4><p>CCO заходить у сітку ONDE Hotel і обирає скоуп переоцінки: готель, тип, поверх або лише залишок.</p></div></div>
+        <div class="row"><div class="num">2</div><div><h4>Ініціювати переоцінку</h4><p>Кнопка «Ініціювати переоцінку» формує запит до Maxify з характеристиками лотів і темпом продажів.</p></div></div>
+        <div class="row"><div class="num">3</div><div><h4>Отримати ціни з Maxify</h4><p>Через API приходять нові ціни з обґрунтуванням. Properly зберігає їх як чернетку — без авто-застосування.</p></div></div>
+        <div class="row"><div class="num">4</div><div><h4>Переглянути та застосувати</h4><p>Дві проекції: шахматка «до/після» з дельтами і аналітичний звіт. CCO підтверджує — опційно через погодження.</p></div></div>
+      </div>
+      <div class="stack">
+        <div class="app">
+          <div class="app__bar"><div class="dotrow"><i></i><i></i><i></i></div><div class="app__crumb">Переоцінка / <b>чернетка</b> · ONDE Hotel</div></div>
+          <div class="app__main" style="padding:16px">
+            <div class="scr-head" style="margin-bottom:12px"><div><h3 style="font-size:16px">Шахматка «до → після»</h3></div><span class="btn btn--primary" style="font-size:11.5px">{{s:check}} Застосувати</span></div>
+            <div class="chess" style="grid-template-columns:repeat(4,1fr)">
+              <div class="cell cell--up" style="min-height:64px"><span class="id">0508</span><span class="pr">142 → <b style="color:var(--bronze)">148K</b></span></div>
+              <div class="cell cell--up" style="min-height:64px"><span class="id">0507</span><span class="pr">150 → <b style="color:var(--bronze)">156K</b></span></div>
+              <div class="cell cell--up" style="min-height:64px"><span class="id">0408</span><span class="pr">144 → <b style="color:var(--bronze)">150K</b></span></div>
+              <div class="cell cell--up" style="min-height:64px"><span class="id">0310</span><span class="pr">152 → <b style="color:var(--bronze)">159K</b></span></div>
+            </div>
+            <div class="grid cols-3" style="margin-top:14px">
+              <div class="kpi kpi--bronze"><div class="kpi__v" style="font-size:18px">+4.2%</div><div class="kpi__l">сер. приріст ціни/м²</div></div>
+              <div class="kpi kpi--pine"><div class="kpi__v mono" style="font-size:18px">+$0.9M</div><div class="kpi__l">капіталізація залишку</div></div>
+              <div class="kpi kpi--ice"><div class="kpi__v mono" style="font-size:18px">61</div><div class="kpi__l">лотів у переоцінці</div></div>
+            </div>
+          </div>
+        </div>
+        <p class="note">Жодна ціна не змінюється «тихо»: переоцінка спершу — чернетка зі звітом, і лише підтвердження CCO робить її дійсною. Усе пишеться в журнал змін.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 17 — END-TO-END USER FLOW ================= -->
+<section class="slide slide--dark" data-title="Наскрізний сценарій">
+  <div class="topo"><svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#27474E" stroke-width="1"><path d="M-50 560 C 300 500,460 540,690 480 S 1050 425,1270 475 1500 425"/></svg></div>
+  <div class="slide__inner">
+    <div class="eyebrow">Наскрізний сценарій · від зустрічі до дебіторки</div>
+    <h2 style="margin-bottom:30px;max-width:22ch">Один шлях угоди — від першого контакту до контролю оплат</h2>
+    <div class="flow">
+      <div class="step"><span class="n">1</span><h4>Зустріч</h4><p>Угода в CRM → картка клієнта й угода створюються в Properly.</p></div>
+      <div class="step"><span class="n">2</span><h4>Калькулятор + КП</h4><p>Кошик лотів, розрахунок дохідності, брендована пропозиція.</p></div>
+      <div class="step"><span class="n">3</span><h4>Резерв</h4><p>Стадія «Резерв» → статус лота й чернетка калькулятора розтермінування.</p></div>
+      <div class="step"><span class="n">4</span><h4>Погодження</h4><p>Перший внесок, дати, нетипові умови — на затвердження керівнику.</p></div>
+      <div class="step"><span class="n">5</span><h4>Договір</h4><p>Пакет документів генерується за шаблонами, віза юриста, статус «Підписаний».</p></div>
+      <div class="step"><span class="n">6</span><h4>Оплати</h4><p>Факти вручну чи імпортом, конвертація валют, пеня, статус «Активний».</p></div>
+      <div class="step"><span class="n">7</span><h4>Контроль</h4><p>Дебіторка на трьох рівнях: договір · інвестор · дашборд керівника.</p></div>
+    </div>
+    <p class="note" style="margin-top:28px;max-width:90ch">Той самий цикл, що описаний у вашому процесі — але без перемикання між Excel, CRM і пам'яттю менеджера. Кожен крок лишає дані для наступного.</p>
+  </div>
+</section>
+
+<!-- ================= SLIDE 18 — DELIVERY MODEL ================= -->
+<section class="slide slide--paper" data-title="Як ми постачаємо">
+  <div class="topo"><svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#E4DFD3" stroke-width="1.2"><path d="M-50 600 C 260 540,420 580,640 520 S 1010 460,1230 510 1500 460"/><path d="M-50 540 C 300 480,460 520,690 460 S 1050 405,1270 455 1500 405"/></svg></div>
+  <div class="slide__inner">
+    <div class="eyebrow">Модель постачання</div>
+    <h2 style="margin-bottom:10px;max-width:20ch">Окремий інстанс GORO — дані під вашим контролем</h2>
+    <p class="lead" style="margin-bottom:30px">Properly постачається як ізольована інсталяція під клієнта: власна база, власні контейнери. Жодного спільного середовища з іншими девелоперами — критично для фінансових даних інвесторів рівня OKKO.</p>
+    <div class="grid cols-4">
+      <div class="card"><div class="card__ic">{{s:layers}}</div><h3 style="color:var(--text-l)">Свій інстанс</h3><p>Окрема БД і контейнери лише для GORO. Дані не змішуються.</p></div>
+      <div class="card"><div class="card__ic">{{s:shield}}</div><h3 style="color:var(--text-l)">Безпека з коробки</h3><p>Ролі й права доступу, аудит дій, захищена автентифікація.</p></div>
+      <div class="card"><div class="card__ic">{{s:plug}}</div><h3 style="color:var(--text-l)">Інтеграції</h3><p>CRM і Maxify через API. Розширюється під ваші сервіси.</p></div>
+      <div class="card"><div class="card__ic">{{s:building}}</div><h3 style="color:var(--text-l)">Пресети під готель</h3><p>Типи об'єктів, статуси й маршрути налаштовані під інвестиційну модель.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 19 — COMMERCIAL OFFER ================= -->
+<section class="slide slide--paper" data-title="Комерційна пропозиція">
+  <div class="topo"><svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#E4DFD3" stroke-width="1.2"><path d="M-50 560 C 300 500,460 540,690 480 S 1050 425,1270 475 1500 425"/></svg></div>
+  <div class="slide__inner">
+    <div class="eyebrow">Комерційна пропозиція</div>
+    <h2 style="margin-bottom:26px">Склад і вартість впровадження</h2>
+    <table class="ptable">
+      <thead><tr><th style="width:54%">Пакет</th><th class="r">Вартість</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><div class="name">Операційне ядро</div><div class="desc">Управління договорами та оплатами (контроль дебіторки), калькулятор розтермінувань, база номерів / паркомісць / комерції / квартир, логування та історія змін, погодження резервів і умов.</div></td>
+          <td class="r"><span class="price">5 960 €</span></td>
+        </tr>
+        <tr>
+          <td><div class="name">Калькулятор дохідності</div><div class="desc">Інвестиційна модель для продажу: EBIT на 10 років, капіталізація активу, накопичена дохідність та ROI інвестора.</div></td>
+          <td class="r"><span class="price">5 400 €</span></td>
+        </tr>
+        <tr>
+          <td><div class="name">Інтеграція з CRM</div><div class="desc">Отримання клієнтів і угод для приєднання до калькуляторів; повернення статусів і графіка.</div></td>
+          <td class="r"><span class="price">600 €</span></td>
+        </tr>
+        <tr>
+          <td><div class="name">Інтеграція з Maxify</div><div class="desc">Підключення до API динамічних переоцінок та ініціація переоцінок із шахматки.</div></td>
+          <td class="r"><span class="price">200 €</span></td>
+        </tr>
+        <tr>
+          <td><div class="name">Генерація документів за шаблонами</div><div class="desc">Договори, додатки, акти за шаблонами GORO: дані клієнта з CRM + розрахунок калькулятора → готовий PDF. Ланцюжок погодження документа (напр., віза відповідального юриста).</div></td>
+          <td class="r"><span class="price">2 600 €</span></td>
+        </tr>
+        <tr>
+          <td><div class="name">Звітність: продажі та маркетинг</div><div class="desc">Повторюємо функціонал ваших наявних звітів на даних Properly та зовнішніх систем (CRM, маркетинг): автоматичне формування, експорт XLSX/PDF. Завершальний етап — після генерації документів.</div></td>
+          <td class="r"><span class="price">3 200 €</span></td>
+        </tr>
+        <tr class="total">
+          <td><div class="name">Разом (одноразово)</div></td>
+          <td class="r"><span class="price">17 960 €</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="grid cols-3" style="margin-top:26px">
+      <div class="card" style="padding:18px">
+        <div class="tag tag--bronze" style="margin-bottom:13px">Умови оплати</div>
+        <div class="terms">
+          <div class="li">{{s:check}}<span><b>50%</b> — передплата на старті робіт</span></div>
+          <div class="li">{{s:check}}<span><b>50%</b> — пост-оплата після здачі</span></div>
+        </div>
+      </div>
+      <div class="card" style="padding:18px">
+        <div class="tag tag--bronze" style="margin-bottom:13px">Строки виконання · 150 днів</div>
+        <div class="seg"><div class="s1">60</div><div class="s2">30</div><div class="s3">30</div><div class="s4">30</div></div>
+        <div class="tline">
+          <div><i style="background:var(--bronze)"></i><span>Операційне ядро</span><b>60 дн</b></div>
+          <div><i style="background:#D9D3C4"></i><span>Калькулятор дохідності + CRM + Maxify</span><b>+30</b></div>
+          <div><i style="background:rgba(204,142,79,.5)"></i><span>Генерація документів</span><b>+30</b></div>
+          <div><i style="background:var(--pine)"></i><span>Звітність</span><b>+30</b></div>
+        </div>
+      </div>
+      <div class="subcard">
+        <div class="tag tag--bronze" style="margin-bottom:11px">Підписка</div>
+        <div style="display:flex;align-items:baseline;gap:8px"><span class="price-big">500 €</span><span class="muted" style="font-size:13px">/ місяць</span></div>
+        <div class="terms" style="margin-top:14px">
+          <div class="li">{{s:check}}<span>Без обмеження ліцензій</span></div>
+          <div class="li">{{s:check}}<span>Сервер, обслуговування, бекапи</span></div>
+          <div class="li no">{{s:plus}}<span>Додаткова розробка — за запитом</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 20 — CTA ================= -->
+<section class="slide slide--dark" data-title="Наступні кроки">
+  <div class="topo">
+    <svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" fill="none">
+      <g stroke="#27474E" stroke-width="1"><path d="M-50 560 C 240 500,380 540,600 480 S 980 420,1200 470 1500 420"/><path d="M-50 500 C 260 440,420 480,640 420 S 1010 365,1230 415 1500 365"/></g>
+      <g stroke="#CC8E4F" stroke-width="1.2" opacity="0.5"><path d="M-50 440 C 330 380,500 420,740 350 S 1090 300,1310 350 1500 305"/></g>
+    </svg>
+  </div>
+  <div class="slide__inner" style="text-align:center">
+    <div class="eyebrow" style="justify-content:center">Наступний крок</div>
+    <h1 style="max-width:18ch;margin:0 auto">Зберемо інстанс GORO і пройдемо процес разом</h1>
+    <p class="lead" style="margin:24px auto 0;text-align:center">Готові узгодити скоуп першого впровадження, контракти інтеграцій з CRM і Maxify та план запуску.</p>
+    <div style="margin-top:40px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <span class="tag tag--bronze" style="padding:10px 18px;font-size:13px">Properly ERP</span>
+      <span class="tag" style="padding:10px 18px;font-size:13px">для GORO Mountain Resort</span>
+    </div>
+    <p class="muted" style="margin-top:34px;font-size:12.5px;font-family:var(--font-mono);letter-spacing:.08em">Демо-дані наведено для ілюстрації · цільовий інтерфейс під впровадження</p>
+  </div>
+</section>
+
+<!-- SLIDES_END -->
+</div>
+
+<div class="gate" id="gate">
+  <div class="topo">
+    <svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" fill="none">
+      <g stroke="#27474E" stroke-width="1"><path d="M-50 560 C 240 500,380 540,600 480 S 980 420,1200 470 1500 420"/><path d="M-50 500 C 260 440,420 480,640 420 S 1010 365,1230 415 1500 365"/></g>
+      <g stroke="#CC8E4F" stroke-width="1.2" opacity="0.5"><path d="M-50 440 C 330 380,500 420,740 350 S 1090 300,1310 350 1500 305"/></g>
+    </svg>
+  </div>
+  <div class="gate__box">
+    <div class="gate__logo"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Properly"><path fill-rule="evenodd" clip-rule="evenodd" d="M23.2026 5.32812C24.0513 5.32813 24.8653 5.66527 25.4654 6.26539L29.9909 10.7909C30.591 11.391 30.9281 12.2049 30.9281 13.0536V18.1281C30.9281 19.8954 29.4954 21.3281 27.7281 21.3281H21.3281V30.9281H13.0536C12.2049 30.9281 11.391 30.591 10.7909 29.9909L6.26539 25.4654C5.66527 24.8653 5.32812 24.0513 5.32812 23.2026V5.32812H23.2026ZM11.7281 11.7281L21.3281 21.3281V14.9281C21.3281 13.1608 22.7608 11.7281 24.5281 11.7281H11.7281Z" fill="currentColor"/></svg></div>
+    <h2>Презентація для GORO Mountain Resort</h2>
+    <p class="sub">Матеріал містить комерційну пропозицію.<br>Введіть пароль доступу, щоб продовжити.</p>
+    <div class="gate__row">
+      <input id="gate-in" type="password" placeholder="Пароль" autocomplete="off" spellcheck="false" aria-label="Пароль доступу">
+      <button id="gate-btn" type="button">Відкрити</button>
+    </div>
+    <div class="gate__err" id="gate-err" role="alert" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="progress" id="progress"></div>
+<div class="brandmark"><span class="lg"><svg width="144" height="36" viewBox="0 0 144 36" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Properly"><path fill-rule="evenodd" clip-rule="evenodd" d="M23.2026 5.32812C24.0513 5.32813 24.8653 5.66527 25.4654 6.26539L29.9909 10.7909C30.591 11.391 30.9281 12.2049 30.9281 13.0536V18.1281C30.9281 19.8954 29.4954 21.3281 27.7281 21.3281H21.3281V30.9281H13.0536C12.2049 30.9281 11.391 30.591 10.7909 29.9909L6.26539 25.4654C5.66527 24.8653 5.32812 24.0513 5.32812 23.2026V5.32812H23.2026ZM11.7281 11.7281L21.3281 21.3281V14.9281C21.3281 13.1608 22.7608 11.7281 24.5281 11.7281H11.7281Z" fill="currentColor"/><path d="M37.9551 27.3838V8.9518H45.6607C49.3983 8.9518 52.1119 11.4862 52.1119 15.0446C52.1119 18.6542 49.3471 21.163 45.6607 21.163H41.6671V27.3838H37.9551ZM41.6671 18.0142H45.1231C47.1199 18.0142 48.2463 16.8878 48.2463 15.0702C48.2463 13.2526 47.1199 12.1774 45.1231 12.1774H41.6671V18.0142Z" fill="currentColor"/><path d="M60.5937 14.0718H62.4113V17.2718H60.3889C58.2641 17.2718 57.5985 18.5262 57.5985 20.5486V27.3838H53.9889V14.0718H57.3425L57.7265 15.6078C58.1617 14.7886 59.1089 14.0718 60.5937 14.0718Z" fill="currentColor"/><path d="M63.0155 20.7278C63.0155 16.6062 65.9083 13.7902 69.9787 13.7902C74.0491 13.7902 76.9419 16.6062 76.9419 20.7278C76.9419 24.875 74.0491 27.6398 69.9787 27.6398C65.9083 27.6398 63.0155 24.875 63.0155 20.7278ZM66.6763 20.7022C66.6763 23.0574 67.9819 24.5934 69.9787 24.5934C71.9755 24.5934 73.2811 23.0574 73.2811 20.7022C73.2811 18.3214 71.9755 16.8366 69.9787 16.8366C67.9819 16.8366 66.6763 18.3214 66.6763 20.7022Z" fill="currentColor"/><path d="M86.8229 13.8158C90.4581 13.8158 93.1205 16.299 93.1205 20.7534C93.1205 24.9774 90.6629 27.6654 86.8229 27.6654C84.8773 27.6654 83.2389 26.8718 82.5477 25.6942V32.5038H78.9637V14.0718H82.3173L82.5221 15.8894C83.1877 14.7374 84.7749 13.8158 86.8229 13.8158ZM86.0293 24.4654C88.0005 24.4654 89.4341 23.083 89.4341 20.7534C89.4341 18.4494 88.0005 17.0414 86.0293 17.0158C84.0837 17.0158 82.6245 18.4494 82.6245 20.779C82.6245 23.083 84.0837 24.4654 86.0293 24.4654Z" fill="currentColor"/><path d="M107.828 20.523V21.7006H98.2023C98.2535 23.6718 99.6359 24.7726 101.351 24.7726C102.657 24.7726 103.706 24.1838 104.116 23.0318H107.725C107.137 25.7966 104.602 27.6654 101.249 27.6654C97.2551 27.6654 94.5927 24.9006 94.5927 20.7278C94.5927 16.5806 97.2551 13.8158 101.223 13.8158C105.191 13.8158 107.828 16.4526 107.828 20.523ZM101.223 16.6062C99.6871 16.6062 98.3815 17.5022 98.2279 19.3454H104.244C104.09 17.5022 102.785 16.6062 101.223 16.6062Z" fill="currentColor"/><path d="M116.521 14.0718H118.338V17.2718H116.316C114.191 17.2718 113.525 18.5262 113.525 20.5486V27.3838H109.916V14.0718H113.269L113.653 15.6078C114.089 14.7886 115.036 14.0718 116.521 14.0718Z" fill="currentColor"/><path d="M123.387 8.1582V27.3838H119.803V8.1582H123.387Z" fill="currentColor"/><path d="M128.4 14.0718L131.882 24.1582L135.184 14.0718H138.845L133.29 29.5086C132.368 32.0942 130.525 32.5038 128.502 32.5038H125.251V29.3294H128.502C129.373 29.3294 129.834 28.9198 129.834 28.1006C129.834 27.7934 129.757 27.5118 129.603 27.1022L124.56 14.0718H128.4Z" fill="currentColor"/></svg></span><span class="x">×</span> GORO</div>
+<nav class="nav">
+  <button class="nav__btn" id="prev" aria-label="Попередній слайд"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="dots" id="dots"></div>
+  <button class="nav__btn" id="next" aria-label="Наступний слайд"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+</nav>
+<div class="counter"><b id="cur">01</b> / <span id="tot">22</span></div>
+
+<script>
+/* ---- icon library (inline SVG, lucide-style) ---- */
+const ICONS = {
+  trending:'<path d="M22 7l-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/>',
+  shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  card:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
+  bolt:'<path d="M13 2L3 14h9l-1 8 10-12h-9z"/>',
+  chart:'<path d="M3 3v18h18"/><rect x="7" y="11" width="3" height="6"/><rect x="12" y="7" width="3" height="10"/><rect x="17" y="13" width="3" height="4"/>',
+  layers:'<path d="M12 2L2 7l10 5 10-5z"/><path d="M2 12l10 5 10-5"/><path d="M2 17l10 5 10-5"/>',
+  grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+  calc:'<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h2M14 10h2M8 14h2M14 14h2M8 18h2M14 18h2"/>',
+  file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h6"/>',
+  check:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>',
+  history:'<path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/>',
+  plug:'<path d="M9 2v6M15 2v6M6 8h12v4a6 6 0 0 1-12 0z"/><path d="M12 18v4"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/>',
+  building:'<rect x="4" y="2" width="16" height="20" rx="1"/><path d="M9 22v-4h6v4M9 6h2M13 6h2M9 10h2M13 10h2M9 14h2M13 14h2"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  filter:'<path d="M22 3H2l8 9.46V19l4 2v-8.54z"/>',
+  copy:'<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>',
+  report:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 17v-3M12 17v-6M15 17v-2"/>'
+};
+function svg(name,w){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+ICONS[name]+'</svg>';}
+
+/* ---- product sidebar (DRY across all mockups) ---- */
+const NAVMODEL=[
+  ['sec','Продажі'],
+  ['chess','grid','Шахматка'],
+  ['calc','calc','Калькулятори'],
+  ['contracts','file','Договори'],
+  ['docs','copy','Документи'],
+  ['payments','card','Оплати'],
+  ['approvals','check','Погодження'],
+  ['sec','Аналітика'],
+  ['planning','chart','Планування'],
+  ['reports','report','Звітність'],
+  ['audit','history','Журнал змін'],
+  ['sec','Зовнішнє'],
+  ['integr','plug','Інтеграції']
+];
+function navHTML(active){
+  return NAVMODEL.map(row=>{
+    if(row[0]==='sec') return `<div class="navsec">${row[1]}</div>`;
+    const [key,ic,label]=row;
+    return `<div class="navi${key===active?' is-active':''}">${svg(ic)}<span>${label}</span></div>`;
+  }).join('');
+}
+/* ---- content + chart builders ---- */
+function cycleHTML(){
+  const steps=[['grid','Шахматка','лоти, статуси, фільтри'],['calc','Калькулятор','дохідність + розтермінування'],['file','Договір','умови, графік оплат'],['copy','Документи','генерація за шаблонами → PDF'],['card','Платежі','факт, прострочення, пеня'],['check','Погодження','знижки, умови, документи'],['chart','Аналітика','план-факт, прогноз'],['report','Звітність','продажі й маркетинг — авто-звіти']];
+  return steps.map((s,idx)=>`<div style="display:flex;align-items:center;gap:13px;padding:11px 0;${idx<steps.length-1?'border-bottom:1px solid var(--line-l)':''}">
+    <span style="width:34px;height:34px;border-radius:9px;background:rgba(204,142,79,.12);border:1px solid rgba(204,142,79,.3);color:var(--bronze);display:grid;place-items:center;flex:0 0 34px">${svg(s[0])}</span>
+    <span style="display:flex;flex-direction:column"><b style="font-family:var(--font-display);font-size:15px;color:var(--text-l)">${s[1]}</b><span style="font-size:12px;color:var(--muted-l)">${s[2]}</span></span>
+  </div>`).join('');
+}
+function chessHTML(){
+  const cells=[['0512','sold'],['0511','sold'],['0510','ok'],['0509','res'],['0508','ok'],['0507','up'],['0506','ok'],['0505','sold'],
+    ['0412','ok'],['0411','res'],['0410','ok'],['0409','ok'],['0408','up'],['0407','ok'],['0406','sold'],['0405','ok'],
+    ['0312','sold'],['0311','ok'],['0310','up'],['0309','sold'],['0308','sold'],['0307','ok'],['0306','res'],['0305','ok']];
+  const price={ok:'$142K',res:'$148K',sold:'—',up:'$156K'};
+  return cells.map(c=>`<div class="cell cell--${c[1]}"><span class="id">${c[0]}</span><span class="pr">${price[c[1]]}</span></div>`).join('');
+}
+function yieldSVG(){
+  const W=580,H=250,pl=40,pr=44,pt=18,pb=30,iw=W-pl-pr,ih=H-pt-pb;
+  const op=[0,2,9,14,15,15,16,16,17,17], cap=[148,158,170,232,240,247,254,261,268,275];
+  const n=op.length,opMax=20,capMin=140,capMax=290,bw=iw/n*0.5;
+  let bars='';
+  for(let k=0;k<n;k++){const x=pl+(k+0.5)*(iw/n)-bw/2,h=op[k]/opMax*ih,y=pt+ih-h;
+    bars+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="3" fill="var(--bronze)" opacity="0.92"/>`;}
+  const pts=[];for(let k=0;k<n;k++){pts.push([pl+(k+0.5)*(iw/n),pt+ih-((cap[k]-capMin)/(capMax-capMin))*ih]);}
+  const line=pts.map((p,k)=>(k?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const dots=pts.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3" fill="var(--ice)"/>`).join('');
+  let labels='';[1,3,5,8,10].forEach(yr=>{const x=pl+(yr-0.5)*(iw/n);labels+=`<text x="${x.toFixed(1)}" y="${H-9}" fill="#6f878a" font-size="10" text-anchor="middle">Р${yr}</text>`;});
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="xMidYMid meet" font-family="ui-monospace"><line x1="${pl}" y1="${pt+ih}" x2="${W-pr}" y2="${pt+ih}" stroke="#27474E"/>${bars}<path d="${line}" fill="none" stroke="var(--ice)" stroke-width="2"/>${dots}${labels}</svg>`;
+}
+function planSVG(){
+  const W=560,H=220,pl=30,pr=14,pt=14,pb=26,iw=W-pl-pr,ih=H-pt-pb;
+  const months=['Кві','Тра','Чер','Лип','Сер','Вер'],plan=[9,10,11,12,11,13],fact=[9,11,12,11,11,12],mx=14;
+  const n=months.length,gw=iw/n,bw=gw*0.3,gap=gw*0.08;let bars='';
+  for(let k=0;k<n;k++){const cx=pl+k*gw+gw/2,x1=cx-bw-gap/2,x2=cx+gap/2,hp=plan[k]/mx*ih,hf=fact[k]/mx*ih;
+    bars+=`<rect x="${x1.toFixed(1)}" y="${(pt+ih-hp).toFixed(1)}" width="${bw.toFixed(1)}" height="${hp.toFixed(1)}" rx="3" fill="var(--ice-d)"/>`;
+    bars+=`<rect x="${x2.toFixed(1)}" y="${(pt+ih-hf).toFixed(1)}" width="${bw.toFixed(1)}" height="${hf.toFixed(1)}" rx="3" fill="var(--bronze)"/>`;
+    bars+=`<text x="${cx.toFixed(1)}" y="${H-8}" fill="#6f878a" font-size="10" text-anchor="middle" font-family="ui-monospace">${months[k]}</text>`;}
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="xMidYMid meet"><line x1="${pl}" y1="${pt+ih}" x2="${W-pr}" y2="${pt+ih}" stroke="#27474E"/>${bars}</svg>`;
+}
+
+/* ---- hydrate ALL placeholders before engine ---- */
+const deck=document.getElementById('deck');
+deck.innerHTML=deck.innerHTML
+  .replace(/\{\{s:(\w+)\}\}/g,(m,n)=>svg(n))
+  .replace(/\{\{ic:(\w+)\}\}/g,(m,n)=>svg(n))
+  .replace('{{cycle}}',cycleHTML())
+  .replace('{{chess}}',chessHTML())
+  .replace('{{yieldchart}}',yieldSVG())
+  .replace('{{planchart}}',planSVG())
+  .replace('{{heatmap}}',heatmapHTML());
+document.querySelectorAll('[data-nav]').forEach(el=>{el.innerHTML=navHTML(el.dataset.nav);});
+
+/* ---- dynamic helpers: reveal, count-up, meters, heatmap ---- */
+const reduceMo=matchMedia('(prefers-reduced-motion:reduce)').matches;
+function heatmapHTML(){
+  const data=[['0512',6],['0511',5],['0510',4],['0509',3],['0508',6],['0507',5],
+    ['0412',4],['0411',5],['0410',3],['0409',2],['0408',6],['0407',4],
+    ['0312',2],['0311',3],['0310',7],['0309',1],['0308',4],['0307',5],
+    ['0210',3],['0209',2],['0208',5],['0207',6],['0206',4],['0205',1]];
+  const stops=['rgba(23,48,52,.92)','rgba(47,107,94,.55)','rgba(62,140,121,.72)','rgba(204,142,79,.46)','rgba(204,142,79,.72)','rgba(176,119,60,.92)'];
+  const col=d=>`background:${stops[Math.min(stops.length-1,Math.max(0,d-1))]};border-color:rgba(204,142,79,.25)`;
+  return data.map(c=>`<div class="cell" style="${col(c[1])}"><span class="id">${c[0]}</span><span class="dl">+${c[1]}%</span></div>`).join('');
+}
+function animateCount(el){
+  if(reduceMo)return;
+  const raw=el.dataset.raw!==undefined?el.dataset.raw:(el.dataset.raw=el.textContent.trim());
+  if(/\d\s*[–—-]\s*\d/.test(raw))return;                 // ranges stay static
+  const m=raw.match(/^([^\d]*?)(\d{1,3}(?:[ \u00A0]\d{3})*(?:[.,]\d+)?)(.*)$/);
+  if(!m)return;
+  const prefix=m[1],numStr=m[2],suffix=m[3];
+  const decimals=((numStr.match(/[.,](\d+)/)||[,''])[1]||'').length;
+  const target=parseFloat(numStr.replace(/[ \u00A0]/g,'').replace(',','.'));
+  if(!isFinite(target))return;
+  const fmt=v=>decimals>0?v.toFixed(decimals):Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ');
+  const dur=850,t0=performance.now();
+  (function step(now){let p=Math.min(1,(now-t0)/dur);p=1-Math.pow(1-p,3);el.textContent=prefix+fmt(target*p)+suffix;if(p<1)requestAnimationFrame(step);else el.textContent=raw;})(performance.now());
+}
+function playReveal(s){
+  const inner=s.querySelector('.slide__inner'); if(!inner)return;
+  const kids=[...inner.children];
+  kids.forEach((c,k)=>{c.classList.remove('in');c.style.transitionDelay=(k*65)+'ms';});
+  void inner.offsetWidth;
+  kids.forEach(c=>c.classList.add('in'));
+  s.querySelectorAll('.kpi__v').forEach(animateCount);
+  s.querySelectorAll('.meter>span[data-w]').forEach(sp=>{sp.style.width='0';void sp.offsetWidth;sp.style.width=sp.dataset.w;});
+  const hm=s.querySelector('.hm');
+  if(hm){const cells=[...hm.querySelectorAll('.cell')];hm.classList.remove('in');cells.forEach((c,k)=>c.style.transitionDelay=(k*22)+'ms');void hm.offsetWidth;requestAnimationFrame(()=>hm.classList.add('in'));}
+}
+
+/* ---- navigation engine ---- */
+const slides=[...document.querySelectorAll('.slide')];
+const dotsWrap=document.getElementById('dots');
+const prog=document.getElementById('progress');
+const curEl=document.getElementById('cur'),totEl=document.getElementById('tot');
+let i=slides.findIndex(s=>s.classList.contains('is-active')); if(i<0)i=0;
+totEl.textContent=String(slides.length).padStart(2,'0');
+slides.forEach((s,idx)=>{const b=document.createElement('button');b.className='dot'+(idx===i?' is-active':'');b.setAttribute('aria-label',(s.dataset.title||('Слайд '+(idx+1))));b.onclick=()=>go(idx);dotsWrap.appendChild(b);});
+const dots=[...dotsWrap.children];
+function go(n){
+  n=Math.max(0,Math.min(slides.length-1,n));
+  slides[i].classList.remove('is-active');slides[i].classList.add('is-prev');
+  dots[i].classList.remove('is-active');
+  i=n;
+  slides[i].classList.remove('is-prev');slides[i].classList.add('is-active');
+  dots[i].classList.add('is-active');
+  prog.style.width=((i+1)/slides.length*100)+'%';
+  curEl.textContent=String(i+1).padStart(2,'0');
+  slides[i].scrollTop=0;
+  document.body.classList.toggle('on-paper',slides[i].classList.contains('slide--paper'));
+  playReveal(slides[i]);
+}
+document.getElementById('next').onclick=()=>go(i+1);
+document.getElementById('prev').onclick=()=>go(i-1);
+addEventListener('keydown',e=>{
+  if(document.body.classList.contains('is-locked'))return;
+  if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(i+1);}
+  else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(i-1);}
+  else if(e.key==='Home'){e.preventDefault();go(0);}
+  else if(e.key==='End'){e.preventDefault();go(slides.length-1);}
+});
+let tx=0;
+addEventListener('touchstart',e=>tx=e.changedTouches[0].clientX,{passive:true});
+addEventListener('touchend',e=>{if(document.body.classList.contains('is-locked'))return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>60){go(i+(dx<0?1:-1));}},{passive:true});
+slides.forEach(s=>{const inner=s.querySelector('.slide__inner');if(inner)[...inner.children].forEach(c=>c.classList.add('rise'));});
+prog.style.width=((i+1)/slides.length*100)+'%';
+curEl.textContent=String(i+1).padStart(2,'0');
+document.body.classList.toggle('on-paper',slides[i].classList.contains('slide--paper'));
+playReveal(slides[i]);
+
+/* ---- access gate ----
+   Пароль не зберігається у файлі — лише FNV-1a хеш від 'properly|<пароль>'.
+   Змінити пароль: відкрий консоль браузера на цій сторінці, виконай
+   fnv1a('properly|НовийПароль') і встав результат у PASS_HASH нижче. */
+const PASS_HASH=0x75f85d12; // 'GORO-2026'
+function fnv1a(s){let h=0x811c9dc5;for(let k=0;k<s.length;k++){h^=s.charCodeAt(k);h=Math.imul(h,0x01000193)>>>0;}return h>>>0;}
+window.fnv1a=fnv1a;
+const gate=document.getElementById('gate'),gin=document.getElementById('gate-in'),gbtn=document.getElementById('gate-btn'),gerr=document.getElementById('gate-err');
+function unlock(silent){
+  document.body.classList.remove('is-locked');
+  gate.classList.add('is-open');
+  try{sessionStorage.setItem('properly_goro_unlocked','1');}catch(e){}
+  if(!silent)setTimeout(()=>playReveal(slides[i]),80);
+}
+function tryUnlock(){
+  const v=(gin.value||'').trim();
+  if(fnv1a('properly|'+v)===PASS_HASH){gerr.textContent='';unlock(false);}
+  else{gerr.textContent='Невірний пароль — спробуйте ще раз';gate.classList.remove('shake');void gate.offsetWidth;gate.classList.add('shake');gin.select();}
+}
+gbtn.onclick=tryUnlock;
+gin.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter'){e.preventDefault();tryUnlock();}});
+let preUnlocked=false;
+try{preUnlocked=sessionStorage.getItem('properly_goro_unlocked')==='1';}catch(e){}
+const viaWrapper=(location.hash==='#pgu');
+if(preUnlocked||viaWrapper){unlock(!viaWrapper);}else{setTimeout(()=>gin.focus(),120);}
+</script>
+</body>
+</html>
