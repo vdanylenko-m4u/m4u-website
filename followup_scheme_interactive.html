@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Фоллоуап: подготовка и проведение · Teus B2B</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0F1B2A; --panel:#152537; --panel2:#1B2E45; --text:#E9E5D9; --muted:#94A3B6;
+  --line:rgba(233,229,217,.14); --brass:#C9A24B; --brass-soft:rgba(201,162,75,.16);
+  --teal:#7FAF9E; --red:#C4554D; --red-soft:rgba(196,85,77,.14);
+  --r:14px; --maxw:1060px;
+}
+body.mode-partner{
+  --bg:#F3F0E8; --panel:#FFFFFF; --panel2:#FAF7F0; --text:#25313F; --muted:#6E7987;
+  --line:rgba(37,49,63,.13); --brass:#8F6B22; --brass-soft:rgba(143,107,34,.12);
+  --teal:#4E8571; --red:#A9433C; --red-soft:rgba(169,67,60,.10);
+}
+*{box-sizing:border-box; margin:0; padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:'Manrope',system-ui,sans-serif; font-size:16px; line-height:1.55;
+  transition:background .6s ease, color .6s ease;
+}
+.mono{font-family:'IBM Plex Mono',monospace}
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px}
+
+/* ---------- hero ---------- */
+.hero{padding:64px 0 28px}
+.eyebrow{font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.18em; color:var(--brass); text-transform:uppercase}
+h1{font-family:'Spectral',serif; font-weight:600; font-size:clamp(30px,4.6vw,50px); line-height:1.12; margin:14px 0 12px; max-width:20ch}
+.hero .sub{color:var(--muted); max-width:62ch}
+.hero .sub b{color:var(--text); font-weight:600}
+.fade-up{opacity:0; transform:translateY(14px); animation:fadeUp .7s ease forwards}
+.fade-up.d1{animation-delay:.08s}.fade-up.d2{animation-delay:.18s}.fade-up.d3{animation-delay:.3s}
+@keyframes fadeUp{to{opacity:1; transform:none}}
+
+/* ---------- sticky mode bar ---------- */
+.modebar{position:sticky; top:0; z-index:50; backdrop-filter:blur(10px);
+  background:var(--bg);
+  background:color-mix(in srgb, var(--bg) 82%, transparent);
+  border-bottom:1px solid var(--line); transition:background .6s ease}
+.modebar .inner{max-width:var(--maxw); margin:0 auto; padding:12px 24px; display:flex; align-items:center; gap:16px; flex-wrap:wrap}
+.modebar .hint{font-size:13px; color:var(--muted)}
+.toggle{display:flex; border:1px solid var(--line); border-radius:999px; overflow:hidden; background:var(--panel)}
+.toggle button{
+  appearance:none; border:0; background:transparent; color:var(--muted); cursor:pointer;
+  font-family:'Manrope',sans-serif; font-weight:600; font-size:14px; padding:10px 20px;
+  transition:background .35s ease, color .35s ease;
+}
+.toggle button.on{background:var(--brass); color:#14202F}
+body.mode-partner .toggle button.on{color:#FFF}
+.toggle button:focus-visible{outline:2px solid var(--brass); outline-offset:-2px}
+
+/* ---------- sections ---------- */
+section{padding:44px 0 8px}
+.sec-head{display:flex; align-items:baseline; gap:14px; margin-bottom:6px}
+.sec-num{font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--brass); letter-spacing:.12em}
+h2{font-family:'Spectral',serif; font-weight:600; font-size:clamp(22px,3vw,30px)}
+.sec-sub{color:var(--muted); font-size:15px; max-width:70ch; margin-bottom:20px}
+
+.rv{opacity:0; transform:translateY(18px); transition:opacity .7s ease, transform .7s ease}
+.rv.in{opacity:1; transform:none}
+
+/* ---------- veil (partner mode) ---------- */
+.veil{display:none; border:1px dashed var(--line); border-radius:var(--r); padding:26px 28px; gap:14px; align-items:flex-start; background:var(--panel2)}
+.veil .curtain{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.16em; color:var(--muted); text-transform:uppercase; white-space:nowrap; padding-top:3px}
+.veil p{color:var(--text); font-style:italic; max-width:64ch}
+body.mode-partner .backstage .bs-body{display:none}
+body.mode-partner .backstage .veil{display:flex}
+
+/* ---------- chips / cards ---------- */
+.chips{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px; margin-top:16px}
+.chip{background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:16px 18px}
+.chip .k{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; color:var(--brass); text-transform:uppercase}
+.chip h4{font-family:'Spectral',serif; font-size:17px; font-weight:600; margin:6px 0 4px}
+.chip p{font-size:13.5px; color:var(--muted)}
+.goalline{margin-top:16px; padding:14px 18px; border-left:3px solid var(--brass); background:var(--brass-soft); border-radius:0 var(--r) var(--r) 0; font-size:15px}
+.goalline b{font-weight:700}
+
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.card{background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:18px 20px}
+.card h4{font-family:'Spectral',serif; font-size:17px; font-weight:600; margin-bottom:6px}
+.card .k{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; color:var(--brass); text-transform:uppercase}
+.card p, .card li{font-size:14px; color:var(--muted)}
+.card ul{list-style:none; margin-top:8px}
+.card li{padding:4px 0 4px 16px; position:relative}
+.card li::before{content:''; position:absolute; left:0; top:12px; width:6px; height:6px; border-radius:50%; background:var(--brass)}
+.note{font-size:13px; color:var(--muted); margin-top:14px}
+.note b{color:var(--text)}
+
+/* ---------- checklist + gate ---------- */
+.check-wrap{margin-top:18px; background:var(--panel); border:1px solid var(--line); border-radius:var(--r); overflow:hidden}
+.check-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--line); flex-wrap:wrap}
+.check-head h4{font-family:'Spectral',serif; font-size:18px; font-weight:600}
+.check-count{font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--muted)}
+.check-list{display:grid; grid-template-columns:1fr 1fr; gap:0}
+@media(max-width:760px){.check-list{grid-template-columns:1fr}}
+.check-item{display:flex; gap:12px; align-items:flex-start; padding:14px 20px; border-bottom:1px solid var(--line); cursor:pointer; transition:background .25s ease}
+.check-item:hover{background:var(--panel2)}
+.check-item input{margin-top:4px; accent-color:var(--brass); width:16px; height:16px; cursor:pointer; flex:none}
+.check-item span{font-size:14px}
+.check-item.done span{color:var(--muted); text-decoration:line-through; text-decoration-color:var(--brass)}
+.gate{display:flex; align-items:center; gap:14px; padding:16px 20px; background:var(--red-soft); transition:background .5s ease}
+.gate .lock{font-size:20px; line-height:1}
+.gate .g-txt{font-size:14.5px; font-weight:600; color:var(--red); transition:color .5s ease}
+.gate.open{background:rgba(127,175,158,.14)}
+.gate.open .g-txt{color:var(--teal)}
+.gate .bar{flex:1; height:5px; border-radius:3px; background:var(--line); overflow:hidden; min-width:80px}
+.gate .bar i{display:block; height:100%; width:0%; background:var(--brass); border-radius:3px; transition:width .45s ease}
+.gate.open .bar i{background:var(--teal)}
+
+/* ---------- timeline ---------- */
+.rec{display:inline-flex; align-items:center; gap:8px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted); border:1px solid var(--line); border-radius:999px; padding:6px 14px; margin-bottom:16px}
+.rec .dot{width:8px; height:8px; border-radius:50%; background:var(--red); animation:blink 1.6s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+.timebar{display:flex; gap:5px; margin-top:8px}
+.seg{appearance:none; border:0; cursor:pointer; position:relative; min-width:0;
+  background:var(--panel2); border:1px solid var(--line); border-radius:10px;
+  padding:12px 6px 10px; display:flex; flex-direction:column; align-items:center; gap:4px;
+  color:var(--muted); transition:background .3s ease, border-color .3s ease, transform .25s ease;
+  transform-origin:bottom; animation:segUp .6s ease backwards;
+}
+@keyframes segUp{from{opacity:0; transform:scaleY(.4)}to{opacity:1; transform:scaleY(1)}}
+.seg:hover{transform:translateY(-3px)}
+.seg.on{background:var(--brass-soft); border-color:var(--brass); color:var(--text)}
+.seg .seg-num{font-size:12px; font-weight:500; color:var(--text)}
+.seg .seg-t{font-size:10.5px}
+.seg .seg-glow{position:absolute; inset:auto 8px 6px 8px; height:3px; border-radius:2px; background:transparent; transition:background .3s ease}
+.seg.on .seg-glow{background:var(--brass)}
+body.mode-partner .seg .seg-num, body.mode-partner .seg .seg-t{visibility:hidden}
+body.mode-partner .seg{border-radius:999px; padding:16px 6px}
+.time-cap{display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); margin-top:8px}
+body.mode-partner .time-cap{visibility:hidden}
+
+.detail{margin-top:20px; background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:24px 26px; min-height:190px}
+.detail .d-head{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:10px}
+.detail .d-num{font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; color:var(--brass)}
+.detail h3{font-family:'Spectral',serif; font-size:22px; font-weight:600}
+.detail .d-time{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted); margin-left:auto}
+.detail .d-goal{font-size:15px; margin-bottom:10px}
+.detail .d-goal b{color:var(--brass)}
+.detail ul{list-style:none}
+.detail li{font-size:14.5px; color:var(--muted); padding:5px 0 5px 18px; position:relative}
+.detail li::before{content:''; position:absolute; left:0; top:13px; width:7px; height:7px; border-radius:50%; background:var(--brass)}
+.detail li b{color:var(--text); font-weight:600}
+.d-exits{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
+.d-exit{appearance:none; cursor:pointer; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--teal); background:transparent; border:1px solid var(--teal); border-radius:999px; padding:6px 14px; transition:background .25s ease}
+.d-exit:hover{background:rgba(127,175,158,.14)}
+.d-quote{font-family:'Spectral',serif; font-size:clamp(19px,2.6vw,26px); font-weight:500; line-height:1.4; max-width:34ch}
+.d-feel{margin-top:14px; font-size:14px; color:var(--muted)}
+.d-feel b{color:var(--brass)}
+.d-anim{animation:dIn .35s ease}
+@keyframes dIn{from{opacity:0; transform:translateY(8px)}to{opacity:1; transform:none}}
+.chatline{margin-top:14px; font-size:13.5px; color:var(--muted)}
+.chatline b{color:var(--text)}
+
+/* ---------- decision branch ---------- */
+.decide{margin-top:18px}
+.d-q{background:var(--panel); border:1px solid var(--brass); border-radius:var(--r); padding:20px 22px; display:flex; align-items:center; gap:18px; flex-wrap:wrap}
+.d-q h4{font-family:'Spectral',serif; font-size:19px; font-weight:600; flex:1; min-width:240px}
+.d-q .btns{display:flex; gap:10px; flex-wrap:wrap}
+.pathbtn{appearance:none; cursor:pointer; font-family:'Manrope',sans-serif; font-weight:600; font-size:14px;
+  border:1px solid var(--line); border-radius:999px; padding:10px 20px; background:var(--panel2); color:var(--text);
+  transition:all .3s ease}
+.pathbtn.on{background:var(--brass); border-color:var(--brass); color:#14202F}
+body.mode-partner .pathbtn.on{color:#FFF}
+.paths{position:relative; margin-top:14px}
+.path{display:none; animation:dIn .4s ease}
+.paths[data-path="a"] .path-a{display:block}
+.paths[data-path="b"] .path-b{display:block}
+.flow{display:flex; gap:10px; align-items:stretch; flex-wrap:wrap}
+.fstep{flex:1; min-width:200px; background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:16px 18px; position:relative}
+.fstep .k{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; color:var(--brass); text-transform:uppercase}
+.fstep p{font-size:14px; color:var(--muted); margin-top:6px}
+.fstep p b{color:var(--text)}
+.farrow{align-self:center; color:var(--brass); font-size:20px; flex:none}
+.trumps{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+.trump{font-size:12.5px; font-family:'IBM Plex Mono',monospace; border:1px solid var(--line); color:var(--muted); border-radius:999px; padding:5px 12px; transition:all .3s ease}
+.trump.on{border-color:var(--brass); color:var(--brass); background:var(--brass-soft)}
+.loopbtn{appearance:none; cursor:pointer; margin-top:12px; font-size:13px; font-weight:600; color:var(--red);
+  background:transparent; border:1px dashed var(--red); border-radius:999px; padding:8px 16px; transition:background .25s ease}
+.loopbtn:hover{background:var(--red-soft)}
+.reqline{margin-top:16px; padding:14px 18px; border:1px solid var(--line); border-radius:var(--r); font-size:13.5px; color:var(--muted); background:var(--panel2)}
+.reqline b{color:var(--text)}
+
+/* ---------- reactivation steps ---------- */
+.steps{counter-reset:st; margin-top:16px; display:grid; gap:10px}
+.step{display:flex; gap:16px; align-items:flex-start; background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:14px 18px}
+.step::before{counter-increment:st; content:counter(st); font-family:'IBM Plex Mono',monospace; font-size:14px; color:var(--brass);
+  border:1px solid var(--brass); border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; flex:none}
+.step p{font-size:14.5px}
+.step .who{margin-left:auto; flex:none; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); border:1px solid var(--line); border-radius:999px; padding:4px 10px; white-space:nowrap}
+.redrule{margin-top:14px; padding:14px 18px; border-left:3px solid var(--red); background:var(--red-soft); border-radius:0 var(--r) var(--r) 0; font-size:14px}
+.redrule b{color:var(--red)}
+
+/* ---------- anti-patterns ---------- */
+.anti-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; margin-top:16px}
+.anti{background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--red); border-radius:var(--r); padding:16px 18px; cursor:default; transition:border-color .3s ease}
+.anti h4{font-size:14.5px; font-weight:700}
+.anti p{font-size:13px; color:var(--muted); max-height:0; overflow:hidden; opacity:0; transition:max-height .4s ease, opacity .4s ease, margin .4s ease}
+.anti:hover p, .anti:focus-within p, .anti.open p{max-height:120px; opacity:1; margin-top:8px}
+.anti .why{font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.14em; color:var(--red); text-transform:uppercase}
+
+footer{margin-top:56px; padding:26px 0 44px; border-top:1px solid var(--line)}
+footer .wrap{display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted)}
+
+/* ---------- password gate ---------- */
+body.locked{overflow:hidden}
+body.locked .hero, body.locked .modebar, body.locked main, body.locked footer{visibility:hidden}
+.gatekeeper{position:fixed; inset:0; z-index:100; display:flex; align-items:center; justify-content:center;
+  background:#0F1B2A; padding:24px; transition:opacity .5s ease}
+.gatekeeper.bye{opacity:0; pointer-events:none}
+.gate-card{width:min(440px,100%); background:#152537; border:1px solid rgba(233,229,217,.14);
+  border-radius:16px; padding:36px 34px 30px; text-align:left; animation:fadeUp .6s ease backwards}
+.gate-card .eyebrow{color:#C9A24B}
+.gate-title{font-family:'Spectral',serif; font-weight:600; font-size:27px; color:#E9E5D9; margin:12px 0 6px}
+.gate-sub{font-size:14px; color:#94A3B6; margin-bottom:20px}
+.gate-row{display:flex; gap:10px}
+.gate-row input{flex:1; min-width:0; appearance:none; background:#0F1B2A; border:1px solid rgba(233,229,217,.2);
+  border-radius:10px; padding:12px 14px; color:#E9E5D9; font-family:'IBM Plex Mono',monospace; font-size:15px;
+  letter-spacing:.06em; transition:border-color .25s ease}
+.gate-row input:focus{outline:none; border-color:#C9A24B}
+.gate-row button{appearance:none; cursor:pointer; border:0; border-radius:10px; padding:12px 22px;
+  background:#C9A24B; color:#14202F; font-family:'Manrope',sans-serif; font-weight:700; font-size:14px;
+  transition:filter .25s ease}
+.gate-row button:hover{filter:brightness(1.08)}
+.gate-row button:focus-visible{outline:2px solid #E9E5D9; outline-offset:2px}
+.gate-err{margin-top:12px; font-size:13px; color:#C4554D; opacity:0; transition:opacity .3s ease}
+.gate-card.shake{animation:shake .45s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(4px)}}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important; transition:none !important}
+  html{scroll-behavior:auto}
+  .rv{opacity:1; transform:none}
+  .fade-up{opacity:1; transform:none}
+}
+</style>
+</head>
+<body class="locked mode-manager">
+
+<div class="gatekeeper" id="gatekeeper" role="dialog" aria-modal="true" aria-label="Доступ по паролю">
+  <div class="gate-card" id="gateCard">
+    <div class="eyebrow">Teus Group · B2B · Инструмент менеджера</div>
+    <h2 class="gate-title">Доступ по паролю</h2>
+    <p class="gate-sub">Рабочий документ команды. Введите пароль, чтобы продолжить.</p>
+    <div class="gate-row">
+      <input type="password" id="pwInput" placeholder="Пароль" autocomplete="off" spellcheck="false" aria-label="Пароль">
+      <button id="pwBtn" type="button">Войти</button>
+    </div>
+    <p class="gate-err" id="gateErr">Неверный пароль</p>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow fade-up">Teus Group · B2B · Инструмент менеджера</div>
+    <h1 class="fade-up d1">Фоллоуап: подготовка и&nbsp;проведение</h1>
+    <p class="sub fade-up d2">Одна и та же встреча существует в двух реальностях. <b>В голове менеджера</b> - структура, тайминги, чек-листы и выходы в процессы. <b>Глазами партнёра</b> - просто тёплый разговор с человеком, который помогает зарабатывать. Переключайте режим - и смотрите, как система исчезает.</p>
+  </div>
+</header>
+
+<div class="modebar fade-up d3">
+  <div class="inner">
+    <div class="toggle" role="group" aria-label="Режим просмотра">
+      <button id="btnManager" class="on" aria-pressed="true">В голове менеджера</button>
+      <button id="btnPartner" aria-pressed="false">Глазами партнёра</button>
+    </div>
+    <span class="hint">Принцип невидимости: партнёру не сообщается, что взаимодействие построено по методике</span>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <!-- 0 · Стратегическая рамка -->
+  <section id="frame" class="backstage rv">
+    <div class="bs-body">
+      <div class="sec-head"><span class="sec-num mono">0</span><h2>Зачем это всё</h2></div>
+      <p class="sec-sub">Цель уровня компании - войти в ТОП-3 застройщиков, которых брокеры предлагают клиентам на Бали и Мальдивах. Фоллоуапы - ядро фактора отношений.</p>
+      <div class="chips">
+        <div class="chip"><span class="k">Что · 1</span><h4>Суперпродукт</h4><p>Суть, упаковка, донесение: экономика интересна как предложение, проект - как продукт</p></div>
+        <div class="chip"><span class="k">Что · 2</span><h4>Суперзастройщик</h4><p>Надёжность + позиционирование: с таким хочется иметь дело и клиенту, и брокеру</p></div>
+        <div class="chip"><span class="k">Что · 3</span><h4>Суперсервис</h4><p>На всём цикле - от онбординга партнёра до комиссии. Цикл не заканчивается получением денег</p></div>
+        <div class="chip"><span class="k">Как</span><h4>Отношения</h4><p>Не четвёртый блок, а качество исполнения первых трёх. Фундамент</p></div>
+      </div>
+      <div class="goalline"><b>Метрика, которая решает всё, - сделки.</b> Система существует, чтобы помогать, а не заменять инициативу. Но тот, кто работает в системе, - прозрачен: когда что-то ломается, видно, где чинить.</div>
+    </div>
+    <div class="veil"><span class="curtain">Партнёр этого не видит</span><p>Никакой «стратегической рамки» для партнёра не существует. Есть компания, с которой приятно и выгодно работать.</p></div>
+  </section>
+
+  <!-- 1 · Готовность -->
+  <section id="prep" class="backstage rv">
+    <div class="bs-body">
+      <div class="sec-head"><span class="sec-num mono">1</span><h2>Готовность менеджера</h2></div>
+      <p class="sec-sub">Подготовка - норма роли, не факультатив. Четыре требования - постоянное состояние, чек-лист - перед каждой встречей.</p>
+      <div class="grid2">
+        <div class="card"><span class="k">Требование 1</span><h4>Контекст партнёра</h4><p>Соцсети: посты, активность, кого продаёт. CRM: последние взаимодействия и статусы его клиентов в нашей воронке - до каждой встречи.</p></div>
+        <div class="card"><span class="k">Требование 2</span><h4>Контекст компании</h4><p>Состояние лидогенерации и продаж: делиться информацией и быть интересным - без раскрытия конфиденциального.</p></div>
+        <div class="card"><span class="k">Требование 3</span><h4>Контекст рынка</h4><p>Тренды, новые проекты, слухи, условия. Два контура: информация о нас - простая и под рукой; информация о рынке собирается целенаправленно - сама не появляется. Ссылка на другой рынок (Бали ↔ Мальдивы ↔ Турция) звучит заметно экспертнее.</p></div>
+        <div class="card"><span class="k">Требование 4</span><h4>Идеи быстрой конверсии</h4><p>Наработанный набор причин «почему этому клиенту встретиться с Teus именно сейчас» под типовые запросы. Пополняется из фабрики контента и практики команды.</p></div>
+      </div>
+
+      <div class="check-wrap">
+        <div class="check-head">
+          <h4>Чек-лист перед встречей</h4>
+          <span class="check-count mono" id="checkCount">0 / 6</span>
+        </div>
+        <div class="check-list" id="checkList">
+          <label class="check-item"><input type="checkbox"><span>Соцсети партнёра просмотрены: посты, кейсы, кого продаёт</span></label>
+          <label class="check-item"><input type="checkbox"><span>CRM: последние взаимодействия + статусы его клиентов в воронке</span></label>
+          <label class="check-item"><input type="checkbox"><span>Свои лиды и продажи: знаю, чем делиться без конфиденциального</span></label>
+          <label class="check-item"><input type="checkbox"><span>Рынок: тренды, новые проекты, условия - обновил</span></label>
+          <label class="check-item"><input type="checkbox"><span>Заготовки «только тут, только сейчас» - под рукой</span></label>
+          <label class="check-item"><input type="checkbox"><span>Обещания с прошлого раза выполнены, мини-агенда ушла за день</span></label>
+        </div>
+        <div class="gate" id="gate">
+          <span class="lock" id="gateLock">🔒</span>
+          <span class="g-txt" id="gateTxt">Встреча не назначается - подготовка не завершена</span>
+          <span class="bar"><i id="gateBar"></i></span>
+        </div>
+      </div>
+    </div>
+    <div class="veil"><span class="curtain">Партнёр этого не видит</span><p>Он видит другое: менеджер всегда в контексте, помнит детали, не приходит с пустыми руками. «Просто внимательные ребята».</p></div>
+  </section>
+
+  <!-- 2 · Встреча -->
+  <section id="meeting" class="rv">
+    <div class="sec-head"><span class="sec-num mono">2</span><h2 id="meetTitle">Встреча: 30-40 минут, 8 блоков</h2></div>
+    <p class="sec-sub" id="meetSub">Хронометраж ориентировочный. Блоки - логика в голове менеджера, а не анкета: переходы органичные. Нажмите на блок.</p>
+    <div class="rec"><span class="dot"></span><span id="recTxt">Запись на каждой встрече - подаётся как сервис, без извинений</span></div>
+    <div class="timebar" id="timebar" role="tablist" aria-label="Блоки встречи"></div>
+    <div class="time-cap"><span>0 мин</span><span>~40 мин</span></div>
+    <div class="detail" id="detail" role="tabpanel"></div>
+    <p class="chatline backstage-inline" id="chatline"><b>Правило параллельного канала:</b> чат = операционка по текущим клиентам, встреча = зум-аут. Можно решить в чате - решай в чате: встреча его не дублирует.</p>
+  </section>
+
+  <!-- 3 · Развилка конверсии -->
+  <section id="conv" class="backstage rv">
+    <div class="bs-body">
+      <div class="sec-head"><span class="sec-num mono">3</span><h2>Развилка быстрой конверсии</h2></div>
+      <p class="sec-sub">Клиенты «под столом» у партнёра делятся на две неравные категории. Выберите ситуацию - схема покажет путь.</p>
+      <div class="decide">
+        <div class="d-q">
+          <h4>Клиент в активном поиске прямо сейчас?</h4>
+          <div class="btns">
+            <button class="pathbtn on" id="pathA">Да - горячий</button>
+            <button class="pathbtn" id="pathB">Нет - нужен прогрев</button>
+          </div>
+        </div>
+        <div class="paths" id="paths" data-path="a">
+          <div class="path path-a">
+            <div class="flow">
+              <div class="fstep"><span class="k">Live-catch</span><p>Не откладываем. Партнёр пишет клиенту <b>прямо на встрече, при менеджере</b>: «У нас только что был созвон с Teus - под твой запрос есть суперовая возможность»</p></div>
+              <span class="farrow">→</span>
+              <div class="fstep"><span class="k">Соус</span><p><b>«Только для вашего партнёра, только здесь и сейчас»</b> - юнит, условие, окно цены, событие</p></div>
+              <span class="farrow">→</span>
+              <div class="fstep"><span class="k">Результат</span><p>Клиент забирается на <b>короткую встречу с менеджером Teus</b></p></div>
+            </div>
+          </div>
+          <div class="path path-b">
+            <div class="flow">
+              <div class="fstep"><span class="k">Шаг 1 · Крючок</span><p>Партнёр отправляет клиенту сообщение-крючок под его запрос. Один из трёх козырей:</p>
+                <div class="trumps" id="trumps">
+                  <span class="trump on">Рендеры проектов</span>
+                  <span class="trump">Глобальные бренды</span>
+                  <span class="trump">Отельный формат</span>
+                </div>
+              </div>
+              <span class="farrow">→</span>
+              <div class="fstep"><span class="k">Шаг 2 · Реакция</span><p>Слушаем: ответил, спросил, отреагировал - интерес есть</p>
+                <button class="loopbtn" id="loopBtn">Реакции нет → меняем козырь, не дожимаем</button>
+              </div>
+              <span class="farrow">→</span>
+              <div class="fstep"><span class="k">Шаг 3 · Приглашение</span><p>Сообщение-углубление и подводка: <b>«Могу организовать короткий зум с Teus - покажут именно то, что ты ищешь»</b></p></div>
+            </div>
+          </div>
+        </div>
+        <div class="reqline"><b>Требования к идее конверсии:</b> привязана к запросу клиента, а не к нашему желанию продать · есть причина действовать сейчас · подтверждена внутри · партнёр пересказывает её за 30 секунд. Материалы партнёру передаются готовыми - он ничего не собирает сам.</div>
+      </div>
+    </div>
+    <div class="veil"><span class="curtain">Партнёр этого не видит</span><p>Для партнёра это выглядит как удачная идея, родившаяся в разговоре. Никакой «развилки» и «шагов прогрева» - просто менеджер вовремя подсказал ход.</p></div>
+  </section>
+
+  <!-- 4 · Реактивация -->
+  <section id="react" class="backstage rv">
+    <div class="bs-body">
+      <div class="sec-head"><span class="sec-num mono">4</span><h2>Реактивация зависших</h2></div>
+      <p class="sec-sub">Для клиентов в процессе, которые зависли, но не отказались. Запускается с ретро (блок 1).</p>
+      <div class="steps">
+        <div class="step"><p>На ретро выделили зависших - договорились о совместном прогреве</p><span class="who">менеджер + партнёр</span></div>
+        <div class="step"><p>Повод под клиента: новое условие, этап стройки, материал, событие, идея конверсии</p><span class="who">менеджер</span></div>
+        <div class="step"><p>Пакет партнёру - в тот же день</p><span class="who">менеджер</span></div>
+        <div class="step"><p>Выход к клиенту с поводом</p><span class="who">партнёр</span></div>
+        <div class="step"><p>Контроль на следующем фоллоуапе: вышел / реакция / следующий шаг</p><span class="who">менеджер</span></div>
+      </div>
+      <div class="redrule"><b>Реактивация без нового повода не запускается.</b> «Позвони ему ещё раз» без аргумента сжигает клиента и доверие партнёра. Компания не выходит на клиентов партнёра напрямую.</div>
+    </div>
+    <div class="veil"><span class="curtain">Партнёр этого не видит</span><p>Партнёр видит: компания сама принесла повод и материал под его зависшего клиента - осталось только отправить.</p></div>
+  </section>
+
+  <!-- 5 · После встречи -->
+  <section id="after" class="backstage rv">
+    <div class="bs-body">
+      <div class="sec-head"><span class="sec-num mono">5</span><h2>После встречи</h2></div>
+      <p class="sec-sub">Встреча без выходов - встреча ради галочки. Три обязательных контура.</p>
+      <div class="grid2">
+        <div class="card"><span class="k">≤ 24 часа</span><h4>Фиксация</h4>
+          <ul>
+            <li>Саммари в CRM в течение 24 часов</li>
+            <li>Продажи и статусы · потери с причинами (у кого купил и почему)</li>
+            <li>Ответы партнёра на «что нам сделать, чтобы...»</li>
+            <li>План по потенциальным клиентам · обязательства с дедлайнами · дата следующего контакта</li>
+          </ul>
+        </div>
+        <div class="card"><span class="k">Вернуться с ответом</span><h4>Follow-through</h4>
+          <ul>
+            <li>Запросы партнёра → руководителю B2B со сроком ответа партнёру</li>
+            <li>Каждая названная причина потери = задача: без решения партнёр перестанет делиться</li>
+            <li>Причина повторяется у нескольких партнёров = готовое предложение, а не «подумаем»</li>
+          </ul>
+        </div>
+        <div class="card"><span class="k">Ритм</span><h4>Частоты</h4>
+          <ul>
+            <li>Высокая интенсивность партнёра - раз в 2 недели</li>
+            <li>Ниже - раз в месяц</li>
+            <li>Есть результат - частоту можно поднять; нет - точно не поднимать</li>
+            <li>Частота - решение менеджера, партнёру не анонсируется</li>
+          </ul>
+        </div>
+        <div class="card"><span class="k">Два формата</span><h4>Первая встреча</h4>
+          <p>Внешне ничем не отличается от обычного фоллоуапа - те же блоки, тот же тон. Особенность только в фокусе менеджера: вытянуть 5-6 причин, по которым партнёр не приводит больше клиентов, и определить ритм на будущее - внутри обычного разговора, без анонса.</p>
+        </div>
+      </div>
+    </div>
+    <div class="veil"><span class="curtain">Партнёр этого не видит</span><p>Он видит: спустя пару дней компания вернулась с ответом на его вопрос. «Они реально слушают».</p></div>
+  </section>
+
+  <!-- 6 · Анти-паттерны -->
+  <section id="anti" class="backstage rv">
+    <div class="bs-body">
+      <div class="sec-head"><span class="sec-num mono">6</span><h2>Что разрушает конструкцию</h2></div>
+      <p class="sec-sub">Наведите на карточку - почему это ломает систему.</p>
+      <div class="anti-grid">
+        <div class="anti" tabindex="0"><h4>«Система», «программа», «регулярные встречи» вслух</h4><p><span class="why">Почему разрушает</span><br>Вся ценность - в органичности. Формальный анонс убивает тёплое ощущение, ради которого всё затевается.</p></div>
+        <div class="anti" tabindex="0"><h4>Предложить партнёру «выбрать» частоту</h4><p><span class="why">Почему разрушает</span><br>Раскрывает график. Ритм решает менеджер - и просто начинает выходить на связь в нём.</p></div>
+        <div class="anti" tabindex="0"><h4>Прийти без контекста</h4><p><span class="why">Почему разрушает</span><br>Пустой смолток, вопросы вслепую, интерес не показан - партнёр это чувствует мгновенно.</p></div>
+        <div class="anti" tabindex="0"><h4>Допрос по чек-листу</h4><p><span class="why">Почему разрушает</span><br>Блоки - логика, а не анкета. Переходы органичные, иначе встреча звучит как отчётность.</p></div>
+        <div class="anti" tabindex="0"><h4>Просящая позиция</h4><p><span class="why">Почему разрушает</span><br>Рушит позиционирование «я помогаю тебе зарабатывать» - и менеджер становится одним из многих просителей.</p></div>
+        <div class="anti" tabindex="0"><h4>Приглашение «в лоб» холодному клиенту</h4><p><span class="why">Почему разрушает</span><br>Отказ сжигает возможность. Сначала крючок → реакция → приглашение.</p></div>
+      </div>
+    </div>
+    <div class="veil"><span class="curtain">Партнёр этого не видит</span><p>Пока анти-паттерны не случаются - партнёр не видит ничего. Он замечает их мгновенно, когда они случаются.</p></div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Основание: Инструкция «Первый и регулярный фоллоуапы» v4.0 · Дополнение к Политике B2B · Воркшоп 07-2026</span>
+    <span>Teus Group × M4U</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  var BLOCKS = [
+    {num:'Блок 0', t:'2-3 мин', share:2.5, title:'Смолток и похвала',
+     goal:'Показать: «мы тобой интересуемся». Возможно только при выполненной подготовке.',
+     moves:['Открытие через личное: комментарий к посту, кейсу, событию партнёра',
+            'Были результаты за период - похвалить: <b>«дай пять, красавчик»</b>'],
+     exits:[],
+     q:'«Видел твой пост про сделку - красавчик! Как ты вообще?»',
+     feel:'обо мне помнят, мной интересуются'},
+    {num:'Блок 1', t:'5-7 мин', share:6, title:'Ретро периода',
+     goal:'Разобрать, что было: продажи, процесс, зависшие.',
+     moves:['Кому продали - <b>похвалить: «супер, молодцы!»</b>',
+            'Кто в процессе: по каждому - идеи, блоки, вопрос «как нам их сдвинуть?»',
+            'Зависшие (не отказавшиеся) - договориться о совместном прогреве'],
+     exits:[{txt:'→ Реактивация', target:'react'}],
+     q:'«Кстати, как там тот твой клиент по вилле? Есть идея, как его сдвинуть»',
+     feel:'мне помогают с моими сделками, а не требуют отчёта'},
+    {num:'Блок 2', t:'5-7 мин', share:6, title:'Рефлексия потерь',
+     goal:'Собрать 5-6 живых причин за встречу - не общие слова. Не останавливаться на первом ответе.',
+     moves:['Не купил - <b>почему? что остановило?</b>',
+            'Купил у другого - <b>у кого и что именно?</b> Повторяется - что там происходит?',
+            'Обязательный финал: <b>«Что нам сделать, чтобы таких клиентов выигрывать?»</b>'],
+     exits:[{txt:'→ Задачи наверх (§5)', target:'after'}],
+     q:'«Слушай, а почему тогда не срослось? Что его остановило?»',
+     feel:'моё мнение важно - меня слышат, а не оправдываются'},
+    {num:'Блок 3', t:'3-5 мин', share:4, title:'Новости и слухи рынка',
+     goal:'Лёгкий режим: обмен инсайтами, а не отчёт. «Уголок интересного».',
+     moves:['Сначала делимся своим: «у нас лидов много» или «лиды просели, странно»',
+            'Через это вытягиваем встречное: <b>«а у вас как? что слышно по рынку?»</b>',
+            'Брокер слышит рынок через клиентов чаще нас - часть контекста берём у него'],
+     exits:[],
+     q:'«Что слышно по рынку? У нас, кстати, вот что происходит...»',
+     feel:'интересный собеседник - знает больше меня'},
+    {num:'Блок 4', t:'5-7 мин', share:6, title:'Лидоген и маркетинг партнёра',
+     goal:'Взаимный обмен динамикой + помощь партнёру с его продвижением.',
+     moves:['Динамика лидогенерации: как у нас, как у него, какие запросы',
+            '<b>Минимум раз в месяц:</b> идеи контента + готовые материалы для его SMM',
+            'Ведёт рекламу - материалы для её создания + релевантные идеи. Источник - фабрика контента: проекты / компания / рынки'],
+     exits:[],
+     q:'«Набросал тебе идей, что постить, - материалы готовые, собирать ничего не надо»',
+     feel:'мне дают, а не просят'},
+    {num:'Блок 5', t:'5-7 мин', share:6, title:'Скрытый портфель',
+     goal:'Кому можем продать новому: клиенты партнёра, которых он к нам не вёл.',
+     moves:['Какие люди приходят, чего от них ожидать, какие запросы',
+            'Есть ли те, кому легли бы наши офферы - думаем вместе',
+            'Лиды идут, а к нам не ведёт: <b>«Почему? Чего не хватает проекту, чтобы ты их повёл?»</b>'],
+     exits:[{txt:'→ Быстрая конверсия (§3)', target:'conv'}],
+     q:'«А кто к тебе сейчас вообще приходит? Какие запросы?»',
+     feel:'обычное любопытство коллеги по рынку'},
+    {num:'Блок 6', t:'7-10 мин', share:8.5, title:'Быстрая конверсия и план',
+     goal:'Менеджер работает как соавтор партнёра: причина встречи с Teus именно сейчас + план подготовки клиента.',
+     moves:['По каждому клиенту из блока 5 - зачем ему встреча с Teus <b>именно сейчас</b>',
+            'Прогрев вместо лобового захода: крючок → реакция → приглашение',
+            'План фиксируется: повод → шаги → триггер приглашения → кто что делает'],
+     exits:[{txt:'→ Развилка конверсии (§3)', target:'conv'}],
+     q:'«Под его запрос прямо сейчас есть суперовая возможность - пиши ему, я рядом»',
+     feel:'удачная идея родилась в разговоре'},
+    {num:'Блок 7', t:'3-5 мин', share:4, title:'Финализация',
+     goal:'Встреча без выходов = встреча ради галочки.',
+     moves:['Взаимные обязательства <b>вслух</b>: что делаем мы, что делает партнёр',
+            'План на период до следующего контакта + шаги с датами',
+            'Закрывающий ритуал - расходимся на позитиве'],
+     exits:[{txt:'→ Фиксация 24ч (§5)', target:'after'}],
+     q:'«Ну что, по рукам: с меня материалы к четвергу, с тебя - выход к Марине»',
+     feel:'договорились по-человечески, без протокола'}
+  ];
+
+  var mode = 'manager';
+  var current = 0;
+
+  function $(id){ return document.getElementById(id); }
+
+  /* ---- timeline ---- */
+  function buildSegments(){
+    var bar = $('timebar');
+    if(!bar) return;
+    var html = '';
+    for(var i=0;i<BLOCKS.length;i++){
+      var b = BLOCKS[i];
+      html += '<button class="seg'+(i===current?' on':'')+'" data-i="'+i+'" role="tab" aria-selected="'+(i===current)+'"'+
+              ' style="flex-grow:'+b.share+'; animation-delay:'+(i*70)+'ms">'+
+              '<span class="seg-num mono">Б'+i+'</span>'+
+              '<span class="seg-t mono">'+b.t.replace(' мин','\u2032')+'</span>'+
+              '<span class="seg-glow"></span></button>';
+    }
+    bar.innerHTML = html;
+    var segs = bar.querySelectorAll('.seg');
+    for(var j=0;j<segs.length;j++){
+      segs[j].addEventListener('click', function(){
+        selectBlock(parseInt(this.getAttribute('data-i'),10));
+      });
+    }
+  }
+
+  function selectBlock(i){
+    current = i;
+    var bar = $('timebar');
+    if(bar){
+      var segs = bar.querySelectorAll('.seg');
+      for(var j=0;j<segs.length;j++){
+        var on = (j===i);
+        segs[j].classList.toggle('on', on);
+        segs[j].setAttribute('aria-selected', on ? 'true':'false');
+      }
+    }
+    renderDetail();
+  }
+
+  function renderDetail(){
+    var d = $('detail');
+    if(!d) return;
+    var b = BLOCKS[current];
+    var html = '';
+    if(mode === 'manager'){
+      html += '<div class="d-anim">';
+      html += '<div class="d-head"><span class="d-num">'+b.num.toUpperCase()+'</span><h3>'+b.title+'</h3><span class="d-time">'+b.t+'</span></div>';
+      html += '<p class="d-goal"><b>Цель:</b> '+b.goal+'</p><ul>';
+      for(var i=0;i<b.moves.length;i++){ html += '<li>'+b.moves[i]+'</li>'; }
+      html += '</ul>';
+      if(b.exits.length){
+        html += '<div class="d-exits">';
+        for(var e=0;e<b.exits.length;e++){
+          html += '<button class="d-exit" data-target="'+b.exits[e].target+'">'+b.exits[e].txt+'</button>';
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+    } else {
+      html += '<div class="d-anim">';
+      html += '<p class="d-quote">'+b.q+'</p>';
+      html += '<p class="d-feel"><b>Ощущение партнёра:</b> '+b.feel+'.</p>';
+      html += '</div>';
+    }
+    d.innerHTML = html;
+    var exits = d.querySelectorAll('.d-exit');
+    for(var k=0;k<exits.length;k++){
+      exits[k].addEventListener('click', function(){
+        var t = document.getElementById(this.getAttribute('data-target'));
+        if(t && t.scrollIntoView) t.scrollIntoView({behavior:'smooth', block:'start'});
+      });
+    }
+  }
+
+  /* ---- mode toggle ---- */
+  function setMode(m){
+    mode = m;
+    document.body.classList.remove('mode-manager','mode-partner');
+    document.body.classList.add('mode-'+m);
+    var bm = $('btnManager'), bp = $('btnPartner');
+    if(bm){ bm.classList.toggle('on', m==='manager'); bm.setAttribute('aria-pressed', m==='manager' ? 'true':'false'); }
+    if(bp){ bp.classList.toggle('on', m==='partner'); bp.setAttribute('aria-pressed', m==='partner' ? 'true':'false'); }
+    var mt = $('meetTitle'), ms = $('meetSub'), rt = $('recTxt'), cl = $('chatline');
+    if(m==='manager'){
+      if(mt) mt.textContent = 'Встреча: 30-40 минут, 8 блоков';
+      if(ms) ms.textContent = 'Хронометраж ориентировочный. Блоки - логика в голове менеджера, а не анкета: переходы органичные. Нажмите на блок.';
+      if(rt) rt.textContent = 'Запись на каждой встрече - подаётся как сервис, без извинений';
+      if(cl) cl.style.display = '';
+    } else {
+      if(mt) mt.textContent = 'Просто живой разговор';
+      if(ms) ms.textContent = 'Никаких блоков и таймингов партнёр не видит. Разговор течёт сам собой - нажмите на любую его часть, чтобы услышать, как это звучит.';
+      if(rt) rt.textContent = '«Мы записываем - фиксируем все вопросы, чтобы ни один не потерять»';
+      if(cl) cl.style.display = 'none';
+    }
+    renderDetail();
+  }
+
+  /* ---- checklist gate ---- */
+  function initChecklist(){
+    var list = $('checkList');
+    if(!list) return;
+    var boxes = list.querySelectorAll('input[type="checkbox"]');
+    function update(){
+      var done = 0;
+      for(var i=0;i<boxes.length;i++){
+        var item = boxes[i].parentNode;
+        if(boxes[i].checked){ done++; item.classList.add('done'); } else { item.classList.remove('done'); }
+      }
+      var total = boxes.length;
+      var cc = $('checkCount'); if(cc) cc.textContent = done+' / '+total;
+      var gb = $('gateBar'); if(gb) gb.style.width = Math.round(done/total*100)+'%';
+      var gate = $('gate'), gl = $('gateLock'), gt = $('gateTxt');
+      var open = (done === total);
+      if(gate) gate.classList.toggle('open', open);
+      if(gl) gl.textContent = open ? '🔓' : '🔒';
+      if(gt) gt.textContent = open ? 'Готово. Встреча назначается.' : 'Встреча не назначается - подготовка не завершена';
+    }
+    for(var i=0;i<boxes.length;i++){ boxes[i].addEventListener('change', update); }
+    update();
+  }
+
+  /* ---- decision branch ---- */
+  function initDecision(){
+    var pa = $('pathA'), pb = $('pathB'), paths = $('paths');
+    if(!pa || !pb || !paths) return;
+    pa.addEventListener('click', function(){
+      paths.setAttribute('data-path','a');
+      pa.classList.add('on'); pb.classList.remove('on');
+    });
+    pb.addEventListener('click', function(){
+      paths.setAttribute('data-path','b');
+      pb.classList.add('on'); pa.classList.remove('on');
+    });
+    var trumpWrap = $('trumps'), loop = $('loopBtn');
+    if(trumpWrap && loop){
+      var trumps = trumpWrap.querySelectorAll('.trump');
+      var ti = 0;
+      loop.addEventListener('click', function(){
+        ti = (ti+1) % trumps.length;
+        for(var i=0;i<trumps.length;i++){ trumps[i].classList.toggle('on', i===ti); }
+      });
+    }
+  }
+
+  /* ---- anti-pattern tap (mobile) ---- */
+  function initAnti(){
+    var cards = document.querySelectorAll('.anti');
+    for(var i=0;i<cards.length;i++){
+      cards[i].addEventListener('click', function(){ this.classList.toggle('open'); });
+    }
+  }
+
+  /* ---- reveal on scroll ---- */
+  function initReveal(){
+    var els = document.querySelectorAll('.rv');
+    if(!('IntersectionObserver' in window)){
+      for(var i=0;i<els.length;i++){ els[i].classList.add('in'); }
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      for(var i=0;i<entries.length;i++){
+        if(entries[i].isIntersecting){
+          entries[i].target.classList.add('in');
+          io.unobserve(entries[i].target);
+        }
+      }
+    }, {threshold:.12});
+    for(var j=0;j<els.length;j++){ io.observe(els[j]); }
+  }
+
+  /* ---- password gate ---- */
+  var GATE_HASH = 'b97eb3814cf1942ff830ebe949357e252beb8994f7f0942ede3e094b1d2f8b97';
+
+  var sha256 = function(ascii){
+    function rr(v,a){ return (v>>>a)|(v<<(32-a)); }
+    var mp=Math.pow, mw=mp(2,32), i, j, result='';
+    var words=[], bits=ascii.length*8;
+    var hash=sha256.h=sha256.h||[], k=sha256.k=sha256.k||[];
+    var pc=k.length, comp={};
+    for(var cand=2; pc<64; cand++){
+      if(!comp[cand]){
+        for(i=0;i<313;i+=cand) comp[i]=cand;
+        hash[pc]=(mp(cand,.5)*mw)|0;
+        k[pc++]=(mp(cand,1/3)*mw)|0;
+      }
+    }
+    ascii+='\x80';
+    while(ascii.length%64-56) ascii+='\x00';
+    for(i=0;i<ascii.length;i++){
+      j=ascii.charCodeAt(i);
+      if(j>>8) return '';
+      words[i>>2]|=j<<((3-i)%4)*8;
+    }
+    words[words.length]=(bits/mw)|0;
+    words[words.length]=bits;
+    for(j=0;j<words.length;){
+      var w=words.slice(j,j+=16), oldHash=hash;
+      hash=hash.slice(0,8);
+      for(i=0;i<64;i++){
+        var w15=w[i-15], w2=w[i-2];
+        var a=hash[0], e=hash[4];
+        var t1=hash[7]+(rr(e,6)^rr(e,11)^rr(e,25))+((e&hash[5])^((~e)&hash[6]))+k[i]
+          +(w[i]=(i<16)?w[i]:(w[i-16]+(rr(w15,7)^rr(w15,18)^(w15>>>3))+w[i-7]+(rr(w2,17)^rr(w2,19)^(w2>>>10)))|0);
+        var t2=(rr(a,2)^rr(a,13)^rr(a,22))+((a&hash[1])^(a&hash[2])^(hash[1]&hash[2]));
+        hash=[(t1+t2)|0].concat(hash);
+        hash[4]=(hash[4]+t1)|0;
+      }
+      for(i=0;i<8;i++) hash[i]=(hash[i]+oldHash[i])|0;
+    }
+    for(i=0;i<8;i++){
+      for(j=3;j+1;j--){
+        var b=(hash[i]>>(j*8))&255;
+        result+=((b<16)?0:'')+b.toString(16);
+      }
+    }
+    return result;
+  };
+
+  function tryUnlock(){
+    var inp = $('pwInput');
+    if(!inp) return;
+    var val = (inp.value || '').trim();
+    if(val && sha256(val) === GATE_HASH){
+      document.body.classList.remove('locked');
+      var g = $('gatekeeper');
+      if(g){
+        g.classList.add('bye');
+        setTimeout(function(){ g.style.display = 'none'; }, 550);
+      }
+    } else {
+      var err = $('gateErr'); if(err) err.style.opacity = '1';
+      var card = $('gateCard');
+      if(card){
+        card.classList.remove('shake');
+        void card.offsetWidth;
+        card.classList.add('shake');
+      }
+      if(inp.select) inp.select();
+    }
+  }
+
+  function initGate(){
+    var inp = $('pwInput'), btn = $('pwBtn');
+    if(!inp || !btn){ document.body.classList.remove('locked'); return; }
+    btn.addEventListener('click', tryUnlock);
+    inp.addEventListener('keydown', function(ev){
+      if(ev.key === 'Enter'){ ev.preventDefault(); tryUnlock(); }
+      var err = $('gateErr'); if(err) err.style.opacity = '0';
+    });
+    if(inp.focus) setTimeout(function(){ inp.focus(); }, 150);
+  }
+
+  /* ---- init ---- */
+  function init(){
+    initGate();
+    buildSegments();
+    renderDetail();
+    initChecklist();
+    initDecision();
+    initAnti();
+    initReveal();
+    var bm = $('btnManager'), bp = $('btnPartner');
+    if(bm) bm.addEventListener('click', function(){ setMode('manager'); });
+    if(bp) bp.addEventListener('click', function(){ setMode('partner'); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
