@@ -9,6 +9,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Maxify — динамічне ціноутворення для девелоперів</title>
+<meta name="description" content="Перша система динамічного ціноутворення для девелоперів у Європі. Автоматичні переоцінки, +3–8% додаткового доходу, тарифи та пілот на одному будинку.">
+<meta name="theme-color" content="#060B1E">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<!-- Прев'ю посилання (Telegram / LinkedIn / Facebook).
+     Перед публікацією завантаж maxify_og.png у корінь m4u.ua -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Maxify">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:title" content="Maxify — динамічне ціноутворення для девелоперів">
+<meta property="og:description" content="Перша система динамічного ціноутворення для девелоперів у Європі. Автоматичні переоцінки, +3–8% додаткового доходу, тарифи та пілот на одному будинку.">
+<meta property="og:image" content="https://m4u.ua/maxify_og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Maxify — динамічне ціноутворення для девелоперів">
+<meta name="twitter:description" content="Перша система динамічного ціноутворення для девелоперів у Європі. Автоматичні переоцінки, +3–8% додаткового доходу, тарифи та пілот на одному будинку.">
+<meta name="twitter:image" content="https://m4u.ua/maxify_og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
