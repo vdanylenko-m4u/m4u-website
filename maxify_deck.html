@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<!--
+  Maxify — інтерактивна демо-презентація (Claude + засновник, 2026-07-23)
+  Одна сторінка, без залежностей. Навігація: стрілки ← →, кліки, свайп, крапки.
+  Тумблер «Річна оплата −20%» перемикає ціни на тарифних слайдах.
+-->
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maxify — динамічне ціноутворення для девелоперів</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#060B1E;
+    --navy:#0D1836;
+    --panel:#111F44;
+    --line:rgba(140,165,220,.16);
+    --blue:#5B9BF8;
+    --blue-deep:#2E63E0;
+    --mint:#2BE4A0;
+    --coral:#F87171;
+    --paper:#EEF2FB;
+    --muted:#93A0C2;
+    --dim:#5E6C92;
+    --r:18px;
+    --disp:'Unbounded',system-ui,sans-serif;
+    --body:'Golos Text',system-ui,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:var(--body);
+    background:var(--ink);
+    color:var(--paper);
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* ── фонова сітка ─────────────────────────── */
+  .bg{
+    position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:
+      radial-gradient(1000px 600px at 85% -10%, rgba(46,99,224,.20), transparent 60%),
+      radial-gradient(800px 500px at -5% 110%, rgba(43,228,160,.10), transparent 60%);
+  }
+  .bg::after{
+    content:"";position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(140,165,220,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(140,165,220,.05) 1px, transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(ellipse at 50% 40%, #000 30%, transparent 75%);
+  }
+
+  /* ── шапка / хром ─────────────────────────── */
+  .chrome{
+    position:fixed;top:0;left:0;right:0;z-index:20;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px clamp(20px,4vw,48px);
+  }
+  .brand{display:flex;align-items:center;text-decoration:none;color:var(--paper)}
+  .logo-h{height:26px;width:auto;display:block}
+  .logo-hero{height:clamp(48px,6vw,72px);width:auto;display:block}
+  .logo-eng{height:30px;width:auto;display:block}
+  .crumbs{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .counter{font-family:var(--mono);font-size:12px;color:var(--dim)}
+  .counter b{color:var(--blue);font-weight:500}
+
+  /* ── сцена та слайди ──────────────────────── */
+  .stage{position:relative;z-index:5;height:100%;width:100%}
+  .slide{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:96px clamp(20px,5vw,72px) 108px;
+    opacity:0;visibility:hidden;transform:translateX(44px);
+    transition:opacity .45s ease, transform .45s ease, visibility 0s .45s;
+  }
+  .slide.active{opacity:1;visibility:visible;transform:none;transition-delay:0s}
+  .slide.prev{transform:translateX(-44px)}
+  .inner{width:100%;max-width:1120px;margin:0 auto}
+
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--blue);margin-bottom:16px;display:flex;align-items:center;gap:12px;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--blue)}
+  h1,h2{font-family:var(--disp);font-weight:600;line-height:1.14;letter-spacing:-.01em}
+  h1{font-size:clamp(30px,5.2vw,62px)}
+  h2{font-size:clamp(22px,3vw,36px);margin-bottom:clamp(18px,3vh,30px)}
+  .lead{color:var(--muted);font-size:clamp(15px,1.4vw,18px);line-height:1.65;max-width:640px}
+
+  /* поява елементів усередині активного слайда */
+  .rise{opacity:0;transform:translateY(18px)}
+  .slide.active .rise{animation:rise .6s cubic-bezier(.2,.7,.2,1) forwards}
+  .slide.active .rise:nth-of-type(2){animation-delay:.08s}
+  .slide.active .rise:nth-of-type(3){animation-delay:.16s}
+  .slide.active .rise:nth-of-type(4){animation-delay:.24s}
+  @keyframes rise{to{opacity:1;transform:none}}
+
+  /* ── картки-фрейми ────────────────────────── */
+  .grid{display:grid;gap:16px}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .card{
+    background:linear-gradient(180deg, rgba(24,38,80,.72), rgba(13,24,54,.72));
+    border:1px solid var(--line);border-radius:var(--r);
+    padding:clamp(18px,2.2vw,26px);
+    backdrop-filter:blur(6px);
+  }
+  .card h3{font-family:var(--body);font-weight:600;font-size:17px;margin-bottom:8px}
+  .card p{color:var(--muted);font-size:14.5px;line-height:1.6}
+  .tag{
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--mint);background:rgba(43,228,160,.08);
+    border:1px solid rgba(43,228,160,.25);border-radius:999px;
+    padding:4px 10px;margin-bottom:14px;
+  }
+  .tag.blue{color:var(--blue);background:rgba(91,155,248,.08);border-color:rgba(91,155,248,.3)}
+  .tag.dimtag{color:var(--muted);background:rgba(147,160,194,.07);border-color:rgba(147,160,194,.25)}
+
+  /* ── титул ────────────────────────────────── */
+  #s0 .logo-lockup{display:flex;align-items:center;margin-bottom:34px}
+  #s0 h1{max-width:900px}
+  #s0 .sub{margin-top:22px}
+  #s0 .meta{
+    margin-top:44px;display:flex;gap:26px;flex-wrap:wrap;
+    font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--dim);
+  }
+  #s0 .meta b{color:var(--muted);font-weight:500}
+  .hint{margin-top:40px;font-size:13px;color:var(--dim);display:flex;align-items:center;gap:10px}
+  .hint kbd{
+    font-family:var(--mono);font-size:11px;color:var(--muted);
+    border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:3px 8px;
+  }
+  .poly{position:absolute;pointer-events:none;opacity:.7}
+
+  /* ── як працює ────────────────────────────── */
+  .flow{display:grid;grid-template-columns:1fr auto 1.1fr auto 1fr;gap:14px;align-items:stretch}
+  .flow .stack{display:flex;flex-direction:column;gap:12px;justify-content:center}
+  .chip{
+    background:rgba(24,38,80,.6);border:1px solid var(--line);border-radius:14px;
+    padding:13px 16px;font-size:14px;color:var(--paper);
+  }
+  .chip small{display:block;color:var(--dim);font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
+  .flow .arrow{align-self:center;color:var(--blue);font-size:22px;opacity:.8}
+  .engine{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;
+    background:linear-gradient(160deg, rgba(46,99,224,.28), rgba(13,24,54,.85));
+    border:1px solid rgba(91,155,248,.4);border-radius:var(--r);padding:26px 20px;
+  }
+  .engine p{color:var(--muted);font-size:13px;line-height:1.5}
+  .out{
+    display:flex;flex-direction:column;gap:12px;justify-content:center;
+  }
+  .out .chip{border-color:rgba(43,228,160,.3);background:rgba(43,228,160,.06)}
+  .flownote{margin-top:22px;color:var(--muted);font-size:15px;line-height:1.65;max-width:820px}
+  .flownote b{color:var(--paper);font-weight:600}
+
+  /* ── графік adV (підпис слайда) ───────────── */
+  .chartwrap{display:grid;grid-template-columns:1.4fr 1fr;gap:clamp(20px,3vw,40px);align-items:center}
+  .chart{
+    background:rgba(13,24,54,.6);border:1px solid var(--line);border-radius:var(--r);
+    padding:18px 14px 8px;
+  }
+  .chart svg{width:100%;height:auto;display:block}
+  .draw{stroke-dasharray:1400;stroke-dashoffset:1400}
+  .slide.active .draw{animation:draw 1.8s ease forwards .25s}
+  .slide.active .draw.d2{animation-delay:.55s}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .gain{opacity:0}
+  .slide.active .gain{animation:fadeg .5s ease forwards}
+  .slide.active .gain.g1{animation-delay:1.35s}
+  .slide.active .gain.g2{animation-delay:1.55s}
+  .slide.active .gain.g3{animation-delay:1.75s}
+  @keyframes fadeg{to{opacity:1}}
+  .legend{display:flex;gap:20px;flex-wrap:wrap;margin:10px 8px 8px;font-size:12.5px;color:var(--muted)}
+  .legend i{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:7px}
+  .formula{
+    font-family:var(--mono);font-size:clamp(14px,1.4vw,17px);color:var(--mint);
+    background:rgba(43,228,160,.07);border:1px solid rgba(43,228,160,.25);
+    border-radius:12px;padding:14px 18px;display:inline-block;margin-bottom:18px;
+  }
+  .kcase{
+    border-left:3px solid var(--mint);padding:4px 0 4px 18px;margin-top:20px;
+    color:var(--muted);font-size:14.5px;line-height:1.6;
+  }
+  .kcase b{color:var(--paper)}
+
+  /* ── цифри ────────────────────────────────── */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .stat{
+    background:linear-gradient(180deg, rgba(24,38,80,.72), rgba(13,24,54,.72));
+    border:1px solid var(--line);border-radius:var(--r);padding:22px 24px;
+  }
+  .stat .num{font-family:var(--disp);font-weight:600;font-size:clamp(26px,3vw,38px);color:var(--paper)}
+  .stat .num em{font-style:normal;color:var(--blue)}
+  .stat .lbl{margin-top:6px;color:var(--muted);font-size:13.5px;line-height:1.45}
+
+  /* ── лінійка продуктів ────────────────────── */
+  .prod{cursor:pointer;position:relative;transition:transform .25s ease, border-color .25s ease}
+  .prod:hover{transform:translateY(-4px);border-color:rgba(91,155,248,.45)}
+  .prod .pname{font-family:var(--disp);font-weight:500;font-size:20px;margin-bottom:4px}
+  .prod .prole{color:var(--blue);font-size:13px;font-weight:600;margin-bottom:12px}
+  .prod ul{list-style:none;margin-top:4px}
+  .prod li{color:var(--muted);font-size:13.5px;line-height:1.55;padding-left:16px;position:relative;margin-bottom:7px}
+  .prod li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;border-radius:2px;background:var(--blue);opacity:.7}
+  .prod .go{
+    margin-top:14px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--dim);display:flex;align-items:center;gap:8px;
+  }
+  .prod:hover .go{color:var(--blue)}
+
+  /* ── тарифи ───────────────────────────────── */
+  .pricehead{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+  .toggle{
+    display:inline-flex;background:rgba(13,24,54,.8);border:1px solid var(--line);
+    border-radius:999px;padding:4px;gap:2px;
+  }
+  .toggle button{
+    font-family:var(--body);font-weight:600;font-size:13px;color:var(--muted);
+    background:transparent;border:0;border-radius:999px;padding:9px 18px;cursor:pointer;
+    transition:background .2s, color .2s;
+  }
+  .toggle button.on{background:var(--blue-deep);color:#fff}
+  .toggle .disc{color:var(--mint);font-weight:700;margin-left:6px;font-size:12px}
+  .toggle button.on .disc{color:#B6FFE2}
+
+  .plan{position:relative;display:flex;flex-direction:column}
+  .plan.hot{border-color:rgba(91,155,248,.55);box-shadow:0 12px 44px rgba(46,99,224,.22)}
+  .plan .badge{
+    position:absolute;top:-11px;right:16px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:#08122B;background:var(--blue);border-radius:999px;padding:4px 11px;font-weight:600;
+  }
+  .plan .pl-name{font-weight:600;font-size:15.5px;margin-bottom:2px}
+  .plan .pl-sub{color:var(--dim);font-size:12.5px;margin-bottom:16px}
+  .plan .price{font-family:var(--disp);font-weight:600;font-size:clamp(24px,2.6vw,32px);line-height:1}
+  .plan .price .cur{font-size:.62em;color:var(--muted);font-weight:500}
+  .plan .per{color:var(--dim);font-size:12.5px;margin-top:6px}
+  .plan .was{color:var(--dim);font-size:13px;text-decoration:line-through;margin-top:8px;height:16px;visibility:hidden}
+  .annual .plan .was{visibility:visible}
+  .plan .unit{
+    margin-top:14px;font-family:var(--mono);font-size:12px;color:var(--mint);
+    border-top:1px dashed var(--line);padding-top:12px;
+  }
+  .strip{
+    margin-top:18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;
+    background:rgba(13,24,54,.6);border:1px dashed var(--line);border-radius:14px;
+    padding:14px 18px;color:var(--muted);font-size:13.5px;
+  }
+  .strip b{color:var(--paper);font-weight:600}
+  .strip .sep{color:var(--dim)}
+
+  /* ── альтернативні моделі ─────────────────── */
+  .alt .big{font-family:var(--disp);font-weight:600;font-size:clamp(26px,3.4vw,40px);margin:6px 0 10px}
+  .alt .big span{color:var(--mint)}
+  .footlaw{margin-top:18px;color:var(--dim);font-size:13px}
+
+  /* ── кастом ───────────────────────────────── */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:st}
+  .step{position:relative;padding-top:54px}
+  .step::before{
+    counter-increment:st;content:"0" counter(st);
+    position:absolute;top:18px;left:20px;
+    font-family:var(--mono);font-size:13px;letter-spacing:.14em;color:var(--blue);
+  }
+  .step::after{
+    content:"";position:absolute;top:24px;left:64px;right:20px;height:1px;background:var(--line);
+  }
+  .step .price-s{font-family:var(--disp);font-weight:600;font-size:22px;margin-bottom:6px}
+  .step .price-s small{font-family:var(--mono);font-weight:400;font-size:12px;color:var(--muted)}
+
+  /* ── фінал ────────────────────────────────── */
+  #s10 .cta{
+    display:inline-flex;align-items:center;gap:10px;margin-top:30px;
+    background:var(--blue-deep);color:#fff;text-decoration:none;font-weight:600;font-size:15px;
+    border-radius:12px;padding:15px 26px;transition:transform .2s ease, box-shadow .2s ease;
+  }
+  #s10 .cta:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(46,99,224,.4)}
+  #s10 .contacts{margin-top:38px;display:flex;gap:44px;flex-wrap:wrap;color:var(--muted);font-size:14px;line-height:1.75}
+  #s10 .contacts b{display:block;color:var(--paper);font-weight:600;margin-bottom:3px}
+  #s10 .contacts a{color:var(--blue);text-decoration:none}
+
+  /* ── навігація ────────────────────────────── */
+  .nav{
+    position:fixed;left:0;right:0;bottom:0;z-index:20;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px clamp(20px,4vw,48px);
+  }
+  .dots{display:flex;gap:8px}
+  .dots button{
+    width:8px;height:8px;border-radius:50%;border:0;cursor:pointer;
+    background:rgba(147,160,194,.3);transition:all .25s;padding:0;
+  }
+  .dots button.on{background:var(--blue);width:26px;border-radius:99px}
+  .arrows{display:flex;gap:10px}
+  .arrows button{
+    width:44px;height:44px;border-radius:12px;cursor:pointer;
+    background:rgba(24,38,80,.7);border:1px solid var(--line);color:var(--paper);
+    font-size:17px;transition:all .2s;
+  }
+  .arrows button:hover{border-color:var(--blue);color:var(--blue)}
+  :focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:6px}
+
+  /* ── адаптив ──────────────────────────────── */
+  @media (max-width:960px){
+    .g3,.stats,.steps{grid-template-columns:1fr 1fr}
+    .chartwrap{grid-template-columns:1fr}
+    .flow{grid-template-columns:1fr}
+    .flow .arrow{transform:rotate(90deg);justify-self:center}
+  }
+  @media (max-width:640px){
+    .slide{padding:84px 18px 96px;overflow-y:auto;justify-content:flex-start}
+    .inner{padding-top:2vh}
+    .g3,.g2,.stats,.steps{grid-template-columns:1fr}
+    .crumbs{display:none}
+    .pricehead{align-items:flex-start}
+    #s10 .contacts{gap:18px;flex-direction:column}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .slide,.rise,.draw,.gain,.prod,.dots button{animation:none!important;transition:none!important}
+    .rise{opacity:1;transform:none}
+    .draw{stroke-dashoffset:0}
+    .gain{opacity:1}
+  }
+</style>
+</head>
+<body class="monthly">
+<div class="bg"></div>
+
+<!-- ХРОМ -->
+<header class="chrome">
+  <span class="brand" aria-hidden="true">
+    <img class="logo-h" src="data:image/png;base64,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" alt="maxify">
+  </span>
+  <span class="crumbs" id="crumbs">Динамічне ціноутворення</span>
+  <span class="counter"><b id="cur">01</b> / <span id="total">11</span></span>
+</header>
+
+<main class="stage" id="stage">
+
+  <!-- 00 ТИТУЛ -->
+  <section class="slide" id="s0" data-label="Maxify · M4U">
+    <svg class="poly" style="top:8%;right:4%" width="220" height="180" viewBox="0 0 220 180" fill="none">
+      <path d="M10 160 L80 40 L150 90 L210 12 M80 40 L150 12 L210 12 M10 160 L150 90" stroke="#2BE4A0" stroke-opacity=".5" stroke-width="1"/>
+      <circle cx="80" cy="40" r="2.6" fill="#2BE4A0"/><circle cx="150" cy="90" r="2.6" fill="#2BE4A0"/>
+      <circle cx="210" cy="12" r="2.6" fill="#2BE4A0"/><circle cx="10" cy="160" r="2.6" fill="#2BE4A0"/>
+    </svg>
+    <svg class="poly" style="bottom:10%;right:14%" width="260" height="200" viewBox="0 0 260 200" fill="none">
+      <path d="M6 30 L110 100 L60 190 M110 100 L230 60 L254 170 L60 190 M230 60 L254 20" stroke="#5B9BF8" stroke-opacity=".45" stroke-width="1"/>
+      <circle cx="110" cy="100" r="2.6" fill="#5B9BF8"/><circle cx="230" cy="60" r="2.6" fill="#5B9BF8"/>
+      <circle cx="254" cy="170" r="2.6" fill="#5B9BF8"/><circle cx="60" cy="190" r="2.6" fill="#5B9BF8"/>
+    </svg>
+    <div class="inner">
+      <div class="logo-lockup rise">
+        <img class="logo-hero" src="data:image/png;base64,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" alt="maxify">
+      </div>
+      <h1 class="rise">Перша система динамічного ціноутворення для&nbsp;девелоперів у&nbsp;Європі</h1>
+      <p class="lead sub rise">Автоматизує переоцінки, тримає план доходу під контролем і&nbsp;перетворює темп продажів на&nbsp;додатковий прибуток проєкту.</p>
+      <div class="meta rise">
+        <span><b>M4U</b> · Income We Trust</span>
+        <span>Швидко · Просто · Об'єктивно</span>
+      </div>
+      <div class="hint"><kbd>←</kbd><kbd>→</kbd> гортати слайди</div>
+    </div>
+  </section>
+
+  <!-- 01 ПРОБЛЕМА -->
+  <section class="slide" id="s1" data-label="01 · Проблема">
+    <div class="inner">
+      <div class="eyebrow">Проблема</div>
+      <h2 class="rise">Ціна — головний важіль прибутку,<br>яким найважче керувати вручну</h2>
+      <div class="grid g3">
+        <div class="card rise">
+          <h3>Нерівномірні продажі</h3>
+          <p>Найліквідніші квартири йдуть занадто швидко, менш привабливі зависають. Загальна прибутковість проєкту просідає.</p>
+        </div>
+        <div class="card rise">
+          <h3>Години на кожну переоцінку</h3>
+          <p>Кожна зміна цін — це розрахунки та погодження вручну. Рішення запізнюються, реакція на ринок сповільнюється.</p>
+        </div>
+        <div class="card rise">
+          <h3>Втрата конверсії</h3>
+          <p>Що менше унікальних пропозицій лишається в асортименті, то нижча конверсія маркетингу та продажів.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 ЯК ПРАЦЮЄ -->
+  <section class="slide" id="s2" data-label="02 · Як це працює">
+    <div class="inner">
+      <div class="eyebrow">Механіка</div>
+      <h2 class="rise">Як працює Maxify</h2>
+      <div class="flow rise">
+        <div class="stack">
+          <div class="chip"><small>Вхід</small>План доходів проєкту</div>
+          <div class="chip"><small>Вхід</small>Шахматка з характеристиками квартир</div>
+          <div class="chip"><small>Вхід</small>Бронювання та продажі</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="engine">
+          <img class="logo-eng" src="data:image/png;base64,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" alt="maxify">
+          <p>Аналізує попит на кожну характеристику та звіряє факт із планом доходу</p>
+        </div>
+        <div class="arrow">→</div>
+        <div class="out">
+          <div class="chip"><small>Вихід</small>Рекомендовані ціни за лічені секунди</div>
+          <div class="chip"><small>Вихід</small>Погодження в один клік · синхронізація з CRM та ERP</div>
+        </div>
+      </div>
+      <p class="flownote rise">Система відстежує запланований рівень доходу в кожному періоді та <b>прискорює або сповільнює зростання цін</b> на характеристики квартир залежно від темпу продажів. Об'єктивно, з урахуванням попередніх продажів — без ручних перерахунків.</p>
+    </div>
+  </section>
+
+  <!-- 03 ДОДАТКОВИЙ ПРИБУТОК -->
+  <section class="slide" id="s3" data-label="03 · Додатковий прибуток">
+    <div class="inner">
+      <div class="eyebrow">Цінність</div>
+      <h2 class="rise">Часті малі кроки замість рідких стрибків</h2>
+      <div class="chartwrap">
+        <div class="chart rise" aria-label="Порівняння традиційної цінової стратегії та стратегії Maxify">
+          <svg viewBox="0 0 640 360">
+            <!-- осі -->
+            <line x1="70" y1="320" x2="612" y2="320" stroke="#334366" stroke-width="1"/>
+            <line x1="70" y1="320" x2="70" y2="52" stroke="#334366" stroke-width="1"/>
+            <text x="58" y="325" fill="#5E6C92" font-size="13" text-anchor="end" font-family="IBM Plex Mono">P₀</text>
+            <text x="58" y="70" fill="#5E6C92" font-size="13" text-anchor="end" font-family="IBM Plex Mono">P₁₀₀</text>
+            <text x="612" y="342" fill="#5E6C92" font-size="12" text-anchor="end" font-family="IBM Plex Mono">100% розпроданості</text>
+            <!-- традиційна стратегія: 3 великі кроки -->
+            <path class="draw" d="M70 320 H250 V235 H430 V150 H610 V65" fill="none" stroke="#F87171" stroke-width="3" stroke-linejoin="round"/>
+            <!-- Maxify: 12 малих кроків -->
+            <path class="draw d2" d="M70 320 H115 V298.8 H160 V277.5 H205 V256.3 H250 V235 H295 V213.8 H340 V192.5 H385 V171.3 H430 V150 H475 V128.8 H520 V107.5 H565 V86.3 H610 V65" fill="none" stroke="#5B9BF8" stroke-width="3" stroke-linejoin="round"/>
+            <!-- adV зони -->
+            <g class="gain g1">
+              <line x1="240" y1="258" x2="240" y2="318" stroke="#2BE4A0" stroke-width="2" stroke-dasharray="4 4"/>
+              <text x="248" y="292" fill="#2BE4A0" font-size="14" font-family="IBM Plex Mono">adV1</text>
+            </g>
+            <g class="gain g2">
+              <line x1="420" y1="173" x2="420" y2="233" stroke="#2BE4A0" stroke-width="2" stroke-dasharray="4 4"/>
+              <text x="428" y="207" fill="#2BE4A0" font-size="14" font-family="IBM Plex Mono">adV2</text>
+            </g>
+            <g class="gain g3">
+              <line x1="600" y1="88" x2="600" y2="148" stroke="#2BE4A0" stroke-width="2" stroke-dasharray="4 4"/>
+              <text x="540" y="112" fill="#2BE4A0" font-size="14" font-family="IBM Plex Mono">adV3</text>
+            </g>
+          </svg>
+          <div class="legend">
+            <span><i style="background:#F87171"></i>Традиційна стратегія</span>
+            <span><i style="background:#5B9BF8"></i>Стратегія Maxify</span>
+            <span><i style="background:#2BE4A0"></i>Додаткова вартість</span>
+          </div>
+        </div>
+        <div>
+          <div class="formula rise">adV1 + adV2 + … + adV(n)</div>
+          <p class="lead rise">Часті переоцінки фіксують попит на кожну характеристику квартири й підіймають ціну саме там, де ринок готовий платити. У проєктах клієнтів це дає <b style="color:var(--paper)">+3–8% додаткового доходу</b>. Підхід працює і на ринках, що зростають, і на стагнуючих.</p>
+          <div class="kcase rise">
+            <b>Свіжий кейс воєнного часу:</b> будинок, що розпочав і завершив продажі під час повномасштабної війни, — ≈&nbsp;<b>+3% чистого додаткового доходу</b> на проєкті обсягом ~100&nbsp;млн&nbsp;грн навіть за консервативної стратегії.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 У ЦИФРАХ -->
+  <section class="slide" id="s4" data-label="04 · У цифрах">
+    <div class="inner">
+      <div class="eyebrow">Maxify у цифрах</div>
+      <h2 class="rise">Перевірено активами на понад мільярд євро</h2>
+      <div class="stats">
+        <div class="stat rise"><div class="num">6 <em>років</em></div><div class="lbl">у щоденній роботі девелоперів</div></div>
+        <div class="stat rise"><div class="num">0 <em>ексцесів</em></div><div class="lbl">за весь час експлуатації системи</div></div>
+        <div class="stat rise"><div class="num">6 <em>країн</em></div><div class="lbl">присутності в Європі та на Близькому Сході</div></div>
+        <div class="stat rise"><div class="num">45<em>+</em></div><div class="lbl">будинків під управлінням системи</div></div>
+        <div class="stat rise"><div class="num">6 500<em>+</em></div><div class="lbl">квартир у переоцінках</div></div>
+        <div class="stat rise"><div class="num">€1<em>+ млрд</em></div><div class="lbl">активів, що переоцінюються системою</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 ЛІНІЙКА -->
+  <section class="slide" id="s5" data-label="05 · Лінійка продуктів">
+    <div class="inner">
+      <div class="eyebrow">Лінійка продуктів</div>
+      <h2 class="rise">Три способи отримати динамічне ціноутворення</h2>
+      <div class="grid g3">
+        <div class="card prod rise" data-goto="6" role="button" tabindex="0">
+          <span class="tag blue">Флагман</span>
+          <div class="pname">Maxify&nbsp;1</div>
+          <div class="prole">Готове робоче місце прайс-менеджера</div>
+          <ul>
+            <li>Дашборди, аналітика розпроданості, історія цін, звіти у два кліки</li>
+            <li>Перевірена методологія: 6 років у продакшні, €1+ млрд активів</li>
+            <li>Інтеграції з CRM, ERP та шахматками</li>
+          </ul>
+          <div class="go">Тарифи →</div>
+        </div>
+        <div class="card prod rise" data-goto="7" role="button" tabindex="0">
+          <span class="tag">Гнучкість</span>
+          <div class="pname">Maxify&nbsp;3</div>
+          <div class="prole">Движок ціноутворення нового покоління</div>
+          <ul>
+            <li>Backend price processing: підключається до ваших систем через API</li>
+            <li>Власні фактори, кастомні алгоритми, оновлювані моделі розрахунку</li>
+            <li>Математичне ядро Maxify — у максимально гнучкій оболонці</li>
+          </ul>
+          <div class="go">Тарифи →</div>
+        </div>
+        <div class="card prod rise" data-goto="9" role="button" tabindex="0">
+          <span class="tag dimtag">Індивідуально</span>
+          <div class="pname">Кастомна система</div>
+          <div class="prole">Ваші правила — ваша система</div>
+          <ul>
+            <li>Динамічне ціноутворення, побудоване під вашу методологію</li>
+            <li>Ваші тригери, формули та інтеграції з поточними системами</li>
+            <li>Приклад — тригерна система, що працює в клієнта у Словаччині</li>
+          </ul>
+          <div class="go">Умови →</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 ТАРИФИ MAXIFY 1 -->
+  <section class="slide" id="s6" data-label="06 · Тарифи Maxify 1">
+    <div class="inner">
+      <div class="pricehead rise">
+        <div>
+          <div class="eyebrow" style="margin-bottom:10px">Тарифи · Maxify 1</div>
+          <h2 style="margin-bottom:0">Підписка за кількістю будинків</h2>
+        </div>
+        <div class="toggle" role="group" aria-label="Період оплати">
+          <button type="button" class="bt-month on">Щомісячно</button>
+          <button type="button" class="bt-year">Річна оплата<span class="disc">−20%</span></button>
+        </div>
+      </div>
+      <div class="grid g3">
+        <div class="card plan rise">
+          <div class="pl-name">Старт</div>
+          <div class="pl-sub">до 3 будинків</div>
+          <div class="price"><span data-m="990" data-y="792">990</span> <span class="cur">€/міс</span></div>
+          <div class="was">990 €/міс</div>
+          <div class="unit" data-m="330 €/будинок" data-y="264 €/будинок">330 €/будинок</div>
+        </div>
+        <div class="card plan hot rise">
+          <div class="badge">Оптимальний</div>
+          <div class="pl-name">Портфель</div>
+          <div class="pl-sub">до 10 будинків</div>
+          <div class="price"><span data-m="2 490" data-y="1 992">2 490</span> <span class="cur">€/міс</span></div>
+          <div class="was">2 490 €/міс</div>
+          <div class="unit" data-m="249 €/будинок" data-y="199 €/будинок">249 €/будинок</div>
+        </div>
+        <div class="card plan rise">
+          <div class="pl-name">Безліміт</div>
+          <div class="pl-sub">без обмежень за кількістю будинків</div>
+          <div class="price"><span data-m="4 900" data-y="3 920">4 900</span> <span class="cur">€/міс</span></div>
+          <div class="was">4 900 €/міс</div>
+          <div class="unit">увесь портфель в одній системі</div>
+        </div>
+      </div>
+      <div class="strip rise">
+        <span><b>Онбординг будинку:</b> силами Maxify — 440&nbsp;€ разово</span>
+        <span class="sep">·</span>
+        <span>самостійно — <b>безкоштовно</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 ТАРИФИ MAXIFY 3 -->
+  <section class="slide" id="s7" data-label="07 · Тарифи Maxify 3">
+    <div class="inner">
+      <div class="pricehead rise">
+        <div>
+          <div class="eyebrow" style="margin-bottom:10px">Тарифи · Maxify 3</div>
+          <h2 style="margin-bottom:0">Гнучкий движок — гнучка ціна</h2>
+        </div>
+        <div class="toggle" role="group" aria-label="Період оплати">
+          <button type="button" class="bt-month on">Щомісячно</button>
+          <button type="button" class="bt-year">Річна оплата<span class="disc">−20%</span></button>
+        </div>
+      </div>
+      <div class="grid g2">
+        <div class="card plan rise">
+          <div class="pl-name">За будинок</div>
+          <div class="pl-sub">оплата лише за активні будинки</div>
+          <div class="price"><span data-m="240" data-y="192">240</span> <span class="cur">€/будинок·міс</span></div>
+          <div class="was">240 €/будинок·міс</div>
+          <div class="unit">масштабується разом із портфелем</div>
+        </div>
+        <div class="card plan hot rise">
+          <div class="badge">Для портфеля</div>
+          <div class="pl-name">Безліміт</div>
+          <div class="pl-sub">без обмежень за кількістю будинків</div>
+          <div class="price"><span data-m="1 990" data-y="1 592">1 990</span> <span class="cur">€/міс</span></div>
+          <div class="was">1 990 €/міс</div>
+          <div class="unit">вигідніший уже від 9 активних будинків</div>
+        </div>
+      </div>
+      <div class="strip rise">
+        <span><b>Онбординг будинку:</b> силами Maxify — 440&nbsp;€ разово</span>
+        <span class="sep">·</span>
+        <span>самостійно — <b>безкоштовно</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 АЛЬТЕРНАТИВНІ МОДЕЛІ -->
+  <section class="slide" id="s8" data-label="08 · Альтернативні моделі">
+    <div class="inner">
+      <div class="eyebrow">Альтернативні моделі співпраці</div>
+      <h2 class="rise">Платіть від масштабу — або від результату</h2>
+      <div class="grid g2">
+        <div class="card alt rise">
+          <span class="tag blue">Від обороту</span>
+          <div class="big"><span>0,1%</span> від обороту</div>
+          <p>Підписка, прив'язана до масштабу продажів. Жодних фіксованих платежів — вартість системи зростає лише разом із вашим оборотом.</p>
+        </div>
+        <div class="card alt rise">
+          <span class="tag">Від результату</span>
+          <div class="big">Фікс + <span>success fee</span></div>
+          <p>Невелика фіксована абонплата плюс відсоток від результату: success fee рахується від різниці між запланованою та фактично досягнутою сумою продажів і залишків.</p>
+        </div>
+      </div>
+      <p class="footlaw rise">Параметри моделі узгоджуємо індивідуально під проєкт.</p>
+    </div>
+  </section>
+
+  <!-- 09 КАСТОМНА РОЗРОБКА -->
+  <section class="slide" id="s9" data-label="09 · Кастомна розробка">
+    <div class="inner">
+      <div class="eyebrow">Кастомна розробка</div>
+      <h2 class="rise">Система за вашими правилами</h2>
+      <div class="steps">
+        <div class="card step rise">
+          <div class="price-s">2 000 € <small>фіксовано</small></div>
+          <h3>Discovery</h3>
+          <p>Аудит вашої методології ціноутворення, даних та інтеграційного ландшафту. Результат — технічне завдання з точним обсягом робіт.</p>
+        </div>
+        <div class="card step rise">
+          <div class="price-s" style="font-size:20px">Відповідно до ТЗ</div>
+          <h3>Розробка</h3>
+          <p>Бюджет фіксується після затвердження технічного завдання за результатами Discovery. Можливе розтермінування платежів.</p>
+        </div>
+        <div class="card step rise">
+          <h3 style="margin-top:2px">Запуск і супровід</h3>
+          <p>Інтеграції з вашими ERP, шахматкою та CRM. Доопрацювання, нові фактори й алгоритми — за запитом, у міру розвитку продукту.</p>
+        </div>
+      </div>
+      <div class="strip rise">
+        <span><b>Живий приклад:</b> тригерна система динамічного ціноутворення, створена для клієнта у Словаччині, — вже в щоденній роботі.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 НАСТУПНИЙ КРОК -->
+  <section class="slide" id="s10" data-label="10 · Наступний крок">
+    <div class="inner">
+      <div class="eyebrow">Наступний крок</div>
+      <h2 class="rise">Побачте цифри на власних даних</h2>
+      <p class="lead rise">Найшвидший спосіб оцінити систему — пілот на одному будинку.</p>
+      <a class="cta rise" href="https://t.me/YuliiaPronozaM4U" target="_blank" rel="noopener">Домовитися про пілот →</a>
+      <div class="contacts rise">
+        <div><b>Володимир Даниленко</b>CEO M4U · Co-founder Maxify<br>+380 98 904 88 10<br><a href="mailto:v.danylenko@maxify.ai">v.danylenko@maxify.ai</a></div>
+        <div><b>Юлія Проноза</b>BD Manager<br>+380 93 036 48 39<br><a href="mailto:y.pronoza@m4u.com.ua">y.pronoza@m4u.com.ua</a></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- НАВІГАЦІЯ -->
+<footer class="nav">
+  <div class="dots" id="dots" role="tablist" aria-label="Слайди"></div>
+  <div class="arrows">
+    <button type="button" id="prev" aria-label="Попередній слайд">←</button>
+    <button type="button" id="next" aria-label="Наступний слайд">→</button>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var dotsBox = document.getElementById('dots');
+  var cur = document.getElementById('cur');
+  var crumbs = document.getElementById('crumbs');
+  document.getElementById('total').textContent = String(slides.length).padStart(2,'0');
+  var i = 0;
+
+  slides.forEach(function(s, idx){
+    var d = document.createElement('button');
+    d.type = 'button';
+    d.setAttribute('aria-label', 'Слайд ' + (idx+1));
+    d.addEventListener('click', function(){ go(idx); });
+    dotsBox.appendChild(d);
+  });
+  var dots = Array.prototype.slice.call(dotsBox.children);
+
+  function go(n){
+    if(n < 0 || n >= slides.length || n === i) return;
+    slides[i].classList.remove('active');
+    slides[i].classList.toggle('prev', n > i);
+    i = n;
+    slides.forEach(function(s, idx){ s.classList.toggle('prev', idx < i); });
+    slides[i].classList.add('active');
+    dots.forEach(function(d, idx){ d.classList.toggle('on', idx === i); });
+    cur.textContent = String(i+1).padStart(2,'0');
+    crumbs.textContent = slides[i].dataset.label;
+  }
+
+  document.getElementById('next').addEventListener('click', function(){ go(i+1); });
+  document.getElementById('prev').addEventListener('click', function(){ go(i-1); });
+
+  document.addEventListener('keydown', function(e){
+    var onControl = e.target.closest && e.target.closest('button, a, [role="button"]');
+    if(e.key === ' ' && onControl) return; /* пробіл активує сфокусований контрол */
+    if(e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(i+1); }
+    if(e.key === 'ArrowLeft'  || e.key === 'PageUp') { e.preventDefault(); go(i-1); }
+    if(e.key === 'Home') go(0);
+    if(e.key === 'End') go(slides.length-1);
+  });
+
+  /* свайп */
+  var x0 = null;
+  document.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    if(x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if(Math.abs(dx) > 60) (dx < 0 ? go(i+1) : go(i-1));
+    x0 = null;
+  }, {passive:true});
+
+  /* картки лінійки → тарифні слайди */
+  document.querySelectorAll('[data-goto]').forEach(function(c){
+    c.addEventListener('click', function(){ go(parseInt(c.dataset.goto, 10)); });
+    c.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); go(parseInt(c.dataset.goto, 10)); }
+    });
+  });
+
+  /* тумблер оплати: місячно / річно −20% (синхронно на обох тарифних слайдах) */
+  function setBilling(annual){
+    document.body.classList.toggle('annual', annual);
+    document.body.classList.toggle('monthly', !annual);
+    document.querySelectorAll('.bt-month').forEach(function(b){ b.classList.toggle('on', !annual); });
+    document.querySelectorAll('.bt-year').forEach(function(b){ b.classList.toggle('on', annual); });
+    document.querySelectorAll('[data-m]').forEach(function(el){
+      el.textContent = annual ? el.dataset.y : el.dataset.m;
+    });
+  }
+  document.querySelectorAll('.bt-month').forEach(function(b){ b.addEventListener('click', function(){ setBilling(false); }); });
+  document.querySelectorAll('.bt-year').forEach(function(b){ b.addEventListener('click', function(){ setBilling(true); }); });
+
+  go(0);
+  slides[0].classList.add('active');
+  dots[0].classList.add('on');
+  crumbs.textContent = slides[0].dataset.label;
+})();
+</script>
+</body>
+</html>
