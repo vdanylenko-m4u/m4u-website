@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teus Radisson Maldives — стратегия таргета $54.5M | M4U Price Analytics</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+  html, body, #root { margin:0; padding:0; min-height:100vh; background:#0f0f1a; font-family:'DM Sans','Segoe UI',sans-serif; }
+  * { box-sizing:border-box; }
+  ::-webkit-scrollbar { height:8px; width:8px; } ::-webkit-scrollbar-thumb { background:#333; border-radius:4px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script crossorigin src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+<script crossorigin src="https://unpkg.com/recharts@2.12.7/umd/Recharts.js"></script>
+<script crossorigin src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+<script type="text/plain" id="app-source">
+
+const { useState, useMemo } = React;
+const { ResponsiveContainer, ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid,
+        Tooltip, BarChart, Bar, Cell, LabelList, ReferenceLine, Legend } = Recharts;
+
+const DATA = {"meta": {"date": "30.07.2026", "fx": 1.145, "targetUsd": 54500000, "targetEur": 47598253}, "kpi": {"factEur": 21450446, "factUsd": 24560761, "comPlanEur": 1499000, "balanceEur": 22440600, "totalCurrentUsd": 51971603, "deficitEur": 2208207, "deficitUsd": 2528397, "avgUplift": 9.84}, "decomp": [{"name": "Факт: номера", "usd": 17.96, "grp": "fact"}, {"name": "Факт: виллы", "usd": 4.29, "grp": "fact"}, {"name": "Факт: коммерция", "usd": 2.31, "grp": "fact"}, {"name": "План: коммерция ×10", "usd": 1.72, "grp": "plan"}, {"name": "Остаток по текущим ценам", "usd": 25.69, "grp": "bal"}, {"name": "Дефицит", "usd": 2.53, "grp": "def"}], "corr": [{"cat": "Standard", "D": 75.3, "pm2": 6937, "soldPm2": 5442, "total": 85, "soldN": 64, "villa": false}, {"cat": "Villa 1st line", "D": 57.1, "pm2": 8806, "soldPm2": 7239, "total": 7, "soldN": 4, "villa": true}, {"cat": "Villa 2nd line", "D": 50.0, "pm2": 7601, "soldPm2": 6734, "total": 8, "soldN": 4, "villa": true}, {"cat": "Suite", "D": 36.4, "pm2": 6516, "soldPm2": 5839, "total": 11, "soldN": 4, "villa": false}, {"cat": "Junior Suite", "D": 27.8, "pm2": 6384, "soldPm2": 5667, "total": 18, "soldN": 5, "villa": false}, {"cat": "Superior", "D": 0.0, "pm2": 6543, "soldPm2": null, "total": 23, "soldN": 0, "villa": false}], "corrStats": {"pearson": 0.51, "spearman": 0.66, "pearsonHotel": 0.77}, "scenarios": {"S1": {"title": "Текущая структура · равномерный рост", "short": "S1 текущая + равномерный", "desc": "Один множитель на все 71 юнит: +9,84% ср. / +19,7% терм. Просто в администрировании, но консервирует аномалию Superior — категория с нулевыми продажами дорожает наравне со всеми.", "rows": [{"cat": "Standard", "reb": 0, "avg": 9.8, "term": 19.7, "step": 0.98, "cur": [219900, 259900], "rebP": null, "fin": [263200, 311100]}, {"cat": "Superior", "reb": 0, "avg": 9.8, "term": 19.7, "step": 0.89, "cur": [259900, 299900], "rebP": null, "fin": [311100, 358900]}, {"cat": "Junior Suite", "reb": 0, "avg": 9.8, "term": 19.7, "step": 1.64, "cur": [299900, 309900], "rebP": null, "fin": [358900, 370900]}, {"cat": "Suite", "reb": 0, "avg": 9.8, "term": 19.7, "step": 3.28, "cur": [379900, 479900], "rebP": null, "fin": [454700, 574300]}, {"cat": "Villa 2nd line", "reb": 0, "avg": 9.8, "term": 19.7, "step": 6.56, "cur": [450000, 529000], "rebP": null, "fin": [538600, 633100]}, {"cat": "Villa 1st line", "reb": 0, "avg": 9.8, "term": 19.7, "step": 9.84, "cur": [590000, 590000], "rebP": null, "fin": [706100, 706100]}]}, "S2": {"title": "Текущая структура · взвешенный рост", "short": "S2 текущая + взвешенный", "desc": "Инфляционный пол +4% всем плюс надбавка пропорционально распроданности. Рыночно логичнее S1, без стартового скачка цен; но самые высокие терминальные цены вилл (€745 тыс.) и сохранение стартовой перекошенности.", "rows": [{"cat": "Standard", "reb": 0, "avg": 16.0, "term": 32.1, "step": 1.6, "cur": [219900, 259900], "rebP": null, "fin": [290400, 343200]}, {"cat": "Superior", "reb": 0, "avg": 4.0, "term": 8.0, "step": 0.36, "cur": [259900, 299900], "rebP": null, "fin": [280700, 323900]}, {"cat": "Junior Suite", "reb": 0, "avg": 8.4, "term": 16.9, "step": 1.41, "cur": [299900, 309900], "rebP": null, "fin": [350500, 362200]}, {"cat": "Suite", "reb": 0, "avg": 9.8, "term": 19.6, "step": 3.27, "cur": [379900, 479900], "rebP": null, "fin": [454500, 574100]}, {"cat": "Villa 2nd line", "reb": 0, "avg": 12.0, "term": 24.0, "step": 7.99, "cur": [450000, 529000], "rebP": null, "fin": [557900, 655800]}, {"cat": "Villa 1st line", "reb": 0, "avg": 13.1, "term": 26.3, "step": 13.12, "cur": [590000, 590000], "rebP": null, "fin": [744900, 744900]}]}, "S3": {"title": "Новая сетка (якорь Superior, коридор 15%) · равномерный рост", "short": "S3 сетка + равномерный", "desc": "Разовый ребейс выстраивает категории над якорем Superior пропорционально спросу; дальнейшая эскалация — самая мягкая: +5,15% ср. всем. Самые низкие финальные цены и самая компактная сетка. Рекомендуемый базовый сценарий.", "rows": [{"cat": "Standard", "reb": 8.5, "avg": 5.2, "term": 10.3, "step": 0.51, "cur": [219900, 259900], "rebP": [238500, 281900], "fin": [263100, 311000]}, {"cat": "Superior", "reb": 0, "avg": 5.2, "term": 10.3, "step": 0.47, "cur": [259900, 299900], "rebP": null, "fin": [286700, 330800]}, {"cat": "Junior Suite", "reb": 8.2, "avg": 5.2, "term": 10.3, "step": 0.86, "cur": [299900, 309900], "rebP": [324400, 335200], "fin": [357800, 369700]}, {"cat": "Suite", "reb": 7.7, "avg": 5.2, "term": 10.3, "step": 1.72, "cur": [379900, 479900], "rebP": [409100, 516800], "fin": [451300, 570100]}, {"cat": "Villa 2nd line", "reb": 0, "avg": 5.2, "term": 10.3, "step": 3.43, "cur": [450000, 529000], "rebP": null, "fin": [496300, 583500]}, {"cat": "Villa 1st line", "reb": 0, "avg": 5.2, "term": 10.3, "step": 5.15, "cur": [590000, 590000], "rebP": null, "fin": [650800, 650800]}]}, "S4": {"title": "Новая сетка · взвешенный рост (Superior заморожен)", "short": "S4 сетка + взвешенный", "desc": "Тот же ребейс, далее Superior полностью заморожен, дефицит распределяется пропорционально спросу. Самая последовательная рыночная логика; риск — план держится на гипотезе продаж замороженного Superior (29% стоимости остатка).", "rows": [{"cat": "Standard", "reb": 8.5, "avg": 10.4, "term": 20.9, "step": 1.04, "cur": [219900, 259900], "rebP": [238500, 281900], "fin": [288300, 340700]}, {"cat": "Superior", "reb": 0, "avg": 0, "term": 0, "step": 0, "cur": [259900, 299900], "rebP": null, "fin": [259900, 299900]}, {"cat": "Junior Suite", "reb": 8.2, "avg": 3.9, "term": 7.7, "step": 0.64, "cur": [299900, 309900], "rebP": [324400, 335200], "fin": [349400, 361000]}, {"cat": "Suite", "reb": 7.7, "avg": 5.0, "term": 10.1, "step": 1.68, "cur": [379900, 479900], "rebP": [409100, 516800], "fin": [450400, 569000]}, {"cat": "Villa 2nd line", "reb": 0, "avg": 6.9, "term": 13.9, "step": 4.62, "cur": [450000, 529000], "rebP": null, "fin": [512300, 602300]}, {"cat": "Villa 1st line", "reb": 0, "avg": 7.9, "term": 15.8, "step": 7.91, "cur": [590000, 590000], "rebP": null, "fin": [683300, 683300]}]}}, "margins": [{"cat": "Villa 1st line", "sold": 65.5, "now": 68.8, "after": 70.2}, {"cat": "Villa 2nd line", "sold": 64.1, "now": 66.4, "after": 67.9}, {"cat": "Standard", "sold": 9.4, "now": 25.5, "after": 30.8}, {"cat": "Suite", "sold": 11.0, "now": 21.7, "after": 27.3}, {"cat": "Junior Suite", "sold": 12.4, "now": 20.4, "after": 26.1}, {"cat": "Superior", "sold": null, "now": 20.9, "after": 26.5}], "compare": [{"k": "Ребейс на старте", "v": ["нет", "нет", "до +8,5%", "до +8,5%"]}, {"k": "Рост ср. по категориям", "v": ["+9,8% всем", "+4,0…+16,0%", "+5,15% всем", "0…+10,4%"]}, {"k": "Терм. цена виллы 1-й линии", "v": ["€706 тыс.", "€745 тыс.", "€651 тыс.", "€683 тыс."]}, {"k": "Терм. цена Superior", "v": ["€359 тыс.", "€324 тыс.", "€331 тыс.", "€300 тыс."]}, {"k": "Исправляет аномалию Superior", "v": ["нет", "частично", "да", "да"]}, {"k": "Программный разброс €/м²", "v": ["57%", "73%", "49%", "63%"]}]};
+const GOLD='#fbbf24', GREEN='#22c55e', RED='#ef4444', BLUE='#60a5fa', ORANGE='#f97316',
+      CARD='rgba(255,255,255,0.03)', BRD='rgba(255,255,255,0.06)', TXT='#e2e8f0';
+const fmtEur = v => '€' + Math.round(v).toLocaleString('ru-RU');
+const fmtK = v => '€' + Math.round(v/1000).toLocaleString('ru-RU') + ' тыс.';
+const rng = (a) => a[0]===a[1] ? fmtEur(a[0]) : fmtEur(a[0]) + ' – ' + fmtEur(a[1]);
+
+const Sec = ({num, title, children}) => (
+  <div style={{margin:'44px 0'}}>
+    <div style={{display:'flex', alignItems:'baseline', gap:14, marginBottom:6}}>
+      <span style={{color:GOLD, fontSize:13, fontWeight:700, letterSpacing:2}}>{num}</span>
+      <h2 style={{margin:0, fontSize:19, fontWeight:700, color:TXT}}>{title}</h2>
+    </div>
+    <div style={{height:1, background:'linear-gradient(90deg,'+GOLD+'44, transparent)', marginBottom:18}} />
+    {children}
+  </div>
+);
+const Card = ({label, value, sub, color}) => (
+  <div style={{background:CARD, border:'1px solid '+BRD, borderRadius:12, padding:'14px 18px', flex:'1 1 150px', minWidth:150}}>
+    <div style={{fontSize:10, color:'#888', textTransform:'uppercase', letterSpacing:1.5, fontWeight:600}}>{label}</div>
+    <div style={{fontSize:23, fontWeight:700, color: color||GOLD, marginTop:4, fontVariantNumeric:'tabular-nums'}}>{value}</div>
+    {sub && <div style={{fontSize:11, color:'#777', marginTop:2}}>{sub}</div>}
+  </div>
+);
+const TTStyle = {background:'#1a1a2e', border:'1px solid '+BRD, borderRadius:8, fontSize:12};
+
+function CorrTooltip({active, payload}) {
+  if (!active || !payload || !payload.length) return null;
+  const d = payload[0].payload;
+  return (
+    <div style={{...TTStyle, padding:'8px 12px', color:TXT}}>
+      <div style={{fontWeight:700, color:GOLD}}>{d.cat}</div>
+      <div>Распроданность: {d.D}% ({d.soldN} из {d.total})</div>
+      <div>Цена остатка: €{d.pm2.toLocaleString('ru-RU')}/м²</div>
+      {d.soldPm2 && <div>Ср. цена продаж: €{d.soldPm2.toLocaleString('ru-RU')}/м²</div>}
+    </div>);
+}
+
+function RangePair({cur, fin, min, max, rebP}) {
+  const W = 100/(max-min);
+  const bar = (a, color, y) => (
+    <div style={{position:'absolute', left:((a[0]-min)*W)+'%',
+      width:Math.max((a[1]-a[0])*W, 0.8)+'%', top:y, height:8, borderRadius:4, background:color}} />
+  );
+  return (
+    <div style={{position:'relative', height:30, flex:1}}>
+      {bar(cur, '#556', 2)}
+      {rebP && bar(rebP, BLUE, 12)}
+      {bar(fin, GOLD, rebP? 22 : 14)}
+    </div>);
+}
+
+function ScenarioBlock() {
+  const [sc, setSc] = useState('S3');
+  const S = DATA.scenarios[sc];
+  const allMin = 219900, allMax = 760000;
+  return (
+    <div>
+      <div style={{display:'flex', gap:6, flexWrap:'wrap', marginBottom:14}}>
+        {['S1','S2','S3','S4'].map(k => (
+          <button key={k} onClick={()=>setSc(k)} style={{
+            padding:'8px 16px', borderRadius:9, cursor:'pointer', fontSize:12, fontWeight:600,
+            fontFamily:'inherit', border:'1px solid ' + (sc===k? GOLD : BRD),
+            background: sc===k? 'rgba(251,191,36,0.12)':'rgba(255,255,255,0.02)',
+            color: sc===k? GOLD : '#999'}}>{DATA.scenarios[k].short}</button>
+        ))}
+      </div>
+      <div style={{fontSize:13, color:'#aab', marginBottom:16, lineHeight:1.55, maxWidth:900}}>
+        <b style={{color:TXT}}>{S.title}.</b> {S.desc}
+      </div>
+      <div style={{overflowX:'auto'}}>
+      <table style={{width:'100%', borderCollapse:'collapse', fontSize:12.5, fontVariantNumeric:'tabular-nums'}}>
+        <thead><tr style={{color:'#889', textAlign:'left', fontSize:10.5, textTransform:'uppercase', letterSpacing:1}}>
+          {['Категория','Ребейс','Рост ср/терм','Шаг/продажа','Текущая цена','Ребейс-цена','Финальная цена','Диапазоны (визуально)'].map((h,i)=>
+            <th key={i} style={{padding:'8px 10px', borderBottom:'1px solid '+BRD}}>{h}</th>)}
+        </tr></thead>
+        <tbody>
+        {S.rows.map((r,i)=>(
+          <tr key={i} style={{borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+            <td style={{padding:'9px 10px', fontWeight:600, color:TXT}}>{r.cat}</td>
+            <td style={{padding:'9px 10px', color: r.reb? BLUE : '#666'}}>{r.reb? '+'+r.reb.toFixed(1)+'%' : '0%'}</td>
+            <td style={{padding:'9px 10px', color:GOLD}}>{r.avg? '+'+r.avg.toFixed(1)+'% / +'+r.term.toFixed(1)+'%' : '0% / 0%'}</td>
+            <td style={{padding:'9px 10px', color:'#aab'}}>{r.step? '+'+r.step.toFixed(2)+'%' : '0%'}</td>
+            <td style={{padding:'9px 10px', color:'#99a'}}>{rng(r.cur)}</td>
+            <td style={{padding:'9px 10px', color: r.rebP? BLUE:'#555'}}>{r.rebP? rng(r.rebP) : '—'}</td>
+            <td style={{padding:'9px 10px', color:GOLD, fontWeight:600}}>{rng(r.fin)}</td>
+            <td style={{padding:'4px 10px', minWidth:180}}><RangePair cur={r.cur} fin={r.fin} rebP={r.rebP} min={allMin} max={allMax}/></td>
+          </tr>))}
+        </tbody>
+      </table>
+      </div>
+      <div style={{display:'flex', gap:18, fontSize:11, color:'#778', marginTop:10}}>
+        <span><span style={{display:'inline-block',width:16,height:7,background:'#556',borderRadius:3,marginRight:5}}/>текущая</span>
+        <span><span style={{display:'inline-block',width:16,height:7,background:BLUE,borderRadius:3,marginRight:5}}/>ребейс</span>
+        <span><span style={{display:'inline-block',width:16,height:7,background:GOLD,borderRadius:3,marginRight:5}}/>финальная</span>
+      </div>
+    </div>);
+}
+
+function Report() {
+  const K = DATA.kpi, M = DATA.meta;
+  const decompTotal = DATA.decomp.reduce((a,d)=>a+d.usd,0);
+  const decompColors = {fact:GREEN, plan:'#4ade80', bal:GOLD, def:RED};
+  const margData = DATA.margins.map(m => ({...m, sold: m.sold==null? undefined : m.sold}));
+  return (
+    <div style={{maxWidth:1100, margin:'0 auto', padding:'34px 28px 80px', color:TXT}}>
+      <div style={{display:'flex', justifyContent:'space-between', alignItems:'flex-end', flexWrap:'wrap', gap:10}}>
+        <div>
+          <div style={{fontSize:11, letterSpacing:3, color:GOLD, fontWeight:700}}>M4U · PRICE ANALYTICS</div>
+          <h1 style={{margin:'6px 0 4px', fontSize:27, fontWeight:700}}>Teus Radisson Maldives: стратегия выхода на таргет $54,5 млн</h1>
+          <div style={{fontSize:12, color:'#889'}}>Аналитический отчёт · {M.date} · Источник: ШАХМАТКА НОВАЯ 2607, КОММЕРЦИЯ, cost per unit · Курс EUR/USD {M.fx}</div>
+        </div>
+      </div>
+
+      <Sec num="01" title="Ключевые показатели">
+        <div style={{display:'flex', gap:12, flexWrap:'wrap'}}>
+          <Card label="Таргет" value="$54,5M" sub={'€'+(M.targetEur/1e6).toFixed(2)+'M по курсу '+M.fx} />
+          <Card label="Факт (sold + booked)" value="$24,56M" sub="96 юнитов · 45,1% таргета" color={GREEN}/>
+          <Card label="Баланс по текущим ценам" value="$51,97M" sub="95,4% таргета при продаже всего остатка" color={TXT}/>
+          <Card label="Дефицит" value="$2,53M" sub="€2,21M" color={RED}/>
+          <Card label="Необходимый рост остатка" value="+9,84%" sub="средний · терминальный +19,7%" />
+        </div>
+      </Sec>
+
+      <Sec num="02" title="Разложение цели: факт, план, баланс, дефицит">
+        <div style={{fontSize:13, color:'#aab', marginBottom:14, maxWidth:900, lineHeight:1.55}}>
+          Продажа всего остатка (71 юнит номеров и вилл) по текущим ценам 2607 плюс 10 коммерческих юнитов по константе €149 900 даёт $51,97 млн. Дефицит $2,53 млн закрывается исключительно ростом цен остатка.
+        </div>
+        <div style={{height:110}}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart layout="vertical" data={[Object.fromEntries([["name","$"],...DATA.decomp.map(d=>[d.name,d.usd])])]} margin={{left:0,right:30,top:0,bottom:0}}>
+              <XAxis type="number" domain={[0,55]} tick={{fill:'#778',fontSize:11}} tickFormatter={v=>'$'+v+'M'} axisLine={false} tickLine={false}/>
+              <YAxis type="category" dataKey="name" hide/>
+              <Tooltip contentStyle={TTStyle} labelStyle={{display:'none'}} itemStyle={{color:TXT, fontSize:12}} formatter={(v,n)=>['$'+v.toFixed(2)+'M', n]}/>
+              <ReferenceLine x={54.5} stroke={RED} strokeDasharray="5 4" label={{value:'таргет $54,5M', fill:RED, fontSize:11, position:'insideTopRight'}}/>
+              {DATA.decomp.map((d,i)=>(
+                <Bar key={i} dataKey={d.name} stackId="a" fill={decompColors[d.grp]} fillOpacity={d.grp==='fact'? 0.55+i*0.12 : (d.grp==='def'? 0.85 : (d.grp==='plan'? 0.5 : 0.8))} barSize={38}/>
+              ))}
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+        <div style={{display:'flex', gap:16, flexWrap:'wrap', fontSize:11, color:'#889'}}>
+          {DATA.decomp.map((d,i)=>(<span key={i}><span style={{display:'inline-block',width:10,height:10,borderRadius:2,background:decompColors[d.grp],marginRight:5,verticalAlign:-1}}/>{d.name} · ${d.usd.toFixed(2)}M</span>))}
+        </div>
+      </Sec>
+
+      <Sec num="03" title="Корреляция «цена остатка ↔ распроданность» по категориям">
+        <div style={{fontSize:13, color:'#aab', marginBottom:10, maxWidth:900, lineHeight:1.55}}>
+          Средневзвешенная цена остатка (Σ стоимостей / Σ площадей, цены 2607) против доли sold + booked. Связь положительная, но слабая: Пирсон r = {DATA.corrStats.pearson}, Спирмен ρ = {DATA.corrStats.spearman} (по номерам r = {DATA.corrStats.pearsonHotel}). Площадь виллы принята 67 м² (53 + терраса 14).
+        </div>
+        <div style={{height:330}}>
+          <ResponsiveContainer width="100%" height="100%">
+            <ScatterChart margin={{top:14, right:120, bottom:34, left:10}}>
+              <CartesianGrid stroke="rgba(255,255,255,0.05)"/>
+              <XAxis type="number" dataKey="D" domain={[-8, 85]} tick={{fill:'#778', fontSize:11}}
+                tickFormatter={v=>v+'%'} label={{value:'Распроданность (sold + booked), %', fill:'#778', fontSize:12, position:'insideBottom', dy:22}}/>
+              <YAxis type="number" dataKey="pm2" domain={[6000, 9200]} tick={{fill:'#778', fontSize:11}}
+                tickFormatter={v=>'€'+v.toLocaleString('ru-RU')} label={{value:'€/м² остатка', angle:-90, fill:'#778', fontSize:12, position:'insideLeft'}}/>
+              <Tooltip content={<CorrTooltip/>} cursor={{stroke:'rgba(255,255,255,0.15)'}}/>
+              <Scatter data={DATA.corr.filter(d=>!d.villa)} fill={BLUE}>
+                <LabelList dataKey="cat" position="right" style={{fill:'#99a', fontSize:11}}/>
+              </Scatter>
+              <Scatter data={DATA.corr.filter(d=>d.villa)} fill={ORANGE} shape="circle">
+                <LabelList dataKey="cat" position="right" style={{fill:'#99a', fontSize:11}}/>
+              </Scatter>
+            </ScatterChart>
+          </ResponsiveContainer>
+        </div>
+        <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))', gap:12, marginTop:14}}>
+          <div style={{background:CARD, border:'1px solid '+BRD, borderRadius:12, padding:'12px 16px', fontSize:12.5, lineHeight:1.55, color:'#bcc'}}>
+            <b style={{color:GREEN}}>Ценообразование частично отражает спрос.</b> Standard — самая дефицитная категория (75% продано) и самая дорогая среди номеров (€6 937/м², премия +27,5% к ценам сделок).
+          </div>
+          <div style={{background:CARD, border:'1px solid '+RED+'44', borderRadius:12, padding:'12px 16px', fontSize:12.5, lineHeight:1.55, color:'#bcc'}}>
+            <b style={{color:RED}}>Аномалия — Superior.</b> 23 юнита, ноль продаж, но цена €6 543/м² — выше Junior Suite (28% продано) и почти на уровне Suite (36%). Это €6,4 млн — 29% стоимости остатка без подтверждённого спроса.
+          </div>
+          <div style={{background:CARD, border:'1px solid '+BRD, borderRadius:12, padding:'12px 16px', fontSize:12.5, lineHeight:1.55, color:'#bcc'}}>
+            <b style={{color:GOLD}}>Вывод.</b> Ускоренно повышать Standard и виллы 1-й линии, сдержанно — Junior Suite/Suite, Superior — заморозить или активировать спрос. Это основа сценариев S3/S4.
+          </div>
+        </div>
+      </Sec>
+
+      <Sec num="04" title="Четыре сценария выхода на таргет (матрица 2×2)">
+        <div style={{fontSize:13, color:'#aab', marginBottom:14, maxWidth:960, lineHeight:1.55}}>
+          Развилка 1 — стартовая структура: текущий прайс 2607 или разовый <b style={{color:TXT}}>ребейс</b> (разовое изменение цен по текущему уровню спроса — смена ценовой базы для дальнейшего планомерного роста; якорь Superior, коридор категорийных средних ≤15%). Развилка 2 — рост равномерный или взвешенный на спрос. Все сценарии дают ровно €24,65 млн с остатка; терминальный прирост = 2 × средний (ступенчатое удорожание после каждой продажи).
+        </div>
+        <ScenarioBlock/>
+      </Sec>
+
+      <Sec num="05" title="Сравнение сценариев">
+        <div style={{overflowX:'auto'}}>
+        <table style={{width:'100%', borderCollapse:'collapse', fontSize:12.5, fontVariantNumeric:'tabular-nums'}}>
+          <thead><tr style={{color:'#889', textAlign:'left', fontSize:10.5, textTransform:'uppercase', letterSpacing:1}}>
+            <th style={{padding:'8px 10px', borderBottom:'1px solid '+BRD}}>Показатель</th>
+            {['S1','S2','S3','S4'].map(s=><th key={s} style={{padding:'8px 10px', borderBottom:'1px solid '+BRD, color: s==='S3'? GOLD:'#889'}}>{s}{s==='S3'? ' ★':''}</th>)}
+          </tr></thead>
+          <tbody>{DATA.compare.map((r,i)=>(
+            <tr key={i} style={{borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+              <td style={{padding:'9px 10px', color:'#aab'}}>{r.k}</td>
+              {r.v.map((v,j)=><td key={j} style={{padding:'9px 10px', color: j===2? TXT:'#99a', fontWeight: j===2? 600:400}}>{v}</td>)}
+            </tr>))}
+          </tbody>
+        </table>
+        </div>
+        <div style={{background:'rgba(251,191,36,0.06)', border:'1px solid '+GOLD+'44', borderRadius:12, padding:'14px 18px', marginTop:16, fontSize:13, lineHeight:1.6, color:'#ccd', maxWidth:960}}>
+          <b style={{color:GOLD}}>Рекомендация: S3 как базовый, с триггером перехода в S4.</b> Ребейс даёт рыночно честную стартовую иерархию и самую компактную сетку, мягкая равномерная эскалация не создаёт ценовых шоков, финальные цены вилл — самые умеренные. Триггер: первые продажи Superior в течение 2–3 месяцев → перевод категории на взвешенную траекторию (логика S4) с перераспределением темпа в пользу лидеров спроса.
+        </div>
+      </Sec>
+
+      <Sec num="06" title="Маржинальность (чистая маржа по методологии файла: BE/AW)">
+        <div style={{fontSize:13, color:'#aab', marginBottom:10, maxWidth:960, lineHeight:1.55}}>
+          Методология файла «cost per unit»: полная себестоимость AT ($27,98 млн) → маржа AX → минус расходы на реализацию (комиссии 10,13% + маркетинг 3,73% + финансовые 1,43% + налог 0,42% + курсовые 0,17% = 15,88% выручки) → чистая прибыль BE; маржинальность = BE/AW, курс модели 1,14. Внесены две корректировки: себестоимость No.723 нормализована до Suite-уровня ($301,9 тыс. вместо строки-накопителя $1,85 млн), высвобожденный остаток $1,55 млн разнесён на 15 вилл (~$103 тыс./вилла — в файле AT вилл = 0, отсюда искажённые 99,6% net). Суммарная себестоимость сохранена. Проект: net 25,5% сейчас → 28,4% при выполнении плана. Виллы — прибыльный двигатель (net 64–70%, втрое выше номеров); по логике аллокации файла общая инфраструктура сидит на отеле, виллы несут только собственный конструктив.
+        </div>
+        <div style={{height:300}}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={margData} margin={{top:8, right:14, bottom:4, left:0}}>
+              <CartesianGrid stroke="rgba(255,255,255,0.05)" vertical={false}/>
+              <XAxis dataKey="cat" tick={{fill:'#778', fontSize:10.5}} interval={0}/>
+              <YAxis domain={[0,90]} tick={{fill:'#778', fontSize:11}} tickFormatter={v=>v+'%'}/>
+              <Tooltip contentStyle={TTStyle} labelStyle={{color:GOLD, fontWeight:700}} itemStyle={{color:TXT, fontSize:12}} formatter={v=>v==null?'—':v.toFixed(1)+'% net'}/>
+              <Bar dataKey="sold" name="Проданные (факт)" fill="#889" maxBarSize={20} radius={[3,3,0,0]}/>
+              <Bar dataKey="now" name="Остаток, текущие цены" fill={BLUE} maxBarSize={20} radius={[3,3,0,0]}/>
+              <Bar dataKey="after" name="Остаток после роста" fill={GOLD} maxBarSize={20} radius={[3,3,0,0]}/>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+        <div style={{display:'flex', gap:16, fontSize:11, color:'#889'}}>
+          <span><span style={{display:'inline-block',width:10,height:10,borderRadius:2,background:'#889',marginRight:5}}/>проданные (факт)</span>
+          <span><span style={{display:'inline-block',width:10,height:10,borderRadius:2,background:BLUE,marginRight:5}}/>остаток, текущие цены</span>
+          <span><span style={{display:'inline-block',width:10,height:10,borderRadius:2,background:GOLD,marginRight:5}}/>остаток после роста</span>
+        </div>
+      </Sec>
+
+      <Sec num="07" title="Данные и допущения">
+        <ul style={{fontSize:12.5, color:'#aab', lineHeight:1.7, margin:0, paddingLeft:18, maxWidth:960}}>
+          <li>Факт продаж — «ШАХМАТКА НОВАЯ 2607», колонка PRICE (sold + booked). Сверка с «cost per unit» (AU): все 81 общих юнита совпадают до евро.</li>
+          <li>Расхождение полных сумм листов (€528 995) объясняется дефектами cost-листа: No.722 числится Sold за €360 905 (цена сделки соседнего No.723 — вероятная ошибка копирования; в шахматке 2607 юнит available за €299 900) и отсутствием виллы №15. Статус No.722 требует верификации: если продан — необходимый прирост снижается до +9,70%.</li>
+          <li>Курс EUR/USD 1,145 (рынок 29–30.07.2026); в финмодели файла — 1,14 (при нём прирост +10,77%).</li>
+          <li>Букинг приравнен к факту; коммерция — константа €149 900/юнит, план 10 юнитов. Категорийные маржи в самом cost-листе искажены (виллы 99,6% при AT = 0, Suite −15,5% из-за строки No.723) — в отчёте скорректированные значения.</li>
+          <li>Рабочие файлы: maldives_target_scenarios(_ru).xlsx — полотовые расчёты с изменяемыми параметрами; пояснительная записка (UA/RU) — методология.</li>
+        </ul>
+      </Sec>
+
+      <div style={{marginTop:40, paddingTop:16, borderTop:'1px solid '+BRD, fontSize:11, color:'#667', display:'flex', justifyContent:'space-between', flexWrap:'wrap', gap:8}}>
+        <span>M4U · Maxify Price Analytics</span><span>Подготовлено {M.date}</span>
+      </div>
+    </div>
+  );
+}
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<Report/>);
+
+</script>
+
+<div id="gate" style="position:fixed;inset:0;background:#0f0f1a;display:flex;align-items:center;justify-content:center;z-index:999;font-family:'DM Sans','Segoe UI',sans-serif;">
+  <div style="width:340px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:34px 30px;text-align:center;">
+    <div style="font-size:11px;letter-spacing:3px;color:#fbbf24;font-weight:700;">M4U · PRICE ANALYTICS</div>
+    <div style="font-size:17px;font-weight:700;color:#e2e8f0;margin:10px 0 4px;">Teus Radisson Maldives</div>
+    <div style="font-size:12px;color:#778;margin-bottom:22px;">Отчёт защищён. Введите пароль доступа.</div>
+    <input id="pw" type="password" placeholder="Пароль" autocomplete="off" style="width:100%;box-sizing:border-box;background:#0f0f1a;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:11px 14px;color:#e2e8f0;font-size:14px;font-family:inherit;outline:none;" />
+    <div id="pwerr" style="font-size:11.5px;color:#ef4444;height:16px;margin-top:8px;"></div>
+    <button id="pwbtn" style="width:100%;margin-top:6px;background:rgba(251,191,36,0.14);border:1px solid #fbbf24;border-radius:10px;padding:11px;color:#fbbf24;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">Войти</button>
+  </div>
+</div>
+<script>
+(function(){
+  var HASH = 23759216;
+  function djb2(s){var h=5381;for(var i=0;i<s.length;i++){h=((h<<5)+h+s.charCodeAt(i))|0;}return h;}
+  function boot(){
+    var g=document.getElementById('gate'); if(g) g.remove();
+    var code=document.getElementById('app-source').textContent;
+    var out=Babel.transform(code,{presets:[['react',{runtime:'classic'}]]}).code;
+    (new Function('React','ReactDOM','Recharts',out))(React,ReactDOM,Recharts);
+  }
+  function tryPw(){
+    var v=document.getElementById('pw').value;
+    if(djb2(v)===HASH){ sessionStorage.setItem('m4u_mald_auth','ok'); boot(); }
+    else { document.getElementById('pwerr').textContent='Неверный пароль'; }
+  }
+  window.addEventListener('DOMContentLoaded', function(){
+    if(sessionStorage.getItem('m4u_mald_auth')==='ok'){ boot(); return; }
+    document.getElementById('pwbtn').addEventListener('click', tryPw);
+    document.getElementById('pw').addEventListener('keydown', function(e){ if(e.key==='Enter') tryPw(); });
+    document.getElementById('pw').focus();
+  });
+})();
+</script>
+
+</body>
+</html>
