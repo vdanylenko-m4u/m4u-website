@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <!--
-  Maxify — интерактивная презентация v3, RU (2026-09-23): рендеры, кейсы, клиенты, тарифы, модель 50/50, 0,1% от оборота
+  Maxify — интерактивная презентация, RU, альтернативные условия (2026-09-23): 990 €/мес за проект + 10% success fee сверх 101% плана или 0,1% от продаж
   Одна страница, без зависимостей. Навигация: стрелки ← →, клики, свайп, точки.
-  Переключатель «Годовая оплата −20%» меняет цены на слайде тарифов.
 -->
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Maxify — динамическое ценообразование для девелоперов</title>
-<meta name="description" content="Первая система динамического ценообразования для девелоперов в Европе. Автоматические переоценки, +3–8% дополнительного дохода, кейсы, тарифы от 990 €/мес, модели 50/50 и 0,1% от оборота.">
+<meta name="description" content="Первая система динамического ценообразования для девелоперов в Европе. Автоматические переоценки, +3–8% дополнительного дохода, кейсы и условия: 990 €/мес за проект + 10% success fee или 0,1% от продаж.">
 <meta name="theme-color" content="#060B1E">
 <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAGh0lEQVR42u2bW4hdVxnH//+19t7nfqZJm05opVoSp6K01VjaIkqChGJTKJE2ZYo+qA9BEMRCH3woNBF86asPYimUvlQwLxW8IY0kXohUa9WXBKpN05LLtCZzO3PO7Nv6+7D3mZnMnDNzpj0hc9kLFmfO2XvW+tZvf+tb3/ettYlNViSRpL7xk7f3NUdvvz/qxI60zK6lCiq+mbpy4czPv3/fue69q7XnbTYAx47BAkhMqfx0bWfzWTMDGJNdcw6oNIG5q/UfADjXvXdLAVjQBKcw7iBNojChsnGISOJOyYMYDdrOpgVAggAsAIG03QkCwCq7NlAx2OalALDdAaxmA3iD+tSg07zXj5cvv0kAhNxa8nHh3lVk6aEBR2xWoRtU1wNqRX3ppYdiADK+n0KCnMtt35KRGyOAOnjwi24tWbyVxE+k2ef+8sjIp8rA1JAe/C0wpq3JyRMza4M46o+MhLVefY+O7vEmJv6btCenKjvvuAOlRgVJO4ZLU8BkQ3BxZAHx2FOfs6v0RQBdNXreAMcdAFQaX3+c8scJPCSYndn/cxhqTwDTJT+9f3LyxHT+fZlw+z3gdFKvP3VYLL0sxAm0bJoyW+2CcqV86913lz/5wIPY++X9CCoVRJ2OvMBnPN++kibRBGmNqBUAKDgbeF7rw/de8DJDeNxVKo/daWz9Z2DwGElIKQiX20kNQQMIyXnORWvSlBTQ2FugGGCP22kQdTp4/59v4cKbf8fZ13+Prxz9LkY/PcawPY+g0txtPOzuJ7YcENSAcKax2wOAbPDNP9AEY1KYCCAgZr1rWIaPAOLBnBwjwClzY+X1ao6GCKpVksS1C+fx2x//CF/74XMYvecziDodMe4fAxBIYQILpzh7vLbyYj74KLcLFqDJhR52xTpWgVWrnINLUwTVGqJ2G3988acIWy1Y65GkIU3PCmTXRNBUq48fMgwOSWEKIBjEEt/MVaBXOxmEKq6efwfnTr4Ov+LLpU6QeldAUNaGgfGPZirXx+MeTjX5ZPYHC3kdc5Pu92/zeghygg18nH/jDJIwpfUD0no9K0hLCxqCHmkfzDqUWamh6kgIe1vs9doAEcC0MYHWtgGMpHRKQAL1tAEBaapLRRIE6/mY/WACMxNXovqu25yLk95GFEiTCF6SRAlrjae1HCZASurAdb7k+3gXqBGY0833AzI5wjAesV79L6B/J5C43F4pG60L7/r83kfGvnrwvXBu0vqlmuvVg+/FnJm/eJW1xrhbZpy6AKbLwdRd1679bmYj+vC1+pP/gCl/AYqvB6B0fq51Zg/w/qVBY4E+llmMIpSWWF0NSfaPEwt05bCCvH5LSrO5t/LMM98xp06dMgcOHHD9Ojh+/JhYa4xrpYCk5GYM5va0Wr/635ABfDxvKpPDVOtPvkVTvq+XBiTx5c+G4Z/O516cK8LhAsBWzAkCaeYqc2nAQoDJtgAAYAcZeNd72AQQ1QHPbFUAWnQW4+/BtHYgTZQlh7slcWHoJgZdcTarBqjd/uVvhrHkbuIpcMQCH/RxBU4n28AGdFN3xTJYACgAbEdHaI30mrYDABUa0D9n77YqgMVwuHb4FzCle6gk1ULeiyTS0KWXDnc6f704SDi8iTXAu5emMgbF4NJYwMVwzitt/WiQakOxg5I8GmQeDbr5/O+tDSDbG2K+jC9Niq5vaS8coQJAAaAAUAAoABQACgAFgAJAAaAAUADYjmWNcDj5KOf7bmgaYPFTHBaAPoeBKWtLMdZ/vu/GpgGykubb48MA0Pc4bOBcdDuAaQzvwPAwNMA1mw/vSJzZwZ7pPor0Bk+KCumHhLcrP5ubq7tEspKi8eda/YlLWkw53WwFIAGXOnMr6X0CcsJCVmhBRWLfN635+es0pj8Ayv2NxjwqOYfFjXYCAuHtggl2caNZLgn5DFgqmiOtkZKzs7MnJ/PD3gNsjyt5BdCh3rScoFTYkIVmJRVLKXkVgAMOeFjjpcmc4BFbreGksZX9UhgD9LHpimIy8J0L3263JvYBp+eWGc3V/IATLvXmvy1FF8mSDyjJ9UuboKbdwUtxC256HDjdAp4f+Fwju6/LBI1Hx3yNvEITPAwIUrrhn3v2wqiBU3hWyey3Op1fv4EBdoN6OBYL7wzZauOJb1JmXDT7IHobxwVYIbmD9C8pea0z95+XgX/PZcdm1ndyZIkVXXxxCgCazUd2pqk80m44AlJKY2rp7OxrV/vJP2j5P3jIOxHo56icAAAAAElFTkSuQmCC">
 <!-- Превью ссылки (Telegram / LinkedIn / Facebook).
@@ -18,13 +17,13 @@
 <meta property="og:site_name" content="Maxify">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:title" content="Maxify — динамическое ценообразование для девелоперов">
-<meta property="og:description" content="Первая система динамического ценообразования для девелоперов в Европе. Автоматические переоценки, +3–8% дополнительного дохода, кейсы, тарифы от 990 €/мес, модели 50/50 и 0,1% от оборота.">
+<meta property="og:description" content="Первая система динамического ценообразования для девелоперов в Европе. Автоматические переоценки, +3–8% дополнительного дохода, кейсы и условия: 990 €/мес за проект + 10% success fee или 0,1% от продаж.">
 <meta property="og:image" content="https://m4u.ua/maxify_og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Maxify — динамическое ценообразование для девелоперов">
-<meta name="twitter:description" content="Первая система динамического ценообразования для девелоперов в Европе. Автоматические переоценки, +3–8% дополнительного дохода, кейсы, тарифы от 990 €/мес, модели 50/50 и 0,1% от оборота.">
+<meta name="twitter:description" content="Первая система динамического ценообразования для девелоперов в Европе. Автоматические переоценки, +3–8% дополнительного дохода, кейсы и условия: 990 €/мес за проект + 10% success fee или 0,1% от продаж.">
 <meta name="twitter:image" content="https://m4u.ua/maxify_og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -538,6 +537,18 @@
     .frame .shot img{transform:none;transition:none}
     .hub .flowline{animation:none!important}
   }
+
+  /* ── альтернативные условия: фикс + success fee / 0,1% ── */
+  .offer{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);align-items:stretch}
+  .plan .badge.alt{background:rgba(43,228,160,.12);color:var(--mint);border:1px solid rgba(43,228,160,.35)}
+  .plan .plus{font-family:var(--disp);font-weight:600;font-size:clamp(18px,1.9vw,24px);margin-top:12px;color:var(--paper)}
+  .plan .plus b{color:var(--mint);font-weight:600}
+  .terms{list-style:none;margin-top:18px;border-top:1px dashed var(--line);padding-top:14px}
+  .terms li{color:var(--muted);font-size:14px;line-height:1.55;padding-left:18px;position:relative;margin-bottom:8px}
+  .terms li:last-child{margin-bottom:0}
+  .terms li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;border-radius:2px;background:var(--mint);opacity:.8}
+  .terms li b{color:var(--paper);font-weight:600}
+  @media (max-width:960px){.offer{grid-template-columns:1fr}}
 </style>
 </head>
 <body class="monthly">
@@ -788,7 +799,7 @@
             <li>Проверенная методология: 6 лет в продакшене, €1+ млрд активов</li>
             <li>Интеграции с CRM, ERP и шахматками</li>
           </ul>
-          <div class="go">Тарифы →</div>
+          <div class="go">Условия →</div>
         </div>
         <div class="card prod rise" data-goto="8" role="button" tabindex="0">
           <span class="tag">Гибкость</span>
@@ -799,7 +810,7 @@
             <li>Собственные факторы, кастомные алгоритмы, обновляемые модели расчета</li>
             <li>Математическое ядро Maxify — в максимально гибкой оболочке</li>
           </ul>
-          <div class="go">Тарифы →</div>
+          <div class="go">Условия →</div>
         </div>
         <div class="card prod rise" data-goto="11" role="button" tabindex="0">
           <span class="tag dimtag">Индивидуально</span>
@@ -813,69 +824,37 @@
           <div class="go">Условия →</div>
         </div>
       </div>
-      <p class="same rise">Maxify&nbsp;1 и Maxify&nbsp;3 доступны по <b>одинаковым тарифам</b>.</p>
+      <p class="same rise">Maxify&nbsp;1 и Maxify&nbsp;3 доступны на <b>одинаковых условиях</b>.</p>
     </div>
   </section>
 
-  <!-- 08 ТАРИФЫ -->
-  <section class="slide" id="s8" data-label="08 · Тарифы">
+  <!-- 08 УСЛОВИЯ -->
+  <section class="slide" id="s8" data-label="08 · Условия">
     <div class="inner">
-      <div class="pricehead rise">
-        <div>
-          <div class="eyebrow" style="margin-bottom:10px">Тарифы · Maxify 1 и Maxify 3</div>
-          <h2 style="margin-bottom:0">Подписка по количеству домов</h2>
-        </div>
-        <div class="toggle" role="group" aria-label="Период оплаты">
-          <button type="button" class="bt-month on">Ежемесячно</button>
-          <button type="button" class="bt-year">Годовая оплата<span class="disc">−20%</span></button>
-        </div>
-      </div>
-      <div class="grid g3">
-        <div class="card plan rise">
-          <div class="pl-name">Базовый</div>
-          <div class="pl-sub">до 3 домов</div>
-          <div class="price"><span data-m="990" data-y="792">990</span> <span class="cur">€/мес</span></div>
-          <div class="was">990 €/мес</div>
-          <div class="unit" data-m="330 €/дом" data-y="264 €/дом">330 €/дом</div>
-          <div class="ff none">
-            <div class="k">Модель 50/50</div>
-            <div class="n">доступна с тарифа «Расширенный»</div>
-          </div>
-        </div>
+      <div class="eyebrow">Условия · Maxify 1 и Maxify 3</div>
+      <h2 class="rise">Две модели оплаты — на выбор</h2>
+      <div class="grid offer">
         <div class="card plan hot rise">
-          <div class="badge">Оптимальный</div>
-          <div class="pl-name">Расширенный</div>
-          <div class="pl-sub">до 10 домов</div>
-          <div class="price"><span data-m="2 490" data-y="1 992">2 490</span> <span class="cur">€/мес</span></div>
-          <div class="was">2 490 €/мес</div>
-          <div class="unit" data-m="249 €/дом" data-y="199 €/дом">249 €/дом</div>
-          <div class="ff">
-            <div class="k">или модель 50/50</div>
-            <div class="v"><span data-m="1 245" data-y="996">1 245</span> <span class="cur">€/мес</span> + <b>2%</b> <span class="cur">success fee</span></div>
-            <div class="n">от сверхпланового дохода</div>
-          </div>
+          <div class="badge">Основная модель</div>
+          <div class="pl-name">Фикс + success fee</div>
+          <div class="pl-sub">за один проект (ЖК)</div>
+          <div class="price">990 <span class="cur">€/мес</span></div>
+          <div class="plus">+ <b>10%</b> success fee</div>
+          <ul class="terms">
+            <li>Success fee начисляется только на доход сверх <b>101% плана доходов</b></li>
+            <li>Первый 1% перевыполнения плана полностью остается у вас</li>
+            <li>План доходов согласовываем на старте и фиксируем в договоре</li>
+          </ul>
         </div>
         <div class="card plan rise">
-          <div class="pl-name">Безлимитный</div>
-          <div class="pl-sub">без ограничений по количеству домов</div>
-          <div class="price"><span data-m="4 990" data-y="3 992">4 990</span> <span class="cur">€/мес</span></div>
-          <div class="was">4 990 €/мес</div>
-          <div class="unit">весь портфель в одной системе</div>
-          <div class="ff">
-            <div class="k">или модель 50/50</div>
-            <div class="v"><span data-m="2 495" data-y="1 996">2 495</span> <span class="cur">€/мес</span> + <b>2%</b> <span class="cur">success fee</span></div>
-            <div class="n">от сверхпланового дохода</div>
-          </div>
-        </div>
-      </div>
-      <div class="card turn rise">
-        <div>
-          <span class="tag">Альтернатива</span>
-          <div class="turn-p">0,1%<small>от оборота</small></div>
-        </div>
-        <div class="turn-r">
-          <div class="tn">Для любого количества домов</div>
-          <p>Никаких фиксированных платежей — стоимость системы растет только вместе с вашим оборотом.</p>
+          <div class="badge alt">Альтернатива</div>
+          <div class="pl-name">Процент от продаж</div>
+          <div class="pl-sub">для любого количества домов</div>
+          <div class="price">0,1% <span class="cur">от продаж</span></div>
+          <ul class="terms">
+            <li>Никаких фиксированных платежей</li>
+            <li>Стоимость системы растет только вместе с вашими продажами</li>
+          </ul>
         </div>
       </div>
       <div class="strip rise">
@@ -886,45 +865,47 @@
     </div>
   </section>
 
-  <!-- 09 МОДЕЛЬ 50/50 -->
-  <section class="slide" id="s9" data-label="09 · Модель 50/50">
+  <!-- 09 SUCCESS FEE -->
+  <section class="slide" id="s9" data-label="09 · Success fee">
     <div class="inner">
-      <div class="eyebrow">Модель 50/50</div>
-      <h2 class="rise">Половина — фикс, половина — из результата</h2>
+      <div class="eyebrow">Как считаем success fee</div>
+      <h2 class="rise">Платите только сверх 101% плана</h2>
       <div class="chartwrap">
-        <div class="chart rise" aria-label="План доходов и фактический доход: разница между ними — сверхплановый доход">
+        <div class="chart rise" aria-label="План доходов, порог 101% и фактический доход: success fee начисляется только на доход выше порога">
           <svg viewBox="0 0 640 360">
             <line x1="70" y1="320" x2="612" y2="320" stroke="#334366" stroke-width="1"/>
             <line x1="70" y1="320" x2="70" y2="52" stroke="#334366" stroke-width="1"/>
             <text x="58" y="70" fill="#5E6C92" font-size="12" text-anchor="end" font-family="IBM Plex Mono">€</text>
             <text x="612" y="342" fill="#5E6C92" font-size="12" text-anchor="end" font-family="IBM Plex Mono">период продаж</text>
-            <path class="area" d="M70 300 C180 262 360 170 610 78 L610 120 L70 300 Z" fill="#2BE4A0" fill-opacity=".16"/>
+            <path class="area" d="M70 300 C180 262 360 170 610 78 L610 104 L70 300 Z" fill="#2BE4A0" fill-opacity=".18"/>
             <path d="M70 300 L610 120" fill="none" stroke="#93A0C2" stroke-width="2" stroke-dasharray="6 6"/>
+            <path d="M70 300 L610 104" fill="none" stroke="#2BE4A0" stroke-opacity=".75" stroke-width="1.5" stroke-dasharray="2 5"/>
             <path class="draw" d="M70 300 C180 262 360 170 610 78" fill="none" stroke="#5B9BF8" stroke-width="3"/>
             <g class="area">
-              <line x1="520" y1="116" x2="480" y2="64" stroke="#2BE4A0" stroke-width="1.2"/>
-              <circle cx="520" cy="118" r="3" fill="#2BE4A0"/>
-              <text x="476" y="46" fill="#2BE4A0" font-size="13" text-anchor="end" font-family="IBM Plex Mono">сверхплановый доход</text>
-              <text x="476" y="64" fill="#EEF2FB" font-size="13" text-anchor="end" font-family="IBM Plex Mono">× 2% = success fee</text>
+              <line x1="520" y1="110" x2="480" y2="64" stroke="#2BE4A0" stroke-width="1.2"/>
+              <circle cx="520" cy="112" r="3" fill="#2BE4A0"/>
+              <text x="476" y="46" fill="#2BE4A0" font-size="13" text-anchor="end" font-family="IBM Plex Mono">доход сверх 101% плана</text>
+              <text x="476" y="64" fill="#EEF2FB" font-size="13" text-anchor="end" font-family="IBM Plex Mono">× 10% = success fee</text>
             </g>
           </svg>
           <div class="legend">
             <span><i style="background:#93A0C2"></i>План доходов</span>
+            <span><i style="background:#2BE4A0;opacity:.75"></i>Порог 101%: первый 1% — без комиссии</span>
             <span><i style="background:#5B9BF8"></i>Фактический доход с Maxify</span>
-            <span><i style="background:#2BE4A0"></i>Сверхплановый доход</span>
           </div>
         </div>
         <div>
-          <p class="lead rise">Для тарифов «Расширенный» и «Безлимитный». Половину стоимости тарифа вы платите фиксированно, а вместо второй половины — 2% от дохода, полученного сверх плана доходов.</p>
+          <p class="lead rise">Фиксированная часть — 990 €/мес за проект. Success fee — 10% от дохода, полученного сверх 101% плана доходов. Пока план перевыполнен меньше чем на 1%, вы платите только фикс.</p>
           <div class="calc rise">
-            <div class="ch">Пример расчета, тариф «Расширенный»</div>
+            <div class="ch">Пример расчета, один проект</div>
             <div class="row"><span>План доходов</span><b>30 000 000 €</b></div>
-            <div class="row"><span>Фактический доход</span><b>30 900 000 €</b></div>
-            <div class="row"><span>Сверхплановый доход</span><b>900 000 €</b></div>
-            <div class="row hl"><span>Success fee, 2%</span><b>18 000 €</b></div>
-            <div class="row"><span>Фиксированная часть</span><b>1 245 €/мес</b></div>
+            <div class="row"><span>Порог success fee, 101%</span><b>30 300 000 €</b></div>
+            <div class="row"><span>Фактический доход, 103%</span><b>30 900 000 €</b></div>
+            <div class="row"><span>База success fee</span><b>600 000 €</b></div>
+            <div class="row hl"><span>Success fee, 10%</span><b>60 000 €</b></div>
+            <div class="row hl"><span>Остается у вас из дохода сверх плана</span><b>840 000 €</b></div>
           </div>
-          <p class="footlaw rise">База расчета — план доходов, согласованный на старте. Методику фиксируем в договоре.</p>
+          <p class="footlaw rise">План доходов согласовываем на старте и фиксируем в договоре вместе с методикой расчета.</p>
         </div>
       </div>
     </div>
@@ -1081,7 +1062,7 @@
     x0 = y0 = null;
   }, {passive:true});
 
-  /* карточки линейки → тарифы / кастомная разработка */
+  /* карточки линейки → условия / кастомная разработка */
   document.querySelectorAll('[data-goto]').forEach(function(c){
     c.addEventListener('click', function(){ go(parseInt(c.dataset.goto, 10)); });
     c.addEventListener('keydown', function(e){
@@ -1089,20 +1070,7 @@
     });
   });
 
-  /* переключатель оплаты: помесячно / годовая −20% (вместе с фиксированной частью 50/50) */
-  function setBilling(annual){
-    document.body.classList.toggle('annual', annual);
-    document.body.classList.toggle('monthly', !annual);
-    document.querySelectorAll('.bt-month').forEach(function(b){ b.classList.toggle('on', !annual); });
-    document.querySelectorAll('.bt-year').forEach(function(b){ b.classList.toggle('on', annual); });
-    document.querySelectorAll('[data-m]').forEach(function(el){
-      el.textContent = annual ? el.dataset.y : el.dataset.m;
-    });
-  }
-  document.querySelectorAll('.bt-month').forEach(function(b){ b.addEventListener('click', function(){ setBilling(false); }); });
-  document.querySelectorAll('.bt-year').forEach(function(b){ b.addEventListener('click', function(){ setBilling(true); }); });
-
-  /* старт: #N в ссылке открывает конкретный слайд (#9 → «Модель 50/50») */
+  /* старт: #N в ссылке открывает конкретный слайд (#9 → «Success fee») */
   var start = parseInt((location.hash || '').replace('#',''), 10);
   i = 0;
   slides[0].classList.add('active');
