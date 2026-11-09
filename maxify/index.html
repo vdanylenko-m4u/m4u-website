@@ -29,6 +29,22 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-KDMZPHT9');</script>
 <!-- End Google Tag Manager -->
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2698015507284552');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=2698015507284552&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel Code -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1215,7 +1231,9 @@ document.addEventListener('click',function(e){ var a=e.target.closest('[data-cta
 /* клік на запис (Telegram / телефон) = лід для рекламних кабінетів */
 document.addEventListener('click',function(e){ var a=e.target.closest('[data-lead]'); if(!a||a.getAttribute('data-tracked')) return; a.setAttribute('data-tracked','1');
   var h=a.getAttribute('href')||'', m=h.indexOf('tel:')===0?'phone':(h.indexOf('mailto:')===0?'email':'telegram');
-  track('generate_lead',{method:m,cta_id:a.getAttribute('data-cta'),utm_content:utm.utm_content||''}); });
+  track('generate_lead',{method:m,cta_id:a.getAttribute('data-cta'),utm_content:utm.utm_content||''});
+  /* Meta Pixel: заявка = клік на запис (Telegram / дзвінок / email) */
+  if(window.fbq) fbq('track','Lead',{content_name:a.getAttribute('data-cta'),content_category:m}); });
 
 /* ── UTM ── */
 var utm={};
